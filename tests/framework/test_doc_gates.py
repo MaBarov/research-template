@@ -71,7 +71,7 @@ def test_untracked_file_fails_dvc_gate(gate_repo: Path) -> None:
 def documented_run(repo: Path) -> dict[str, str]:
     for kind, record in (
         ("manifests", {"schema": harness.RUN_MANIFEST_SCHEMA}),
-        ("metrics", {"schema": harness.RUN_METRICS_SCHEMA, "psnr": 30}),
+        ("metrics", {"schema": harness.RUN_METRICS_SCHEMA, "score": 30}),
     ):
         directory = repo / "results" / kind
         directory.mkdir(parents=True)

@@ -21,24 +21,24 @@ from framework.indexing.scanner import ClassEntry, FunctionEntry, ModuleEntry
 def _sample_module(rel: str) -> ModuleEntry:
     """Helper to construct a mock ModuleEntry with sample symbols."""
     fn = FunctionEntry(
-        name="ridge_solve",
+        name="fit_line",
         args_repr="target: Tensor, alpha: float",
         return_type="Tensor",
-        doc_summary="Solve closed-form ridge projection.",
+        doc_summary="Solve a least-squares fit.",
         line_no=10,
         end_line_no=25,
     )
     cls_entry = ClassEntry(
-        name="SolverEngine",
+        name="FitEngine",
         bases=("BaseSolver",),
-        doc_summary="Main solver orchestrator.",
+        doc_summary="Main fit orchestrator.",
         methods=(fn,),
         line_no=5,
         end_line_no=30,
     )
     return ModuleEntry(
         rel_path=rel,
-        doc_summary="Module implementing ridge solvers.",
+        doc_summary="Module implementing line fits.",
         classes=(cls_entry,),
         functions=(fn,),
         line_count=50,
@@ -47,7 +47,7 @@ def _sample_module(rel: str) -> ModuleEntry:
 
 def test_format_markdown_index_line_ranges(tmp_path: Path) -> None:
     """Verify TOC specifies line ranges and slicing matches section content."""
-    m_solver = _sample_module("research/solver/ridge.py")
+    m_solver = _sample_module("research/solver/fit.py")
     init_solver = tmp_path / "research" / "solver" / "__init__.py"
     init_solver.parent.mkdir(parents=True)
     init_solver.write_text('"""Explicit solver inputs and projections."""\n')
@@ -60,12 +60,12 @@ def test_format_markdown_index_line_ranges(tmp_path: Path) -> None:
     lines = md.splitlines()
     sliced = lines[start - 1 : end]
     assert sliced[0].startswith("## Package `research/solver`")
-    assert "*Contract*: Main solver orchestrator." in "\n".join(sliced)
+    assert "*Contract*: Main fit orchestrator." in "\n".join(sliced)
 
 
 def test_format_sub_and_master_index(tmp_path: Path) -> None:
     """Verify sub-index local TOC and master index sub-index pointers."""
-    m = _sample_module("research/solver/ridge.py")
+    m = _sample_module("research/solver/fit.py")
     sub_text, sections = format_sub_index("research", [m], repo_root=tmp_path)
     assert "# Research Sub-Index: `research`" in sub_text
     assert len(sections) == 1

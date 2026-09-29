@@ -203,7 +203,7 @@ def test_gate_records_the_resolved_run_settings(tmp_path: Path) -> None:
     env = gate_env(
         binary,
         SBATCH_RUN_NAME="gate_settings",
-        SBATCH_RUN_SETTINGS=("model_id=demo-model,max_round_dose=0.4,carrier_rank=19"),
+        SBATCH_RUN_SETTINGS=("model_id=demo-model,max_step=0.4,rank=19"),
     )
     result = run_gate(repo, PAYLOAD, env)
     assert result.returncode == 0, result.stdout + result.stderr
@@ -214,8 +214,8 @@ def test_gate_records_the_resolved_run_settings(tmp_path: Path) -> None:
     )
     assert manifest["settings"] == {
         "model_id": "demo-model",
-        "max_round_dose": "0.4",
-        "carrier_rank": "19",
+        "max_step": "0.4",
+        "rank": "19",
     }
 
 

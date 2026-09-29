@@ -25,7 +25,7 @@ Invariants & Expected State:
     annotation) *and* a branch guarding that name returns or assigns a
     structurally valid but empty value -- a ``zeros``/``empty``/``eye`` family
     constructor.  That pairing is what lets a solver report a mode it did not
-    run: the substitute is a perfectly valid carrier or projection, so every
+    run: the substitute is a perfectly valid basis or projection, so every
     shape and orthogonality assertion downstream still passes while the term
     that made the computation constrained is gone.  The constructor is what
     keeps the rule silent on ordinary defaults -- ``if device is None: device =
@@ -216,8 +216,8 @@ def placeholder_fallthrough(
 # Constructors that build a structurally void or zeroed object. Identity and
 # all-ones objects are deliberately *excluded*: they have full content and
 # select everything, so substituting one is a default selection rather than a
-# vanished constraint. `carrier = None -> torch.eye(width)` in the trajectory
-# ridge is that shape - a documented whole-space default, not a dropped bound.
+# vanished constraint. `matrix = None -> torch.eye(width)` in a projection
+# helper is that shape - a documented whole-space default, not a dropped bound.
 _NEUTRAL_CTORS = {
     "empty",
     "empty_like",

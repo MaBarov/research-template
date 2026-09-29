@@ -16,13 +16,13 @@ def test_scan_module_text_functions_and_classes() -> None:
     """Verify function signatures, class bases, and doc summaries are extracted."""
     code = (
         '"""Module docstring describing component."""\n\n'
-        "class CarrierBank(BaseBank):\n"
-        '    """Manages carrier matrices."""\n'
+        "class MetricBank(BaseBank):\n"
+        '    """Manages metric matrices."""\n'
         "    def project(self, x: torch.Tensor, r: int = 12) -> torch.Tensor:\n"
-        '        """Project tensor into carrier subspace."""\n'
+        '        """Project tensor into a metric subspace."""\n'
         "        return x\n\n"
         "def compute_angles(a: torch.Tensor, b: torch.Tensor) -> float:\n"
-        '    """Compute principal Grassmann angles between subspaces."""\n'
+        '    """Compute principal angles between subspaces."""\n'
         "    return 0.5\n"
     )
     entry = scan_module_text("research/core/sample.py", code)
@@ -31,7 +31,7 @@ def test_scan_module_text_functions_and_classes() -> None:
     assert entry.doc_summary == "Module docstring describing component."
     assert len(entry.classes) == 1
     cls_entry = entry.classes[0]
-    assert cls_entry.name == "CarrierBank"
+    assert cls_entry.name == "MetricBank"
     assert cls_entry.bases == ("BaseBank",)
     assert len(cls_entry.methods) == 1
     assert cls_entry.methods[0].name == "project"
@@ -41,7 +41,7 @@ def test_scan_module_text_functions_and_classes() -> None:
     fn_entry = entry.functions[0]
     assert fn_entry.name == "compute_angles"
     assert "b: torch.Tensor" in fn_entry.args_repr
-    assert "Grassmann angles" in fn_entry.doc_summary
+    assert "principal angles" in fn_entry.doc_summary
 
 
 def test_scan_module_text_async_and_kwonly() -> None:

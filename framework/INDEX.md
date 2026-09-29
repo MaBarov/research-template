@@ -731,8 +731,8 @@
   * *Module Purpose*: Unit tests for the surrogate distortion static analysis gate.
   * [`test_hns044_flags_quantized_subtraction() -> None`](framework/tests/distortion/test_distortion_gate.py#L25-L35)
     * *Contract*: Flag weight subtraction preceded by low-precision bfloat16 casting.
-  * [`test_hns044_passes_on_full_precision_weight_dose() -> None`](framework/tests/distortion/test_distortion_gate.py#L38-L45)
-    * *Contract*: Pass on float64/float32 distance calculation from dose.py.
+  * [`test_hns044_passes_on_full_precision_distance() -> None`](framework/tests/distortion/test_distortion_gate.py#L38-L45)
+    * *Contract*: Pass on a float64 distance computed without a low-precision cast.
   * [`test_hns045_flags_pooled_broadcast() -> None`](framework/tests/distortion/test_distortion_gate.py#L48-L57)
     * *Contract*: Flag broadcasting one pooled estimate value across members.
   * [`test_hns045_exemption_is_configured_by_the_project(monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/distortion/test_distortion_gate.py#L60-L78)
@@ -791,7 +791,7 @@
   * [`test_a_neutral_value_that_escapes_nothing_is_silent() -> None`](framework/tests/gates/test_antipattern_expansion.py#L293-L304)
     * *Contract*: The substitute must be returned or assigned to count as degradation.
   * [`test_a_full_rank_default_selection_stays_silent() -> None`](framework/tests/gates/test_antipattern_expansion.py#L307-L318)
-    * *Contract*: ``carrier = None -> eye`` selects everything; nothing was emptied.
+    * *Contract*: ``matrix = None -> eye`` selects everything; nothing was emptied.
   * [`test_a_zeroed_substitute_is_still_reported() -> None`](framework/tests/gates/test_antipattern_expansion.py#L321-L332)
     * *Contract*: ``zeros`` voids a direction, which is the family the rule targets.
   * [`test_a_mode_default_outside_its_dispatch_is_reported() -> None`](framework/tests/gates/test_antipattern_expansion.py#L335-L345)
@@ -801,7 +801,7 @@
   * [`test_a_single_special_case_is_not_a_dispatch_table() -> None`](framework/tests/gates/test_antipattern_expansion.py#L361-L369)
     * *Contract*: One ``==`` beside a general branch is not an enumeration of the modes.
   * [`test_a_literal_beside_an_enumeration_counts_as_handled() -> None`](framework/tests/gates/test_antipattern_expansion.py#L372-L386)
-    * *Contract*: ``carrier_mode == "sdp"`` in its own helper claims the default.
+    * *Contract*: ``mode == "sdp"`` in its own helper claims the default.
   * [`test_a_mode_forwarded_without_a_local_dispatch_is_out_of_scope() -> None`](framework/tests/gates/test_antipattern_expansion.py#L389-L395)
     * *Contract*: A module that only relays the setting cannot discharge the branch itself.
   * [`test_a_non_mode_string_default_is_not_a_dispatch_key() -> None`](framework/tests/gates/test_antipattern_expansion.py#L398-L406)

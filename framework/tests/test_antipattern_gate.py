@@ -265,7 +265,7 @@ def test_python_provenance_fallbacks_are_blocked() -> None:
     assert codes('revision = record.get("git_revision", "unavailable")\n') == {"HNS013"}
     assert codes('DIRTY_SHA256 = "n/a"\n') == {"HNS013"}
 
-    assert codes('carrier_stability_verdict = "unknown"\n') == set()
+    assert codes('stability_verdict = "unknown"\n') == set()
     assert (
         codes('token_geometry = basis_dict.get("token_geometry", "unknown")\n') == set()
     )

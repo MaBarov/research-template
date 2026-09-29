@@ -305,15 +305,15 @@ def test_a_neutral_value_that_escapes_nothing_is_silent() -> None:
 
 
 def test_a_full_rank_default_selection_stays_silent() -> None:
-    """``carrier = None -> eye`` selects everything; nothing was emptied."""
+    """``matrix = None -> eye`` selects everything; nothing was emptied."""
     source = (
         "import torch\n"
         "\n"
         "\n"
-        "def normalize(carrier: torch.Tensor | None, width: int):\n"
-        "    if carrier is None:\n"
+        "def normalize(matrix: torch.Tensor | None, width: int):\n"
+        "    if matrix is None:\n"
         "        return torch.eye(width)\n"
-        "    return carrier\n"
+        "    return matrix\n"
     )
     assert "HNS034" not in codes(source)
 
@@ -370,7 +370,7 @@ def test_a_single_special_case_is_not_a_dispatch_table() -> None:
 
 
 def test_a_literal_beside_an_enumeration_counts_as_handled() -> None:
-    """``carrier_mode == "sdp"`` in its own helper claims the default."""
+    """``mode == "sdp"`` in its own helper claims the default."""
     source = (
         "def wants_sdp(mode):\n"
         "    return mode == 'sdp'\n"

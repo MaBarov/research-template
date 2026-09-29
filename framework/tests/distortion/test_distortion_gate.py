@@ -35,13 +35,13 @@ def _simulate_agent_weight_extraction(weight, delta):
     assert "post-quantization" in findings[0].message
 
 
-def test_hns044_passes_on_full_precision_weight_dose() -> None:
-    """Pass on float64/float32 distance calculation from dose.py."""
+def test_hns044_passes_on_full_precision_distance() -> None:
+    """Pass on a float64 distance computed without a low-precision cast."""
     snippet = """
-def _cumulative_weight_dose(weights, ctx):
+def _cumulative_weight_distance(weights, ctx):
     return sum((weights[n].double() - ctx.W0[n].double()).square() for n in weights)
 """
-    findings = analyze_distortion(snippet, "research/peeling/dose.py")
+    findings = analyze_distortion(snippet, "research/model.py")
     assert len(findings) == 0
 
 

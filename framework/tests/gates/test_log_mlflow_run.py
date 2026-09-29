@@ -62,7 +62,7 @@ def test_metrics_tags_params_land(tmp_path: Path) -> None:
     proc = log(
         tmp_path,
         "--metrics",
-        "psnr=25.1",
+        "score=25.1",
         "--metrics",
         "auc=0.05",
         "--tag",
@@ -73,7 +73,7 @@ def test_metrics_tags_params_land(tmp_path: Path) -> None:
     assert proc.returncode == 0, proc.stderr
     mlflow.set_tracking_uri(f"file://{tmp_path / 'store'}")
     row = mlflow.search_runs().iloc[0]
-    assert row["metrics.psnr"] == 25.1
+    assert row["metrics.score"] == 25.1
     assert row["metrics.auc"] == 0.05
     assert row["tags.verdict"] == "probe"
     assert row["params.lr"] == "1e-4"

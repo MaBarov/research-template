@@ -91,13 +91,13 @@ def test_settings_are_recorded_with_the_pins(tmp_path: Path) -> None:
         "--setting",
         "model_id=demo-model",
         "--setting",
-        "carrier_rank=19",
+        "rank=19",
     )
     assert result.returncode == 0, result.stdout + result.stderr
     manifest = manifest_of(repo, "unit_settings")
     assert manifest["settings"] == {
         "model_id": "demo-model",
-        "carrier_rank": "19",
+        "rank": "19",
     }
     assert manifest["schema"] == harness.RUN_MANIFEST_SCHEMA
     assert manifest["paths"]["producer_script"] == SCRIPT
@@ -130,9 +130,9 @@ def test_from_manifest_reuses_the_recorded_settings(tmp_path: Path) -> None:
             "--script",
             SCRIPT,
             "--setting",
-            "rounds=5",
+            "iters=5",
             "--setting",
-            "max_round_dose=0.4",
+            "max_step=0.4",
         ).returncode
         == 0
     )
@@ -145,6 +145,6 @@ def test_from_manifest_reuses_the_recorded_settings(tmp_path: Path) -> None:
     )
     assert replay.returncode == 0, replay.stdout + replay.stderr
     assert manifest_of(repo, "unit_replay")["settings"] == {
-        "rounds": "5",
-        "max_round_dose": "0.4",
+        "iters": "5",
+        "max_step": "0.4",
     }
