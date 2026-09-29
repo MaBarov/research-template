@@ -1,0 +1,358 @@
+#!/usr/bin/env bash
+# Strict pre-commit — ACTIVE via core.hooksPath = framework/hooks.
+# Preserves the original .git/hooks/pre-commit behavior (ruff autofix + block on
+# non-autofixable errors) verbatim, THEN adds strict blocking checks.
+set -eo pipefail
+
+REPO="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+
+# ---------------------------------------------------------------------------
+# 0a. HARNESS REGISTRY — every project-specific literal (roots, scopes,
+#     interpreter) comes from framework/harness.py; the hook hardcodes none.
+# ---------------------------------------------------------------------------
+HARNESS="$REPO/framework/harness.py"
+if [ ! -f "$HARNESS" ]; then
+  echo "[pre-commit] FAILED: missing $HARNESS (fail-closed)." >&2
+  exit 1
+fi
+PY_BOOT="$(command -v python3 || command -v python || true)"
+if [ -z "$PY_BOOT" ]; then
+  echo "[pre-commit] FAILED: no python3 on PATH." >&2
+  exit 1
+fi
+harness() { "$PY_BOOT" "$HARNESS" --get "$1"; }
+PY="$(harness python)" || {
+  echo "[pre-commit] FAILED: no interpreter at or above the project floor (above)." >&2
+  exit 1
+}
+MIRROR_SCOPE="$(harness mirror-scope)"
+COVERAGE_SCOPE="$(harness coverage-scope)"
+DISTORTION_SCOPE="$(harness distortion-scope)"
+INDEX_SCOPE="$(harness index-scope)"
+
+# ---------------------------------------------------------------------------
+# 0. INDEX FRESHNESS — fail closed when the index disagrees with HEAD + worktree
+# ---------------------------------------------------------------------------
+# Runs first, before the ruff autofix rewrites the index. A staged change with
+# no working-tree counterpart means the index was seeded from a different
+# revision than HEAD (a private GIT_INDEX_FILE, a leftover temp index); the
+# commit would silently delete or revert every path that index never saw.
+if [ -x "$REPO/framework/gates/freshness/check_index_freshness.py" ]; then
+  if ! "$PY" "$REPO/framework/gates/freshness/check_index_freshness.py" --strict; then
+    echo "[pre-commit] FAILED: staged paths contradict the working tree — the index" >&2
+    echo "[pre-commit] does not match HEAD. Re-stage each path from the working" >&2
+    echo "[pre-commit] tree; to untrack deliberately, delete the file as well." >&2
+    exit 1
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 1. ORIGINAL BEHAVIOR — verbatim from .git/hooks/pre-commit (ruff autofix gate)
+# ---------------------------------------------------------------------------
+RUFF_BIN=""
+if command -v ruff >/dev/null 2>&1; then
+    RUFF_BIN="$(command -v ruff)"
+elif [ -x "$HOME/.local/bin/ruff" ]; then
+    RUFF_BIN="$HOME/.local/bin/ruff"
+fi
+
+if [ -z "$RUFF_BIN" ] || [ ! -x "$RUFF_BIN" ]; then
+    echo "[pre-commit] ERROR: ruff binary not found." >&2
+    exit 1
+fi
+
+STAGED_PY=$(git diff --cached --name-only --diff-filter=d | grep -E "\.py$" || true)
+
+if [ -n "$STAGED_PY" ]; then
+    echo "[pre-commit] Auto-fixing and formatting staged files..."
+    echo "$STAGED_PY" | xargs "$RUFF_BIN" check --fix || true
+    echo "$STAGED_PY" | xargs "$RUFF_BIN" format
+    echo "$STAGED_PY" | xargs git add
+    if ! echo "$STAGED_PY" | xargs "$RUFF_BIN" check; then
+        echo "[pre-commit] FAILED: Non-autofixable lint errors remain. Fix them manually before committing." >&2
+        exit 1
+    fi
+    echo "[pre-commit] Staged Python files auto-fixed, formatted, and validated."
+fi
+
+# ---------------------------------------------------------------------------
+# 2. BLOCKING PRODUCTION ANTI-PATTERN GATE
+# ---------------------------------------------------------------------------
+# Read staged blobs from the Git index. This prevents an unrelated unstaged
+# edit from changing the result of the commit check.
+mapfile -t STAGED_PRODUCTION_FILES < <(
+  git diff --cached --name-only --diff-filter=ACM | grep -E "$(harness production-scope)" || true
+)
+if [ "${#STAGED_PRODUCTION_FILES[@]}" -gt 0 ]; then
+  if ! "$PY" "$REPO/framework/gates/check_antipatterns.py" \
+      --strict --staged -- "${STAGED_PRODUCTION_FILES[@]}"; then
+    echo "[pre-commit] FAILED: production anti-pattern gate blocked this commit." >&2
+    exit 1
+  fi
+fi
+
+STAGED_ALL=$(git diff --cached --name-only --diff-filter=ACM || true)
+
+# ---------------------------------------------------------------------------
+# 3. BLOCKING TEST MIRROR + COVERAGE CLEARANCE GATES
+# ---------------------------------------------------------------------------
+# Every staged production source keeps a mirror test next to it, and a staged
+# source must carry recorded clearance: >= 80% statement coverage of that file
+# plus 0/1/>=2 observed iterations for every loop it contains. The commit path
+# stays sub-second by deciding from the content-addressed ledger
+# (framework/coverage_evidence.json) instead of importing torch; the refresh
+# command below runs the mirror tests once and records their verdicts.
+# Fail-closed: any finding blocks the commit; there is no escape hatch.
+if [ -n "$STAGED_ALL" ]; then
+  mapfile -t STAGED_MIRROR_SCOPE < <(printf '%s\n' "$STAGED_ALL" | grep -E "$MIRROR_SCOPE" || true)
+  if [ "${#STAGED_MIRROR_SCOPE[@]}" -gt 0 ] && [ -x "$REPO/framework/gates/checks/check_test_mirror.py" ]; then
+    if ! "$PY" "$REPO/framework/gates/checks/check_test_mirror.py" --strict --staged "${STAGED_MIRROR_SCOPE[@]}"; then
+      echo "[pre-commit] FAILED: test mirror gate blocked this commit." >&2
+      exit 1
+    fi
+  fi
+
+  mapfile -t STAGED_SOURCE_PY < <(printf '%s\n' "$STAGED_ALL" | grep -E "$COVERAGE_SCOPE" || true)
+  if [ "${#STAGED_SOURCE_PY[@]}" -gt 0 ] && [ -x "$REPO/framework/gates/check_coverage.py" ]; then
+    if ! "$PY" "$REPO/framework/gates/check_coverage.py" --mode staged \
+        --evidence-only --strict --staged "${STAGED_SOURCE_PY[@]}"; then
+      echo "[pre-commit] FAILED: staged research sources lack cleared coverage evidence." >&2
+      echo "[pre-commit] refresh (runs the mirror tests once, ~seconds per file):" >&2
+      echo "[pre-commit]   python framework/gates/check_coverage.py --mode staged --staged ${STAGED_SOURCE_PY[*]}" >&2
+      echo "[pre-commit]   git add framework/coverage_evidence.json ${STAGED_SOURCE_PY[*]}" >&2
+      exit 1
+    fi
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 4. BLOCKING CODE-SIZE LIMITS (user rulings 2026-09-17)
+# ---------------------------------------------------------------------------
+# A staged module must already satisfy the limits: <= 600 lines, every
+# function/method <= 30 lines, <= 5 modules per directory, and no code in
+# __init__.py. There is no grandfathering: touching a legacy file means
+# splitting it in the same commit (the rule's remedy is a package with the
+# same name, decomposed with the vendored Rope runner in third_party/refactor/).
+# Module text and directory counts are read from the Git index, so unrelated
+# unstaged edits cannot change the decision. Fail-closed; there is no escape
+# hatch.
+mapfile -t STAGED_LIMIT_PY < <(git diff --cached --name-only --diff-filter=ACM -- '*.py')
+if [ "${#STAGED_LIMIT_PY[@]}" -gt 0 ] && [ -f "$REPO/framework/gates/limits/check_limits.py" ]; then
+  if ! "$PY" "$REPO/framework/gates/limits/check_limits.py" --mode staged \
+      --strict --staged "${STAGED_LIMIT_PY[@]}"; then
+    echo "[pre-commit] FAILED: code-size limits blocked this commit (see above)." >&2
+    echo "[pre-commit] split the offending file/function/directory, then re-stage." >&2
+    exit 1
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 5. CHECKS: 5a/5b/5d are advisory; 5c (sbatch provenance contract) BLOCKS
+# ---------------------------------------------------------------------------
+
+# 5a. Governance mirror divergence
+if [ -x "$REPO/framework/gates/checks/sync_agents_mirrors.py" ]; then
+  if ! "$PY" "$REPO/framework/gates/checks/sync_agents_mirrors.py" --check >/dev/null 2>&1; then
+    echo "[pre-commit] WARN: governance mirror divergence — run: python framework/gates/checks/sync_agents_mirrors.py" >&2
+  fi
+fi
+
+# 5b. Local gate on staged python files
+if [ -n "$STAGED_PY" ]; then
+  if ! "$PY" "$REPO/framework/gates/checks/local_gate.py" $STAGED_PY; then
+    echo "[pre-commit] WARN: local_gate failed — advisory only. Fix before push for CI pass." >&2
+  fi
+fi
+
+# 5c. sbatch provenance contract (BLOCKING: new/edited job scripts must refuse a
+# dirty tree and stamp the commit they run from; contract = shared checker)
+STAGED_SBATCH=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.sbatch$' || true)
+if [ -n "$STAGED_SBATCH" ]; then
+  if ! bash "$REPO/framework/gates/check_sbatch_contract.sh" $STAGED_SBATCH; then
+    echo "[pre-commit] FAILED: sbatch provenance contract (see above) — copy the guard+stamp header from slurm/template.sbatch" >&2
+    exit 1
+  fi
+fi
+
+# 5d. File layout (staged files)
+if [ -x "$REPO/framework/gates/check_structure.py" ]; then
+  if [ -n "$STAGED_ALL" ]; then
+    if ! "$PY" "$REPO/framework/gates/check_structure.py" --staged $STAGED_ALL 2>&1; then
+      echo "[pre-commit] WARN: check_structure advisory failure (see above)" >&2
+    fi
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 5d2. BLOCKING TWO-TIER MODULE CONTRACT & FRESHNESS GATE
+# ---------------------------------------------------------------------------
+# Staged Python modules are verified against Two-Tier contract schema (thumbnail
+# <= 140 chars, Invariants & Expected State) and interface drift. Enforce/exclude
+# paths are configured in pyproject.toml ([tool.research.contracts]).
+INDEX_GEN="$REPO/framework/indexing/cli.py"
+if [ -f "$INDEX_GEN" ]; then
+  mapfile -t STAGED_CONTRACT_MODULES < <(
+    printf '%s\n' "$STAGED_ALL" | grep -E '\.py$' || true
+  )
+  if [ "${#STAGED_CONTRACT_MODULES[@]}" -gt 0 ]; then
+    if ! "$PY" "$INDEX_GEN" --strict-contracts --staged-files "${STAGED_CONTRACT_MODULES[@]}"; then
+      echo "[pre-commit] FAILED: Two-Tier module contract gate blocked this commit." >&2
+      exit 1
+    fi
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 5d3. BLOCKING CODE DUPLICATION GATE (jscpd)
+# ---------------------------------------------------------------------------
+# Staged files are checked against existing baseline for duplicate code blocks.
+CHECK_DUP="$REPO/framework/gates/checks/check_duplication.py"
+if [ -f "$CHECK_DUP" ]; then
+  mapfile -t STAGED_DUP_FILES < <(
+    printf '%s\n' "$STAGED_ALL" | grep -E '\.(py|sh|sbatch)$' || true
+  )
+  if [ "${#STAGED_DUP_FILES[@]}" -gt 0 ]; then
+    if ! "$PY" "$CHECK_DUP" --strict --staged "${STAGED_DUP_FILES[@]}"; then
+      echo "[pre-commit] FAILED: code duplication gate (jscpd) blocked this commit." >&2
+      exit 1
+    fi
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 5d4. BLOCKING PARAMETER UNIFICATION GATE
+# ---------------------------------------------------------------------------
+# Staged source files are checked against the canonical parameter registry
+# (research/core/runtime/params/): a superseded env alias (HNS038), a restated default
+# (HNS039), a copied registered literal (HNS040) or a malformed registry (HNS041)
+# blocks the commit. The gate reads no environment variable and has no override.
+CHECK_PARAMS="$REPO/framework/gates/params/check_param_duplicates.py"
+if [ -f "$CHECK_PARAMS" ]; then
+  mapfile -t STAGED_PARAM_FILES < <(
+    printf '%s\n' "$STAGED_ALL" | grep -E '\.(py|sh|sbatch)$' || true
+  )
+  if [ "${#STAGED_PARAM_FILES[@]}" -gt 0 ]; then
+    if ! "$PY" "$CHECK_PARAMS" --strict --staged "${STAGED_PARAM_FILES[@]}"; then
+      echo "[pre-commit] FAILED: parameter unification gate blocked this commit." >&2
+      exit 1
+    fi
+  fi
+fi
+
+# 5d5. BLOCKING MUTATION-EVIDENCE GATE
+# ---------------------------------------------------------------------------
+# Every staged module inside the mutated population ([tool.mutmut] only_mutate)
+# must carry cleared evidence: mutmut scored that exact staged content and no
+# mutant survived, was left unreached ("no tests"), timed out or segfaulted.
+# The decision is read-only (framework/mutation_evidence.json + the Git index),
+# so the hook never forks a test run, and each finding names its refresh
+# command. The step fires when a candidate module (research/**/*.py) or the mutmut
+# config itself is staged, so the ledger's recorded population must still match
+# the configured one — editing only_mutate without re-recording the evidence
+# blocks too. There is no override: no environment variable, no allowlist, no
+# baseline and no skip flag — a mutant is cleared by an assertion that kills
+# it, or by `# pragma: no mutate` on the mutated line, in the same commit. A
+# missing gate is fail-closed too.
+CHECK_MUTATION="$REPO/framework/gates/mutation/check_mutation.py"
+if [ -n "$STAGED_ALL" ]; then
+  mapfile -t STAGED_MUTATION_FILES < <(
+    printf '%s\n' "$STAGED_ALL" | grep -E "$COVERAGE_SCOPE|^pyproject\.toml$" || true
+  )
+  if [ "${#STAGED_MUTATION_FILES[@]}" -gt 0 ]; then
+    if [ ! -f "$CHECK_MUTATION" ]; then
+      echo "[pre-commit] FAILED: mutation gate missing at $CHECK_MUTATION (fail-closed)." >&2
+      exit 1
+    fi
+    if ! "$PY" "$CHECK_MUTATION" --mode staged --evidence-only --strict \
+        --staged "${STAGED_MUTATION_FILES[@]}"; then
+      echo "[pre-commit] FAILED: mutation gate blocked this commit (see above)." >&2
+      echo "[pre-commit] refresh with the command each finding names, e.g.:" >&2
+      echo "[pre-commit]   python framework/gates/mutation/check_mutation.py --mode staged --staged <file>" >&2
+      echo "[pre-commit]   git add framework/mutation_evidence.json <file>" >&2
+      exit 1
+    fi
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 5d6. BLOCKING SURROGATE DISTORTION GATE
+# ---------------------------------------------------------------------------
+# Staged Python sources are checked for surrogate distortion anti-patterns
+# (HNS044 post-quantization delta subtraction, HNS045 in-sample pooled
+# broadcast, HNS046 un-errored ratio-of-means). Fail-closed without circumvention.
+CHECK_DISTORTION="$REPO/framework/gates/distortion/check_distortion.py"
+if [ -n "$STAGED_ALL" ]; then
+  mapfile -t STAGED_DISTORTION_FILES < <(
+    printf '%s\n' "$STAGED_ALL" | grep -E "$DISTORTION_SCOPE" || true
+  )
+  if [ "${#STAGED_DISTORTION_FILES[@]}" -gt 0 ]; then
+    if [ ! -f "$CHECK_DISTORTION" ]; then
+      echo "[pre-commit] FAILED: distortion gate missing at $CHECK_DISTORTION (fail-closed)." >&2
+      exit 1
+    fi
+    if ! "$PY" "$CHECK_DISTORTION" --strict --staged "${STAGED_DISTORTION_FILES[@]}"; then
+      echo "[pre-commit] FAILED: surrogate distortion gate blocked this commit." >&2
+      exit 1
+    fi
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 5e. Codebase architectural index (INDEX.md): auto-maintained, not nagged.
+# The index is generated from the working tree, so a commit that touches an
+# indexed root refreshes it here and re-stages it — the same auto-fix posture as
+# the ruff step above. The write authority is bounded by the artifact family the
+# generator itself declares: INDEX.md plus <root>/INDEX.md for the roots it
+# indexes (read from its own DEFAULT_ROOTS, so a new root needs no hook change).
+# Once the family is committed (activation), the hook maintains all of it,
+# including a member the generator has just started writing; before that, the
+# first commit is the point where the artifact becomes a repo fact, so the step
+# prints the exact command instead of inventing it. A member HEAD carries that the
+# generator no longer writes is reported, never deleted. Only commits that can
+# affect the index pay for it, and a generator failure warns instead of blocking
+# an unrelated commit.
+if [ -f "$INDEX_GEN" ] && printf '%s\n' "$STAGED_ALL" | grep -qE "$INDEX_SCOPE"; then
+  if ! "$PY" "$INDEX_GEN" --output "$REPO/INDEX.md" --check >/dev/null 2>&1; then
+    INDEX_PATHS=(INDEX.md)
+    mapfile -t INDEX_ROOTS < <(cd "$REPO" && "$PY" -c 'from framework.indexing.cli import DEFAULT_ROOTS as roots; print("\n".join(roots))' 2>/dev/null)
+    for index_root in "${INDEX_ROOTS[@]}"; do
+      INDEX_PATHS+=("$index_root/INDEX.md")
+    done
+    if ! git cat-file -e HEAD:INDEX.md 2>/dev/null; then
+      echo "[pre-commit] WARN: INDEX.md out of sync and not committed yet — run: python -m framework.indexing.cli --output INDEX.md && git add ${INDEX_PATHS[*]}" >&2
+    elif "$PY" "$INDEX_GEN" --output "$REPO/INDEX.md" >/dev/null 2>&1; then
+      INDEX_STAGE=()
+      INDEX_ADDED=()
+      for index_path in "${INDEX_PATHS[@]}"; do
+        if [ -f "$REPO/$index_path" ]; then
+          git cat-file -e "HEAD:$index_path" 2>/dev/null || INDEX_ADDED+=("$index_path")
+          INDEX_STAGE+=("$index_path")
+        fi
+      done
+      if [ "${#INDEX_STAGE[@]}" -gt 0 ]; then
+        git add -- "${INDEX_STAGE[@]}"
+        echo "[pre-commit] INDEX.md refreshed and re-staged (${#INDEX_STAGE[@]} file(s))."
+      fi
+      if [ "${#INDEX_ADDED[@]}" -gt 0 ]; then
+        echo "[pre-commit] NOTE: new index file(s) committed by this index refresh: ${INDEX_ADDED[*]}"
+      fi
+      declare -A INDEX_FAMILY=()
+      for index_path in "${INDEX_PATHS[@]}"; do
+        INDEX_FAMILY["$index_path"]=1
+      done
+      INDEX_ORPHAN=()
+      while IFS= read -r index_candidate; do
+        if [ -z "${INDEX_FAMILY[$index_candidate]:-}" ]; then
+          INDEX_ORPHAN+=("$index_candidate")
+        fi
+      done < <(git ls-tree -r --name-only HEAD | grep -E '^[^/]+/INDEX\.md$' || true)
+      if [ "${#INDEX_ORPHAN[@]}" -gt 0 ]; then
+        echo "[pre-commit] NOTE: committed index file(s) the generator no longer writes, remove them deliberately: ${INDEX_ORPHAN[*]}" >&2
+      fi
+    else
+      echo "[pre-commit] WARN: index refresh failed (generator error) — index left untouched" >&2
+    fi
+  fi
+fi
+
+exit 0

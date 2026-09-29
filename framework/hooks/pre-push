@@ -1,0 +1,90 @@
+#!/usr/bin/env bash
+# Advisory pre-push — installed with the pre-commit hook, but never blocking.
+#
+# The blocking decisions live in framework/hooks/pre-commit; this hook is the
+# whole-tree backstop for findings a staged-only check cannot see (dead code,
+# secrets outside the diff, ledger freshness, index drift). Every step warns and
+# the hook always exits 0, so a push is never refused for an advisory finding.
+set -uo pipefail
+
+REPO="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+HARNESS="$REPO/framework/harness.py"
+PY_BOOT="$(command -v python3 || command -v python || true)"
+if [ -f "$HARNESS" ] && [ -n "$PY_BOOT" ]; then
+  PY="$("$PY_BOOT" "$HARNESS" --get python)"
+  VENV="$("$PY_BOOT" "$HARNESS" --get venv)"
+else
+  PY="${PY_BOOT:-python3}"
+  VENV="$(dirname "$(dirname "$PY")")"
+fi
+RUFF="${RUFF_BIN:-$HOME/.local/bin/ruff}"
+
+echo "[pre-push:strict] advisory gates (non-blocking; exit 0 always)"
+
+# 1. ruff on the files this push adds, with the repository configuration
+if [ -x "$RUFF" ]; then
+  CHANGED=$(git diff --name-only origin/HEAD...HEAD 2>/dev/null | grep -E '\.py$' || true)
+  if [ -n "$CHANGED" ]; then
+    # shellcheck disable=SC2086
+    (cd "$REPO" && "$RUFF" check --statistics $CHANGED 2>&1 | head -n 12) || true
+  fi
+fi
+
+# 2. import layer contract (lint-imports), when the project declares one
+if [ -x "$VENV/bin/lint-imports" ]; then
+  (cd "$REPO" && "$VENV/bin/lint-imports" 2>&1 | tail -n 25) || true
+fi
+
+# 3. governance mirrors (AGENTS.md -> CLAUDE.md/.agents)
+if [ -x "$REPO/framework/gates/checks/sync_agents_mirrors.py" ]; then
+  "$PY" "$REPO/framework/gates/checks/sync_agents_mirrors.py" --check || \
+    echo "[pre-push:strict] WARN: mirrors diverged — run: python framework/gates/checks/sync_agents_mirrors.py" >&2
+fi
+
+# 4. dead code (informational; research code has deliberate entrypoints)
+if [ -x "$VENV/bin/vulture" ]; then
+  (cd "$REPO" && "$VENV/bin/vulture" scripts framework --min-confidence 90 2>&1 | head -n 20) || true
+fi
+
+# 5. secrets scan against the baseline (informational). Scan against a throwaway
+#    copy: detect-secrets rewrites whatever baseline it is handed, and a tree
+#    left dirty by a push blocks every submit on the dirty-tree gate.
+if [ -x "$VENV/bin/detect-secrets" ] && [ -f "$REPO/.secrets.baseline" ]; then
+  cd "$REPO" || exit 0
+  baseline_copy=$(mktemp)
+  cp "$REPO/.secrets.baseline" "$baseline_copy"
+  "$VENV/bin/detect-secrets" scan --all-files \
+    --exclude-files 'third_party/|results/|\.git/' \
+    --baseline "$baseline_copy" >/dev/null 2>&1 && \
+    echo "[pre-push:strict] secrets: no new secrets vs baseline" || \
+    echo "[pre-push:strict] WARN: NEW SECRETS detected vs baseline — inspect: detect-secrets scan --baseline .secrets.baseline" >&2
+  rm -f "$baseline_copy"
+fi
+
+# 6. coverage clearance ledger freshness (static: hashes only, no test run).
+#    The blocking clearance decision lives in the pre-commit hook; the expensive
+#    full audit is manual:
+#      python framework/gates/check_coverage.py --mode all --strict
+if [ -f "$REPO/framework/gates/check_coverage.py" ]; then
+  "$PY" "$REPO/framework/gates/check_coverage.py" --mode all --evidence-only 2>&1 | tail -n 5 || \
+    echo "[pre-push:strict] WARN: coverage evidence missing/stale — refresh: python framework/gates/check_coverage.py --update-baseline" >&2
+fi
+
+# 7. code-size limits audit (report only; the blocking decision is pre-commit)
+if [ -f "$REPO/framework/gates/limits/check_limits.py" ]; then
+  "$PY" "$REPO/framework/gates/limits/check_limits.py" --mode all 2>&1 | tail -n 8 || \
+    echo "[pre-push:strict] WARN: code-size limits audit did not run" >&2
+fi
+
+# 8. architectural index (INDEX.md) freshness
+if [ -f "$REPO/framework/indexing/cli.py" ]; then
+  index_log=$(mktemp)
+  if ! "$PY" "$REPO/framework/indexing/cli.py" --output "$REPO/INDEX.md" --check >"$index_log" 2>&1; then
+    echo "[pre-push:strict] WARN: INDEX.md out of sync — run: python -m framework.indexing.cli --output INDEX.md" >&2
+    tail -n 5 "$index_log" >&2
+  fi
+  rm -f "$index_log"
+fi
+
+echo "[pre-push:strict] advisory complete (non-blocking)"
+exit 0

@@ -1,0 +1,120 @@
+[project]
+name = "research-template"
+version = "0.1.0"
+description = "A gated research harness: provenance, parameters, size limits and coverage enforced by commit gates."
+# The harness itself (framework/, gates, hooks) is stdlib-only; the example
+# package has no dependencies either. Add the project's real dependencies here.
+requires-python = ">=3.11"
+dependencies = []
+
+[project.scripts]
+research-plan = "research.probe.plan:main"
+
+[tool.setuptools.packages.find]
+include = ["research*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+python_files = ["test_*.py", "tests_*.py"]
+addopts = ["--import-mode=importlib"]
+
+[tool.mutmut]
+# Mutation testing is a commit gate: the pre-commit hook (step 5d5) refuses a
+# staged module in this population that has no cleared evidence. The gate lives
+# in framework/gates/mutation/ and the ledger in framework/mutation_evidence.json.
+# Refresh (mutmut forks a test pass per uncached mutant, under its own cache):
+#   python framework/gates/mutation/check_mutation.py --mode staged --staged <files>
+#   git add framework/mutation_evidence.json <files>
+# The hook itself only reads the ledger and the Git index, so committing stays
+# sub-second. `source_paths` is what mutmut copies into mutants/ (imports must
+# resolve there), `only_mutate` is the population the gate owns (editing it makes
+# the recorded evidence stale), and `pytest_add_cli_args_test_selection` bounds
+# the tests mutmut maps mutants against (per mutant it then runs the covering
+# tests only).
+#   mutmut run --max-children 8   # generate + score mutants
+#   mutmut results                # survivors == tests that missed a real change
+#   mutmut show <mutant_name>     # the exact change a survivor hides
+# Any survivor is a finding, and a `no tests` line is a coverage hole: close it
+# with a real assertion, or — when the mutation cannot change behaviour for any
+# input the module accepts — with an explicit `# pragma: no mutate` on the
+# mutated line in the commit that touches the file. There is no allowlist, no
+# baseline, no environment variable and no skip flag: the ledger is evidence,
+# not an exemption list. Enroll a new module by adding it to `only_mutate` and
+# refreshing the ledger.
+source_paths = ["research"]
+only_mutate = ["research/params/*.py", "research/probe/*.py"]
+pytest_add_cli_args = ["tests/research/params", "tests/research/probe", "-q", "--no-header"]
+pytest_add_cli_args_test_selection = ["tests/research/params", "tests/research/probe", "-q", "--no-header"]
+# Pin BLAS/OMP threads when a run is heavy: mutmut forks pytest workers, and
+# unpinned numeric libraries on a large node oversubscribe and turn fast tests
+# into spurious timeouts:
+#   OMP_NUM_THREADS=1 MKL_NUM_THREADS=1 mutmut run --max-children 8
+
+[tool.ruff]
+# Vendored trees are not ours to lint or reformat: third_party/ holds verbatim
+# source copies whose hashes are recorded in third_party/README.md, and rewriting
+# them would falsify that provenance. Mirrors the pre-push detect-secrets
+# --exclude-files list.
+extend-exclude = ["third_party"]
+# ...also when a vendored path is passed explicitly (the pre-commit hook hands
+# ruff the staged file list, which would otherwise bypass extend-exclude).
+force-exclude = true
+
+[tool.ruff.lint]
+# Keep the default rules (E, F, W, I) and wire in the antipattern and AI
+# bug-trap rules that the antipattern gate also enforces textually.
+extend-select = [
+    # Production antipattern equivalents (from check_antipatterns.py)
+    "B905",     # zip(..., strict=True) [HNS003]
+    "BLE001",   # Blind except Exception: [HNS005]
+    "PLW1510",  # subprocess.run without check=True [HNS018]
+    "DTZ005",   # datetime.now() without timezone [HNS023]
+    "S506",     # Unsafe yaml.load [HNS024]
+    "S102",     # exec() [HNS016]
+
+    # High-signal AI bug traps
+    "B006",     # Mutable default argument (def f(x=[]))
+    "B018",     # Useless expression (e.g. tensor.squeeze() or x.cpu() discarded)
+    "B023",     # Late-binding loop variable capture in closures/hooks
+    "B033",     # Duplicate set elements
+    "F601",     # Duplicate dictionary keys
+    "ISC001",   # Implicit string concat (missing commas in lists: ["a", "b" "c"])
+]
+
+# Logic rules that must be resolved manually, never guessed by automated fixes
+unfixable = [
+    "B905",
+    "BLE001",
+]
+
+[tool.ruff.lint.isort]
+# The harness's own modules are first-party: without this, ruff classifies them
+# as third-party and demands they be sorted among the installed packages.
+known-first-party = ["research", "framework", "experiments", "scripts"]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests use assert statements and test fixtures often use relaxed zip()
+"tests/**" = ["B905", "S101"]
+# Exploratory scripts with relaxed zip()
+"experiments/**" = ["B905"]
+
+[tool.research.contracts]
+# Subtrees or path prefixes subject to Two-Tier docstring contract enforcement on-touch
+enforce-paths = [
+    "research",
+    "framework",
+    "scripts",
+]
+# File patterns excluded from invariant requirements (e.g. test files, __init__.py)
+exclude-patterns = [
+    "*/tests/*",
+    "tests/*",
+    "test_*.py",
+    "tests_*.py",
+    "__init__.py",
+]
+max-thumbnail-chars = 140
+required-sections = [
+    "Invariants & Expected State",
+]

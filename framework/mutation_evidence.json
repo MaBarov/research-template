@@ -1,0 +1,124 @@
+{
+  "modules": {
+    "research/params/__init__.py": {
+      "content_sha256": "88619ebf2e5350df0857c4303b3a42b007204fca1643c3bce3116865461a54be",
+      "killed": 0,
+      "mutants": 0,
+      "mutmut_version": "python -m mutmut, version 3.8.0",
+      "recorded_at": "2026-09-28T23:50:04+00:00",
+      "skipped": 0
+    },
+    "research/params/registry.py": {
+      "content_sha256": "cb7a07ee08324c8b8fc772f1081540e1f293de9a918e13b7e09ae41a2d6f0f54",
+      "killed": 1,
+      "killed_names": [
+        "research.params.registry.x_by_env__mutmut_1"
+      ],
+      "mutants": 1,
+      "mutmut_version": "python -m mutmut, version 3.8.0",
+      "recorded_at": "2026-09-28T23:50:04+00:00",
+      "skipped": 0
+    },
+    "research/params/resolve.py": {
+      "content_sha256": "41165772dd775ed3299ba3593ae5525ecabd5dd08171b5642aef47163ac02b78",
+      "killed": 17,
+      "killed_names": [
+        "research.params.resolve.x_ambient__mutmut_1",
+        "research.params.resolve.x_ambient__mutmut_2",
+        "research.params.resolve.x_ambient__mutmut_3",
+        "research.params.resolve.x_ambient__mutmut_4",
+        "research.params.resolve.x_default__mutmut_1",
+        "research.params.resolve.x_float_param__mutmut_1",
+        "research.params.resolve.x_float_param__mutmut_2",
+        "research.params.resolve.x_int_param__mutmut_1",
+        "research.params.resolve.x_int_param__mutmut_2",
+        "research.params.resolve.x_path_param__mutmut_1",
+        "research.params.resolve.x_path_param__mutmut_2",
+        "research.params.resolve.x_seed__mutmut_1",
+        "research.params.resolve.x_seed__mutmut_2",
+        "research.params.resolve.x_seed__mutmut_3",
+        "research.params.resolve.x_str_param__mutmut_1",
+        "research.params.resolve.x_str_param__mutmut_2",
+        "research.params.resolve.x_str_param__mutmut_3"
+      ],
+      "mutants": 17,
+      "mutmut_version": "python -m mutmut, version 3.8.0",
+      "recorded_at": "2026-09-28T23:50:04+00:00",
+      "skipped": 0
+    },
+    "research/probe/__init__.py": {
+      "content_sha256": "176d75a0e2c5865bd60e5da2ef79224d838a4643fe4b7ed70f113e51910a67de",
+      "killed": 0,
+      "mutants": 0,
+      "mutmut_version": "python -m mutmut, version 3.8.0",
+      "recorded_at": "2026-09-28T23:50:04+00:00",
+      "skipped": 0
+    },
+    "research/probe/plan.py": {
+      "content_sha256": "85ac813f011d1ea2dc960a841028c21d5bffcb31369ef275e37a5313051ceb23",
+      "killed": 25,
+      "killed_names": [
+        "research.probe.plan.x__parse_args__mutmut_1",
+        "research.probe.plan.x_build_plan__mutmut_1",
+        "research.probe.plan.x_build_plan__mutmut_10",
+        "research.probe.plan.x_build_plan__mutmut_11",
+        "research.probe.plan.x_build_plan__mutmut_12",
+        "research.probe.plan.x_build_plan__mutmut_13",
+        "research.probe.plan.x_build_plan__mutmut_14",
+        "research.probe.plan.x_build_plan__mutmut_15",
+        "research.probe.plan.x_build_plan__mutmut_16",
+        "research.probe.plan.x_build_plan__mutmut_2",
+        "research.probe.plan.x_build_plan__mutmut_3",
+        "research.probe.plan.x_build_plan__mutmut_4",
+        "research.probe.plan.x_build_plan__mutmut_5",
+        "research.probe.plan.x_build_plan__mutmut_6",
+        "research.probe.plan.x_build_plan__mutmut_7",
+        "research.probe.plan.x_build_plan__mutmut_8",
+        "research.probe.plan.x_build_plan__mutmut_9",
+        "research.probe.plan.x_main__mutmut_1",
+        "research.probe.plan.x_main__mutmut_2",
+        "research.probe.plan.x_main__mutmut_3",
+        "research.probe.plan.x_main__mutmut_4",
+        "research.probe.plan.x_main__mutmut_5",
+        "research.probe.plan.x_main__mutmut_6",
+        "research.probe.plan.x_main__mutmut_7",
+        "research.probe.plan.x_main__mutmut_8"
+      ],
+      "mutants": 25,
+      "mutmut_version": "python -m mutmut, version 3.8.0",
+      "recorded_at": "2026-09-28T23:50:04+00:00",
+      "skipped": 0
+    },
+    "research/runtime/device.py": {
+      "content_sha256": "0f2d3db8757682d2e2126e91d4fb69f6e40cb8b6a2be4895e5b00f251b750194",
+      "killed": 11,
+      "killed_names": [
+        "research.runtime.device.x_require_device__mutmut_1",
+        "research.runtime.device.x_require_device__mutmut_10",
+        "research.runtime.device.x_require_device__mutmut_11",
+        "research.runtime.device.x_require_device__mutmut_2",
+        "research.runtime.device.x_require_device__mutmut_3",
+        "research.runtime.device.x_require_device__mutmut_4",
+        "research.runtime.device.x_require_device__mutmut_5",
+        "research.runtime.device.x_require_device__mutmut_6",
+        "research.runtime.device.x_require_device__mutmut_7",
+        "research.runtime.device.x_require_device__mutmut_8",
+        "research.runtime.device.x_require_device__mutmut_9"
+      ],
+      "mutants": 11,
+      "mutmut_version": "python -m mutmut, version 3.8.0",
+      "recorded_at": "2026-09-28T14:01:35+00:00",
+      "skipped": 0
+    }
+  },
+  "mutmut_version": "python -m mutmut, version 3.8.0",
+  "population": {
+    "do_not_mutate": [],
+    "only_mutate": [
+      "research/params/*.py",
+      "research/probe/*.py"
+    ]
+  },
+  "recorded_at": "2026-09-28T23:50:04+00:00",
+  "schema": "research.mutation-evidence.v1"
+}

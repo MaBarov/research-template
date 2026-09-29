@@ -1,0 +1,45 @@
+{
+  "files": {
+    "research/params/registry.py": {
+      "cleared": true,
+      "loops_uncovered": [],
+      "measured": true,
+      "self": 100.0,
+      "statements": 26,
+      "structure": "0a59b543fab3533cadb15e6e79b4b3fbe57ca30d409e888741d37cee002adf75",
+      "suite": 100.0,
+      "tests": {
+        "tests/research/params/tests_registry.py": "ff5dc7566f73f8515c547a116222dd1f9d26ef072ef48d4025273a66787ea43a"
+      },
+      "waivers": {}
+    },
+    "research/params/resolve.py": {
+      "cleared": true,
+      "loops_uncovered": [],
+      "measured": true,
+      "self": 95.2,
+      "statements": 21,
+      "structure": "2f1ab0eb96a1d2d9fc640b422ded20dad9a8152aa620cb1aa71387fe3c6e5e26",
+      "suite": 95.2,
+      "tests": {
+        "tests/research/params/tests_resolve.py": "ee0cc906e20e316f05a735d44b2ce8fc142eb70a9a94765d38ba609824e163aa"
+      },
+      "waivers": {}
+    },
+    "research/probe/plan.py": {
+      "cleared": true,
+      "loops_uncovered": [],
+      "measured": true,
+      "self": 96.2,
+      "statements": 26,
+      "structure": "7b9297737a9978fa2e76add20f39f842e6bab697d453d157f3521ecf09e45189",
+      "suite": 96.2,
+      "tests": {
+        "tests/research/probe/tests_plan.py": "4c129644bda7b18859e877d11030951c79c9cb3c42005ce91eeab413fd1acbda"
+      },
+      "waivers": {}
+    }
+  },
+  "generated_by": "framework/gates/check_coverage.py",
+  "schema": "research.coverage-evidence.v1"
+}

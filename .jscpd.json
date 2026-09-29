@@ -1,0 +1,25 @@
+{
+  "minLines": 10,
+  "minTokens": 50,
+  "mode": "mild",
+  "formats": ["python", "bash"],
+  "ignore": [
+    "**/node_modules/**",
+    "**/.git/**",
+    "**/__pycache__/**",
+    "**/third_party/**",
+    "**/results/**",
+    "**/notes/**",
+    "**/models/**",
+    "**/cache/**",
+    "**/datasets/**",
+    "**/experiments/**",
+    "**/*.json",
+    "**/*.md",
+    "**/*.log",
+    "**/*.pt",
+    "**/*.safetensors",
+    "**/*.csv"
+  ],
+  "reporters": ["console"]
+}

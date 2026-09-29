@@ -1,0 +1,33 @@
+{
+  "files": {
+    "research/params/registry.py": {
+      "loops_uncovered": [],
+      "measured": true,
+      "self": 100.0,
+      "statements": 26,
+      "suite": 100.0
+    },
+    "research/params/resolve.py": {
+      "loops_uncovered": [],
+      "measured": true,
+      "self": 95.2,
+      "statements": 21,
+      "suite": 95.2
+    },
+    "research/probe/plan.py": {
+      "loops_uncovered": [],
+      "measured": true,
+      "self": 96.2,
+      "statements": 26,
+      "suite": 96.2
+    }
+  },
+  "generated": {
+    "coverage": "7.16.1",
+    "python": "3.11.15",
+    "tests": "tests/research"
+  },
+  "loop_criterion": "0-1-many",
+  "min_coverage": 80.0,
+  "schema": "research.coverage-baseline.v1"
+}

@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+# sacct shim for clusters that run with accounting disabled.
+#
+# sprint answers `sacct` with "Slurm accounting storage is disabled" and an
+# empty record, so a state poll can never observe a job finish and the canary
+# gate aborts every submission it is asked to protect. This shim answers the one
+# query shape the canary gate issues --
+#
+#   sacct -j <jobid> -X -n -o State,ExitCode
+#
+# -- from the controller's own record (`scontrol show job -o`), which stays
+# readable for MinJobAge seconds after a job ends. An unreadable, stale, or
+# unsupported query prints nothing, exactly like an accounting store holding no
+# row for the job, so callers keep their own unknown-state handling.
+#
+# Wired in by framework/gates/sbatch_gate.sh, on PATH for the canary-gate
+# process only. Remove the wiring and this file when the controller stores
+# accounting again -- or fold the same fallback into canary_gate._poll, which
+# cannot land while framework/gates/ is over the module-count limit (LMT003).
+set -euo pipefail
+
+jobid=""
+format=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    -j | --jobs) jobid="${2:-}"; shift 2 ;;
+    --jobs=*) jobid="${1#*=}"; shift ;;
+    -o | --format) format="${2:-}"; shift 2 ;;
+    --format=*) format="${1#*=}"; shift ;;
+    *) shift ;;
+  esac
+done
+
+if [ -z "$jobid" ]; then
+  exit 0
+fi
+
+case "$format" in
+  *State*ExitCode* | *ExitCode*State*) ;;
+  *) exit 0 ;;
+esac
+
+if ! record=$(scontrol show job "$jobid" -o 2>/dev/null); then
+  exit 0
+fi
+
+state=""
+exitcode=""
+for token in $record; do
+  case "$token" in
+    JobState=*) state="${token#JobState=}" ;;
+    ExitCode=*) exitcode="${token#ExitCode=}" ;;
+  esac
+done
+
+if [ -z "$state" ]; then
+  exit 0
+fi
+
+printf '%s %s\n' "${state%%+*}" "${exitcode:-0:0}"
