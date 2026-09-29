@@ -3,7 +3,7 @@
 > [!NOTE]
 > Master architectural directory. Sub-indices are maintained for major subtrees. Use the sub-index links and line ranges below to load target sections into context.
 
-**Repository Statistics**: 83 modules | 34 classes | 574 public functions.
+**Repository Statistics**: 84 modules | 34 classes | 579 public functions.
 
 ## Master Table of Contents
 
@@ -39,9 +39,9 @@
 - [`research/params`](research/INDEX.md#L15-L42) (lines 15–42 in `research/INDEX.md`) — *Parameter registry and its runtime accessors (the worked example of the params rule).*
 - [`research/probe`](research/INDEX.md#L43-L53) (lines 43–53 in `research/INDEX.md`) — *Example production package: a dependency-free plan builder.*
 
-### [`scripts/INDEX.md`](scripts/INDEX.md) — 14 modules | 115 symbols
+### [`scripts/INDEX.md`](scripts/INDEX.md) — 15 modules | 120 symbols
 
-- [`scripts/setup`](scripts/INDEX.md#L16-L77) (lines 16–77 in `scripts/INDEX.md`) — *Framework wiring, scaffolding, and hook installation tools.*
-- [`scripts/slurm_queue`](scripts/INDEX.md#L78-L268) (lines 78–268 in `scripts/INDEX.md`) — *Durable draining queue for Research sbatch jobs (model, store, submit, CLI, worker).*
-- [`scripts/slurm_queue/worker`](scripts/INDEX.md#L269-L359) (lines 269–359 in `scripts/INDEX.md`) — *Drain one Slurm lane allocation.*
+- [`scripts/setup`](scripts/INDEX.md#L16-L90) (lines 16–90 in `scripts/INDEX.md`) — *Framework wiring, scaffolding, and hook installation tools.*
+- [`scripts/slurm_queue`](scripts/INDEX.md#L91-L281) (lines 91–281 in `scripts/INDEX.md`) — *Durable draining queue for Research sbatch jobs (model, store, submit, CLI, worker).*
+- [`scripts/slurm_queue/worker`](scripts/INDEX.md#L282-L372) (lines 282–372 in `scripts/INDEX.md`) — *Drain one Slurm lane allocation.*
 

@@ -39,6 +39,12 @@ CODE_PREFIX = "HNS"
 # ``pyproject.toml``.
 PYTHON_FLOOR = "3.11"
 
+# Name-level search order for a floor interpreter on ``PATH``, after an
+# explicit override and the checkout venv. Mirrored by the shell resolver in
+# ``scripts/smoke/lib/interpreter.sh``, which cannot import this module; every
+# other consumer reads it here.
+INTERPRETER_CANDIDATES = ("python3.13", "python3.12", "python3.11", "python3")
+
 # Schema ids of the provenance artifacts (run manifest, its metrics sidecar and
 # the canary receipt). The writer and every validator read them from here, so a
 # renamed project cannot end up with a writer and a validator that disagree.

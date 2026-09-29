@@ -7,6 +7,29 @@ description = "A gated research harness: provenance, parameters, size limits and
 requires-python = ">=3.11"
 dependencies = []
 
+# The toolchain the hooks and gates invoke: `pip install -e ".[dev]"`.
+# Every entry is imported or executed by framework/hooks/*, framework/gates/*
+# or scripts/setup/bootstrap.py; the gates that need an external binary
+# (jscpd, dvc) degrade with a note instead of failing closed, so they are not
+# declared here.
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "coverage",
+    "mutmut",
+    "ruff",
+    "rope",
+    "pyflakes",
+    "vulture",
+    "detect-secrets",
+]
+# Documentation-chain tools: without them the adjudication gate refuses a run
+# that claims a doc chain, rather than passing it vacuously.
+docs = [
+    "dvc",
+    "mlflow",
+]
+
 [project.scripts]
 research-plan = "research.probe.plan:main"
 

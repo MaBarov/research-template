@@ -3,17 +3,30 @@
 > [!NOTE]
 > Sub-index for the `scripts` package hierarchy. Use the line ranges below to load specific sections directly into context.
 
-**Repository Statistics**: 14 modules | 18 classes | 97 public functions.
+**Repository Statistics**: 15 modules | 18 classes | 102 public functions.
 
 ## Table of Contents
 
-- [`scripts/setup`](#package-scriptssetup) (lines 16–77) — *Framework wiring, scaffolding, and hook installation tools.*
-- [`scripts/slurm_queue`](#package-scriptsslurm-queue) (lines 78–268) — *Durable draining queue for Research sbatch jobs (model, store, submit, CLI, worker).*
-- [`scripts/slurm_queue/worker`](#package-scriptsslurm-queueworker) (lines 269–359) — *Drain one Slurm lane allocation.*
+- [`scripts/setup`](#package-scriptssetup) (lines 16–90) — *Framework wiring, scaffolding, and hook installation tools.*
+- [`scripts/slurm_queue`](#package-scriptsslurm-queue) (lines 91–281) — *Durable draining queue for Research sbatch jobs (model, store, submit, CLI, worker).*
+- [`scripts/slurm_queue/worker`](#package-scriptsslurm-queueworker) (lines 282–372) — *Drain one Slurm lane allocation.*
 
 ---
 
 ## Package `scripts/setup` — *Framework wiring, scaffolding, and hook installation tools.*
+
+- [`scripts/setup/bootstrap.py`](scripts/setup/bootstrap.py) (138 lines)
+  * *Module Purpose*: One-command bootstrap: floor interpreter, venv, toolchain, hooks, example suite.
+  * [`at_floor(interpreter: str) -> bool`](scripts/setup/bootstrap.py#L53-L59)
+    * *Contract*: Return whether ``interpreter`` runs and meets the harness floor.
+  * [`pick_interpreter(explicit: str | None) -> str`](scripts/setup/bootstrap.py#L62-L76)
+    * *Contract*: Return the interpreter to build the venv with, or fail with the floor message.
+  * [`build_steps(interpreter: str, skip_install: bool, skip_suite: bool) -> list[list[str]]`](scripts/setup/bootstrap.py#L79-L95)
+    * *Contract*: Return the commands to run, in order, for the resolved interpreter.
+  * [`run_step(step: list[str], dry_run: bool) -> None`](scripts/setup/bootstrap.py#L98-L111)
+    * *Contract*: Print and run one step, stopping the bootstrap when it fails or overruns.
+  * [`main(argv: list[str] | None) -> int`](scripts/setup/bootstrap.py#L114-L134)
+    * *Contract*: Resolve the interpreter, run every step in order, report the next action.
 
 - [`scripts/setup/check_framework_wiring.py`](scripts/setup/check_framework_wiring.py) (114 lines)
   * *Module Purpose*: Verify that the imported repository framework is wired into this worktree.

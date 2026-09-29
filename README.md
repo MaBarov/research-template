@@ -33,8 +33,8 @@ What you get:
 | | |
 | --- | --- |
 | Required | Python **≥ 3.11**, `git`. The floor is declared once (`PYTHON_FLOOR`, `requires-python`) and every hook, smoke driver and submit gate refuses below it. |
-| Hook tooling | `pytest`, `coverage`, `mutmut`, `ruff`, `rope` (`pip install -e . pytest coverage mutmut ruff rope`). |
-| Optional | `dvc` and `mlflow` for the documentation-chain gate; without them the gate refuses with the install hint instead of passing vacuously. |
+| Hook tooling | Declared once in `pyproject.toml` (`[project.optional-dependencies]`): `pip install -e ".[dev]"` pulls `pytest`, `coverage`, `mutmut`, `ruff`, `rope`, `pyflakes`, `vulture`, `detect-secrets`. |
+| Optional | `dvc` and `mlflow` (`pip install -e ".[docs]"`) for the documentation-chain gate; without them the gate refuses with the install hint instead of passing vacuously. The advisory tools degrade quietly: the duplication gate reports a note when the `jscpd` binary (npm) is absent, and the pre-push steps for `vulture`/`detect-secrets`/`lint-imports` run only when those binaries exist. |
 | Not needed | A GPU, a scheduler, or any network service to run the harness itself. |
 
 ## Quickstart
@@ -42,14 +42,22 @@ What you get:
 ```bash
 git clone https://github.com/MaBarov/research-template my-project && cd my-project
 
-python3 -m venv .venv                      # 3.11+; use python3.11/3.12 if your python3 is older
-.venv/bin/python -m pip install -e . pytest coverage mutmut ruff rope
+# One command: venv at the floor, the dev extra, hooks, wiring check, example suite.
+python scripts/setup/bootstrap.py          # add --dry-run to see the plan first
 
+.venv/bin/python -m framework.indexing.cli --output INDEX.md
+```
+
+The bootstrap resolves its interpreter as `.venv`, then `--interpreter`, then
+`python3.13`…`python3` on `PATH`, and refuses anything below the floor. To drive
+the steps yourself:
+
+```bash
+python3 -m venv .venv                      # 3.11+; use python3.11/3.12 if your python3 is older
+.venv/bin/python -m pip install -e ".[dev]"
 python scripts/setup/setup_framework.py    # core.hooksPath = framework/hooks
 python scripts/setup/check_framework_wiring.py
-
 .venv/bin/python -m pytest tests -q                 # the example suite
-.venv/bin/python -m framework.indexing.cli --output INDEX.md
 ```
 
 ## Adopt it for your project

@@ -32,25 +32,25 @@
 
 ## Package `framework` — *Repository gate framework (hooks + checkers).*
 
-- [`framework/harness.py`](framework/harness.py) (237 lines)
+- [`framework/harness.py`](framework/harness.py) (243 lines)
   * *Module Purpose*: Single registry for the project identity, path roots and interpreter the harness uses.
-  * [`env(name: str) -> str`](framework/harness.py#L78-L81)
+  * [`env(name: str) -> str`](framework/harness.py#L84-L87)
     * *Contract*: Return the canonical env-var spelling of a harness parameter.
-  * [`env_regex() -> str`](framework/harness.py#L84-L87)
+  * [`env_regex() -> str`](framework/harness.py#L90-L93)
     * *Contract*: Return the ERE that matches every canonical env var of this project.
-  * [`venv() -> str`](framework/harness.py#L90-L99)
+  * [`venv() -> str`](framework/harness.py#L96-L105)
     * *Contract*: Return the interpreter directory: override, per-cluster, or the checkout venv.
-  * [`python() -> str`](framework/harness.py#L126-L144)
+  * [`python() -> str`](framework/harness.py#L132-L150)
     * *Contract*: Return the project interpreter: env override, venv binary, else this one.
-  * [`deploy_root() -> str`](framework/harness.py#L147-L150)
+  * [`deploy_root() -> str`](framework/harness.py#L153-L156)
     * *Contract*: Return the checkout the jobs import: env override, else this repository.
-  * [`mlflow_uri() -> str`](framework/harness.py#L153-L156)
+  * [`mlflow_uri() -> str`](framework/harness.py#L159-L162)
     * *Contract*: Return the MLflow tracking URI: env override, else this checkout's mlruns dir.
-  * [`dvc_bin() -> str`](framework/harness.py#L159-L166)
+  * [`dvc_bin() -> str`](framework/harness.py#L165-L172)
     * *Contract*: Return the DVC executable: env override, the venv binary, else ``dvc`` on PATH.
-  * [`scope_regex(roots: tuple[str, ...], suffix: str) -> str`](framework/harness.py#L169-L173)
+  * [`scope_regex(roots: tuple[str, ...], suffix: str) -> str`](framework/harness.py#L175-L179)
     * *Contract*: Return an ERE anchoring ``roots`` (plus optional per-root suffix) at the start.
-  * [`main(argv: list[str]) -> int`](framework/harness.py#L217-L233)
+  * [`main(argv: list[str]) -> int`](framework/harness.py#L223-L239)
     * *Contract*: Print one key (``--get``) or the hook assignments (``--shell``).
 
 ## Package `framework/gates` — *Blocking and advisory repository gates.*
