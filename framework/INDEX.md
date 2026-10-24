@@ -3,33 +3,35 @@
 > [!NOTE]
 > Sub-index for the `framework` package hierarchy. Use the line ranges below to load specific sections directly into context.
 
-**Repository Statistics**: 71 modules | 14 classes | 553 public functions.
+**Repository Statistics**: 74 modules | 15 classes | 583 public functions.
 
 ## Table of Contents
 
-- [`framework`](#package-framework) (lines 36–60) — *Repository gate framework (hooks + checkers).*
-- [`framework/gates`](#package-frameworkgates) (lines 61–88) — *Blocking and advisory repository gates.*
-- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 89–122) — *Internals of the production anti-pattern gate.*
-- [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 123–131) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
-- [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 132–138) — *Liveness checks for the production anti-pattern gate (HNS072).*
-- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 139–219) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
-- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 220–277) — *Internals of the per-file coverage and loop-iteration gate.*
-- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 278–324) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
-- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 325–356)
-- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 357–414)
-- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 415–483) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
-- [`framework/gates/params`](#package-frameworkgatesparams) (lines 484–524) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
-- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 525–529) — *Pure AST and text primitives of the parameter-drift matchers.*
-- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 530–566) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
-- [`framework/indexing`](#package-frameworkindexing) (lines 567–618) — *AST-based repository mapping and Table-of-Contents indexing.*
-- [`framework/tests`](#package-frameworktests) (lines 619–775)
-- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 776–863) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
-- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 864–874) — *Tests for the coverage gate and its probe plugin.*
-- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 875–901) — *Test package for the framework distortion gate.*
-- [`framework/tests/gates`](#package-frameworktestsgates) (lines 902–1012) — *Package.*
-- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1013–1071) — *Tests for the parameter registry gates.*
-- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1072–1088) — *Harness registry tests: project identity and the interpreter floor.*
-- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1089–1137) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework`](#package-framework) (lines 38–62) — *Repository gate framework (hooks + checkers).*
+- [`framework/gates`](#package-frameworkgates) (lines 63–90) — *Blocking and advisory repository gates.*
+- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 91–124) — *Internals of the production anti-pattern gate.*
+- [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 125–133) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
+- [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 134–140) — *Liveness checks for the production anti-pattern gate (HNS072).*
+- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 141–225) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
+- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 226–285) — *Internals of the per-file coverage and loop-iteration gate.*
+- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 286–332) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
+- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 333–364)
+- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 365–422)
+- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 423–528) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
+- [`framework/gates/params`](#package-frameworkgatesparams) (lines 529–569) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
+- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 570–574) — *Pure AST and text primitives of the parameter-drift matchers.*
+- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 575–611) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
+- [`framework/indexing`](#package-frameworkindexing) (lines 612–663) — *AST-based repository mapping and Table-of-Contents indexing.*
+- [`framework/tests`](#package-frameworktests) (lines 664–820)
+- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 821–908) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
+- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 909–919) — *Tests for the coverage gate and its probe plugin.*
+- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 920–946) — *Test package for the framework distortion gate.*
+- [`framework/tests/gates`](#package-frameworktestsgates) (lines 947–1057) — *Package.*
+- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1058–1116) — *Tests for the parameter registry gates.*
+- [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1117–1139) — *Ratchet gates: tables that may only shrink.*
+- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1140–1156) — *Harness registry tests: project identity and the interpreter floor.*
+- [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1157–1165) — *Tests for the hook/test-process boundary.*
+- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1166–1214) — *Tests for framework.indexing Table-of-Contents subsystem.*
 
 ---
 
@@ -147,31 +149,35 @@
   * [`check_bank(path: Path, strict: bool) -> list[str]`](framework/gates/checks/check_contamination.py#L216-L235)
   * [`main(argv: list[str] | None) -> int`](framework/gates/checks/check_contamination.py#L263-L284)
 
-- [`framework/gates/checks/check_duplication.py`](framework/gates/checks/check_duplication.py) (361 lines)
+- [`framework/gates/checks/check_duplication.py`](framework/gates/checks/check_duplication.py) (503 lines)
   * *Module Purpose*: Fail-closed copy-paste detection gate for staged or whole-tree code.
-  * [`class Finding`](framework/gates/checks/check_duplication.py#L47-L57)
+  * [`class Finding`](framework/gates/checks/check_duplication.py#L53-L63)
     * *Contract*: One duplicate code finding reported by the gate.
-    * [`Finding.format(self) -> str`](framework/gates/checks/check_duplication.py#L55-L57)
+    * [`Finding.format(self) -> str`](framework/gates/checks/check_duplication.py#L61-L63)
       * *Contract*: Format finding for terminal or log output.
-  * [`resolve_jscpd_bin(custom_path: str | None) -> str | None`](framework/gates/checks/check_duplication.py#L60-L72)
+  * [`resolve_jscpd_bin(custom_path: str | None) -> str | None`](framework/gates/checks/check_duplication.py#L66-L78)
     * *Contract*: Resolve the path to the jscpd executable.
-  * [`collect_staged_files(repo_root: Path) -> list[str]`](framework/gates/checks/check_duplication.py#L75-L101)
+  * [`collect_staged_files(repo_root: Path) -> list[str]`](framework/gates/checks/check_duplication.py#L81-L107)
     * *Contract*: Retrieve list of staged files suitable for duplication check.
-  * [`build_jscpd_args(jscpd_bin: str, target_paths: Sequence[str], config_path: Path | None, baseline_path: Path | None, update_baseline: bool, output_dir: Path | None) -> list[str]`](framework/gates/checks/check_duplication.py#L104-L125)
+  * [`build_jscpd_args(jscpd_bin: str, target_paths: Sequence[str], config_path: Path | None, baseline_path: Path | None, update_baseline: bool, output_dir: Path | None) -> list[str]`](framework/gates/checks/check_duplication.py#L110-L131)
     * *Contract*: Assemble argument list for the jscpd subprocess invocation.
-  * [`parse_jscpd_json(report_file: Path, baseline_active: bool) -> list[Finding]`](framework/gates/checks/check_duplication.py#L128-L148)
+  * [`parse_jscpd_json(report_file: Path, baseline_active: bool) -> list[Finding]`](framework/gates/checks/check_duplication.py#L134-L154)
     * *Contract*: Parse findings from jscpd JSON report output.
-  * [`parse_stdout_clones(stdout: str, baseline_active: bool) -> list[Finding]`](framework/gates/checks/check_duplication.py#L151-L174)
+  * [`parse_stdout_clones(stdout: str, baseline_active: bool) -> list[Finding]`](framework/gates/checks/check_duplication.py#L157-L180)
     * *Contract*: Parse clone occurrences directly from jscpd stdout lines.
-  * [`run_jscpd(jscpd_bin: str, target_paths: Sequence[str], config_path: Path | None, baseline_path: Path | None, update_baseline: bool, repo_root: Path) -> tuple[int, list[Finding], str]`](framework/gates/checks/check_duplication.py#L194-L223)
+  * [`run_jscpd(jscpd_bin: str, target_paths: Sequence[str], config_path: Path | None, baseline_path: Path | None, update_baseline: bool, repo_root: Path) -> tuple[int, list[Finding], str]`](framework/gates/checks/check_duplication.py#L200-L229)
     * *Contract*: Execute jscpd subprocess and parse clone findings.
-  * [`evaluate_duplication(target_files: Sequence[str], staged: bool, baseline_path: Path | None, update_baseline: bool, config_path: Path | None, custom_jscpd: str | None, repo_root: Path) -> tuple[list[Finding], str]`](framework/gates/checks/check_duplication.py#L255-L284)
+  * [`uncovered_clone_findings(jscpd_bin: str, target_paths: Sequence[str], config_path: Path | None, baseline_path: Path, repo_root: Path) -> list[Finding]`](framework/gates/checks/check_duplication.py#L232-L259)
+    * *Contract*: Locate the clones the committed (HEAD) baseline does not cover.
+  * [`check_baseline_ratchet(repo_root: Path, baseline_path: Path, uncovered: Sequence[Finding]) -> list[Finding]`](framework/gates/checks/check_duplication.py#L314-L330)
+    * *Contract*: Block expansion of the committed jscpd baseline (ratchet-only).
+  * [`evaluate_duplication(target_files: Sequence[str], staged: bool, baseline_path: Path | None, update_baseline: bool, config_path: Path | None, custom_jscpd: str | None, repo_root: Path) -> tuple[list[Finding], str]`](framework/gates/checks/check_duplication.py#L349-L376)
     * *Contract*: Evaluate codebase or target files for duplication violations.
-  * [`parse_args(argv: Sequence[str] | None) -> argparse.Namespace`](framework/gates/checks/check_duplication.py#L316-L322)
+  * [`parse_args(argv: Sequence[str] | None) -> argparse.Namespace`](framework/gates/checks/check_duplication.py#L458-L464)
     * *Contract*: Parse command line options for duplication checker.
-  * [`output_json_report(findings: Sequence[Finding], dest: Path) -> None`](framework/gates/checks/check_duplication.py#L325-L331)
+  * [`output_json_report(findings: Sequence[Finding], dest: Path) -> None`](framework/gates/checks/check_duplication.py#L467-L473)
     * *Contract*: Save findings array to JSON file destination.
-  * [`main(argv: Sequence[str] | None) -> int`](framework/gates/checks/check_duplication.py#L334-L357)
+  * [`main(argv: Sequence[str] | None) -> int`](framework/gates/checks/check_duplication.py#L476-L499)
     * *Contract*: Run duplication evaluation and exit with status code.
 
 - [`framework/gates/checks/check_test_mirror.py`](framework/gates/checks/check_test_mirror.py) (529 lines)
@@ -272,8 +278,10 @@
   * [`evaluate(report: Mapping[str, Any], baseline: Mapping[str, Any] | None, waivers: Mapping[str, Mapping[str, str]], src_files: Sequence[str], aliases: Mapping[str, Sequence[str]], exists: Callable[[str], bool], loop_lines: Mapping[str, Sequence[int]], mirrors: str, mode: str, min_coverage: float) -> list[Finding]`](framework/gates/coverage/metrics.py#L438-L462)
     * *Contract*: Return the per-file findings of one probe report.
 
-- [`framework/gates/coverage/run.py`](framework/gates/coverage/run.py) (423 lines)
+- [`framework/gates/coverage/run.py`](framework/gates/coverage/run.py) (515 lines)
   * *Module Purpose*: Probe invocation: pytest selection, execution and report validation.
+  * [`check_waiver_ratchet(repo: Path, waivers_path: Path, current_waivers: Mapping[str, Mapping[str, str]]) -> list[Finding]`](framework/gates/coverage/run.py#L408-L436)
+    * *Contract*: Block loop-waiver additions absent from HEAD; waivers only shrink.
 
 ## Package `framework/gates/distortion` — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
 
@@ -414,72 +422,109 @@
 
 ## Package `framework/gates/mutation` — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
 
-- [`framework/gates/mutation/check_mutation.py`](framework/gates/mutation/check_mutation.py) (172 lines)
+- [`framework/gates/mutation/check_mutation.py`](framework/gates/mutation/check_mutation.py) (233 lines)
   * *Module Purpose*: Mutation gate CLI: refresh and verify cleared mutmut evidence for staged files.
-  * [`parse_args(argv: Sequence[str] | None) -> argparse.Namespace`](framework/gates/mutation/check_mutation.py#L33-L41)
+  * [`parse_args(argv: Sequence[str] | None) -> argparse.Namespace`](framework/gates/mutation/check_mutation.py#L40-L48)
     * *Contract*: Command line for the mutation gate.
-  * [`main(argv: Sequence[str] | None) -> int`](framework/gates/mutation/check_mutation.py#L154-L168)
+  * [`main(argv: Sequence[str] | None) -> int`](framework/gates/mutation/check_mutation.py#L215-L229)
     * *Contract*: Decide from the ledger, or refresh it, for the staged population.
 
-- [`framework/gates/mutation/evidence.py`](framework/gates/mutation/evidence.py) (293 lines)
+- [`framework/gates/mutation/evidence.py`](framework/gates/mutation/evidence.py) (465 lines)
   * *Module Purpose*: Mutation evidence: content-addressed mutmut verdicts for staged modules.
-  * [`staged_bytes(rel: str) -> bytes | None`](framework/gates/mutation/evidence.py#L65-L70)
+  * [`staged_bytes(rel: str) -> bytes | None`](framework/gates/mutation/evidence.py#L93-L98)
     * *Contract*: The exact bytes the index would commit for ``rel`` (None when unstaged).
-  * [`staged_sha256(rel: str) -> str | None`](framework/gates/mutation/evidence.py#L73-L76)
+  * [`staged_sha256(rel: str) -> str | None`](framework/gates/mutation/evidence.py#L101-L104)
     * *Contract*: sha256 of the staged blob, the address ``rel``'s evidence is keyed by.
-  * [`load_ledger(path: Path | None) -> dict[str, Any]`](framework/gates/mutation/evidence.py#L79-L88)
+  * [`head_bytes(rel: str) -> bytes | None`](framework/gates/mutation/evidence.py#L107-L111)
+    * *Contract*: The bytes HEAD carries for ``rel`` (None when HEAD has no such blob).
+  * [`pragma_lines(text: str) -> dict[str, int]`](framework/gates/mutation/evidence.py#L114-L130)
+    * *Contract*: Map the code text of each ``# pragma: no mutate`` comment to its line.
+  * [`pragma_notes(paths: Sequence[str]) -> list[str]`](framework/gates/mutation/evidence.py#L133-L156)
+    * *Contract*: NOTE the ``# pragma: no mutate`` lines a staged blob adds over HEAD.
+  * [`tests_drift_reason() -> str | None`](framework/gates/mutation/evidence.py#L159-L183)
+    * *Contract*: Why the test surface is not committed as staged, or None when it is.
+  * [`load_ledger(path: Path | None) -> dict[str, Any]`](framework/gates/mutation/evidence.py#L186-L195)
     * *Contract*: Read the evidence ledger; a missing or malformed file reads as empty.
-  * [`save_ledger(data: Mapping[str, Any], path: Path | None) -> None`](framework/gates/mutation/evidence.py#L91-L96)
+  * [`save_ledger(data: Mapping[str, Any], path: Path | None) -> None`](framework/gates/mutation/evidence.py#L198-L203)
     * *Contract*: Write the ledger deterministically, so its diff stays reviewable.
-  * [`config_population() -> tuple[dict[str, list[str]] | None, str | None]`](framework/gates/mutation/evidence.py#L128-L143)
+  * [`config_population() -> tuple[dict[str, list[str]] | None, str | None]`](framework/gates/mutation/evidence.py#L235-L250)
     * *Contract*: The mutated-file population from ``[tool.mutmut]``, or why it is unreadable.
-  * [`match_population(rel: str, population: Mapping[str, list[str]]) -> bool`](framework/gates/mutation/evidence.py#L167-L175)
+  * [`test_selection() -> list[str] | None`](framework/gates/mutation/evidence.py#L253-L260)
+    * *Contract*: The configured ``pytest_add_cli_args_test_selection`` list, or None.
+  * [`tests_sha256() -> str`](framework/gates/mutation/evidence.py#L283-L297)
+    * *Contract*: Digest of the test surface plus the configuration that bounds the run.
+  * [`match_population(rel: str, population: Mapping[str, list[str]]) -> bool`](framework/gates/mutation/evidence.py#L321-L329)
     * *Contract*: True when ``rel`` is mutated: it matches only_mutate, not do_not_mutate.
-  * [`entry_findings(rel: str, entry: Any, sha: str) -> list[str]`](framework/gates/mutation/evidence.py#L206-L227)
+  * [`entry_findings(rel: str, entry: Any, sha: str, tests_sha: str) -> list[str]`](framework/gates/mutation/evidence.py#L380-L397)
     * *Contract*: Every reason ``rel``'s recorded evidence does not clear content ``sha``.
-  * [`staged_findings(paths: Sequence[str], ledger_path: Path | None) -> list[str]`](framework/gates/mutation/evidence.py#L253-L264)
+  * [`staged_findings(paths: Sequence[str], ledger_path: Path | None) -> list[str]`](framework/gates/mutation/evidence.py#L423-L434)
     * *Contract*: Every reason the staged files lack cleared evidence for their content.
-  * [`scoped_paths(paths: Sequence[str]) -> tuple[list[str], str | None]`](framework/gates/mutation/evidence.py#L287-L293)
+  * [`scoped_paths(paths: Sequence[str]) -> tuple[list[str], str | None]`](framework/gates/mutation/evidence.py#L459-L465)
     * *Contract*: The staged paths the gate owns, or the reason the population is unreadable.
 
-- [`framework/gates/mutation/scoring.py`](framework/gates/mutation/scoring.py) (111 lines)
+- [`framework/gates/mutation/scoring.py`](framework/gates/mutation/scoring.py) (209 lines)
   * *Module Purpose*: mutmut driver for the mutation gate: score the population, read the verdicts.
-  * [`status_table() -> tuple[dict[int | None, str] | None, str | None, str | None]`](framework/gates/mutation/scoring.py#L36-L42)
+  * [`class RefreshBusy(RuntimeError)`](framework/gates/mutation/scoring.py#L75-L76)
+    * *Contract*: Another process holds the refresh lock and is already scoring.
+  * [`cache_stamp() -> Path`](framework/gates/mutation/scoring.py#L51-L54)
+    * *Contract*: Where the test-surface digest of the cached verdicts is recorded.
+  * [`cached_tests_sha256() -> str | None`](framework/gates/mutation/scoring.py#L57-L63)
+    * *Contract*: The test-surface digest the cached mutmut verdicts were scored against.
+  * [`refresh_lock() -> Iterator[None]`](framework/gates/mutation/scoring.py#L98-L118)
+    * *Contract*: Serialize scorers: one mutmut run per repository, a peer's is refused.
+  * [`prepare_cache(tests_sha256: str) -> str | None`](framework/gates/mutation/scoring.py#L121-L131)
+    * *Contract*: Drop mutmut's verdict cache when it predates ``tests_sha256``.
+  * [`status_table() -> tuple[dict[int | None, str] | None, str | None, str | None]`](framework/gates/mutation/scoring.py#L134-L140)
     * *Contract*: mutmut's status map, its unknown-code fallback status, or why it is absent.
-  * [`mutmut_version(python: str | None) -> tuple[str | None, str | None]`](framework/gates/mutation/scoring.py#L45-L57)
+  * [`mutmut_version(python: str | None) -> tuple[str | None, str | None]`](framework/gates/mutation/scoring.py#L143-L155)
     * *Contract*: The installed mutmut version reported by ``-m mutmut --version``.
-  * [`run_mutmut(jobs: int, python: str | None) -> int`](framework/gates/mutation/scoring.py#L60-L72)
+  * [`run_mutmut(jobs: int, python: str | None) -> int`](framework/gates/mutation/scoring.py#L158-L170)
     * *Contract*: Score every uncached or invalidated mutant; mutmut's output streams through.
-  * [`meta_path(rel: str) -> Path`](framework/gates/mutation/scoring.py#L75-L77)
+  * [`meta_path(rel: str) -> Path`](framework/gates/mutation/scoring.py#L173-L175)
     * *Contract*: Where mutmut stores one module's verdicts.
-  * [`collect_statuses(rel: str) -> tuple[dict[str, str], str | None]`](framework/gates/mutation/scoring.py#L80-L93)
+  * [`collect_statuses(rel: str) -> tuple[dict[str, str], str | None]`](framework/gates/mutation/scoring.py#L178-L191)
     * *Contract*: Map every recorded mutant of ``rel`` to a status, or say why it cannot.
-  * [`aggregate(statuses: Mapping[str, str]) -> dict[str, int]`](framework/gates/mutation/scoring.py#L96-L103)
+  * [`aggregate(statuses: Mapping[str, str]) -> dict[str, int]`](framework/gates/mutation/scoring.py#L194-L201)
     * *Contract*: Count statuses, emitting every blocking key so a silent slip is impossible.
-  * [`names_by_status(statuses: Mapping[str, str]) -> dict[str, list[str]]`](framework/gates/mutation/scoring.py#L106-L111)
+  * [`names_by_status(statuses: Mapping[str, str]) -> dict[str, list[str]]`](framework/gates/mutation/scoring.py#L204-L209)
     * *Contract*: The mutant names behind each status, so findings can print the offender.
 
-- [`framework/gates/mutation/test_mutation.py`](framework/gates/mutation/test_mutation.py) (237 lines)
+- [`framework/gates/mutation/test_evidence_stamp.py`](framework/gates/mutation/test_evidence_stamp.py) (176 lines)
+  * *Module Purpose*: Behavioral tests for the v2 evidence stamp, cache invalidation and lock.
+  * [`repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path`](framework/gates/mutation/test_evidence_stamp.py#L51-L72)
+    * *Contract*: A committed scratch repository with one staged module and no tests yet.
+  * [`test_stale_test_surface_stamp_blocks(repo: Path) -> None`](framework/gates/mutation/test_evidence_stamp.py#L105-L114)
+    * *Contract*: An entry scored against other test bytes is refused, not believed.
+  * [`test_tests_sha256_moves_with_the_test_tree(repo: Path) -> None`](framework/gates/mutation/test_evidence_stamp.py#L117-L133)
+    * *Contract*: A new test byte and a moved run-bounding section both change the digest.
+  * [`test_prepare_cache_drops_only_when_the_digest_moves(repo: Path) -> None`](framework/gates/mutation/test_evidence_stamp.py#L136-L146)
+    * *Contract*: The cached verdicts survive an identical stamp and are dropped on a move.
+  * [`test_refresh_lock_refuses_a_second_holder(repo: Path) -> None`](framework/gates/mutation/test_evidence_stamp.py#L149-L159)
+    * *Contract*: Two scorers never share ``mutants/``: the peer is refused, not queued.
+  * [`test_pragma_notes_report_only_new_suppressions(repo: Path) -> None`](framework/gates/mutation/test_evidence_stamp.py#L162-L176)
+    * *Contract*: A suppression HEAD already carried is silent; a new one is NOTEd.
+
+- [`framework/gates/mutation/test_mutation.py`](framework/gates/mutation/test_mutation.py) (246 lines)
   * *Module Purpose*: Behavioral tests for the mutation-evidence gate (no mutmut run is forked here).
   * [`repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path`](framework/gates/mutation/test_mutation.py#L28-L56)
     * *Contract*: A throwaway repository whose staged blob and ledger the gate reads.
-  * [`test_absent_evidence_blocks_with_the_refresh_command(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L94-L97)
-  * [`test_cleared_evidence_for_the_staged_content_passes(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L100-L102)
-  * [`test_staging_new_content_invalidates_the_recorded_evidence(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L105-L109)
-  * [`test_unstaged_edits_do_not_change_the_decision(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L112-L115)
-  * [`test_a_survivor_blocks_and_is_named(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L118-L128)
-  * [`test_unreached_mutants_block_as_a_coverage_hole(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L131-L134)
-  * [`test_a_timeout_blocks_as_an_unscored_mutant(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L137-L139)
-  * [`test_files_outside_the_population_are_not_the_gates_business(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L142-L144)
-  * [`test_population_drift_blocks_until_the_ledger_is_refreshed(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L147-L156)
-  * [`test_population_drift_blocks_without_a_staged_population_file(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L159-L168)
-  * [`test_emptying_the_population_blocks_against_recorded_evidence(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L171-L177)
-  * [`test_config_only_staging_passes_when_the_ledger_matches(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L180-L182)
-  * [`test_glob_matching_respects_segments_and_double_star(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L185-L190)
-  * [`test_no_environment_variable_downgrades_the_gate(repo: Path, monkeypatch: pytest.MonkeyPatch, name: str, value: str) -> None`](framework/gates/mutation/test_mutation.py#L198-L204)
-  * [`test_cli_evidence_only_exits_nonzero_on_findings(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L207-L211)
-  * [`test_refresh_refuses_a_worktree_that_differs_from_the_index(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L214-L216)
-  * [`test_aggregate_maps_mutmut_statuses_and_unknown_codes_block() -> None`](framework/gates/mutation/test_mutation.py#L219-L237)
+  * [`test_absent_evidence_blocks_with_the_refresh_command(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L103-L106)
+  * [`test_cleared_evidence_for_the_staged_content_passes(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L109-L111)
+  * [`test_staging_new_content_invalidates_the_recorded_evidence(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L114-L118)
+  * [`test_unstaged_edits_do_not_change_the_decision(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L121-L124)
+  * [`test_a_survivor_blocks_and_is_named(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L127-L137)
+  * [`test_unreached_mutants_block_as_a_coverage_hole(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L140-L143)
+  * [`test_a_timeout_blocks_as_an_unscored_mutant(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L146-L148)
+  * [`test_files_outside_the_population_are_not_the_gates_business(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L151-L153)
+  * [`test_population_drift_blocks_until_the_ledger_is_refreshed(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L156-L165)
+  * [`test_population_drift_blocks_without_a_staged_population_file(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L168-L177)
+  * [`test_emptying_the_population_blocks_against_recorded_evidence(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L180-L186)
+  * [`test_config_only_staging_passes_when_the_ledger_matches(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L189-L191)
+  * [`test_glob_matching_respects_segments_and_double_star(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L194-L199)
+  * [`test_no_environment_variable_downgrades_the_gate(repo: Path, monkeypatch: pytest.MonkeyPatch, name: str, value: str) -> None`](framework/gates/mutation/test_mutation.py#L207-L213)
+  * [`test_cli_evidence_only_exits_nonzero_on_findings(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L216-L220)
+  * [`test_refresh_refuses_a_worktree_that_differs_from_the_index(repo: Path) -> None`](framework/gates/mutation/test_mutation.py#L223-L225)
+  * [`test_aggregate_maps_mutmut_statuses_and_unknown_codes_block() -> None`](framework/gates/mutation/test_mutation.py#L228-L246)
 
 ## Package `framework/gates/params` — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
 
@@ -1069,6 +1114,29 @@
   * [`test_the_live_rows_name_their_accessors_and_defaults() -> None`](framework/tests/gates/params/test_param_usage.py#L144-L152)
   * [`test_the_live_tree_compares_every_declared_default() -> None`](framework/tests/gates/params/test_param_usage.py#L155-L161)
 
+## Package `framework/tests/gates/ratchet` — *Ratchet gates: tables that may only shrink.*
+
+- [`framework/tests/gates/ratchet/test_ratchet_gates.py`](framework/tests/gates/ratchet/test_ratchet_gates.py) (193 lines)
+  * *Module Purpose*: Tests for the ratchet gates that block waiver, alias and baseline additions.
+  * [`test_waiver_addition_is_blocked(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L49-L58)
+    * *Contract*: A new ``(file, ordinal)`` waiver absent from HEAD yields COV005.
+  * [`test_unchanged_waivers_are_allowed(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L61-L69)
+    * *Contract*: A candidate table identical to HEAD produces no finding.
+  * [`test_removed_waivers_are_allowed(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L72-L85)
+    * *Contract*: Shrinking the waiver table (partially or wholly) is always permitted.
+  * [`test_alias_addition_is_blocked(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L88-L100)
+    * *Contract*: A new module key absent from HEAD yields MIR003.
+  * [`test_unchanged_aliases_are_allowed(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L103-L111)
+    * *Contract*: An alias table identical to HEAD produces no finding.
+  * [`test_removed_aliases_are_allowed(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L114-L132)
+    * *Contract*: Dropping an alias mapping (or all of them) is always permitted.
+  * [`test_baseline_ratchet_blocks_expansion(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L145-L156)
+    * *Contract*: A current baseline with a fingerprint absent from HEAD is blocking.
+  * [`test_baseline_ratchet_names_the_uncovered_clone(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L159-L179)
+    * *Contract*: An expansion finding names the clone locations it blocks.
+  * [`test_baseline_ratchet_allows_shrink_or_identical(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L182-L193)
+    * *Contract*: Shrinking the baseline or keeping it identical is allowed.
+
 ## Package `framework/tests/harness` — *Harness registry tests: project identity and the interpreter floor.*
 
 - [`framework/tests/harness/test_harness.py`](framework/tests/harness/test_harness.py) (127 lines)
@@ -1085,6 +1153,15 @@
   * [`test_keys_key_lists_every_key() -> None`](framework/tests/harness/test_harness.py#L108-L113)
   * [`test_bare_invocation_prints_every_key(capsys) -> None`](framework/tests/harness/test_harness.py#L116-L121)
   * [`test_superseded_distortion_scope_key_is_unknown(capsys) -> None`](framework/tests/harness/test_harness.py#L124-L127)
+
+## Package `framework/tests/hook_hygiene` — *Tests for the hook/test-process boundary.*
+
+- [`framework/tests/hook_hygiene/git_env_fixture.py`](framework/tests/hook_hygiene/git_env_fixture.py) (37 lines)
+  * *Module Purpose*: Shared environment sanitation for scratch-git test fixtures.
+  * [`clean_env() -> dict[str, str]`](framework/tests/hook_hygiene/git_env_fixture.py#L19-L23)
+    * *Contract*: Return the environment with every git repository selector removed.
+  * [`run_git(repo: Path, *args, check: bool) -> subprocess.CompletedProcess[str]`](framework/tests/hook_hygiene/git_env_fixture.py#L26-L37)
+    * *Contract*: Run one git command in `repo` with repository selectors removed.
 
 ## Package `framework/tests/indexing` — *Tests for framework.indexing Table-of-Contents subsystem.*
 

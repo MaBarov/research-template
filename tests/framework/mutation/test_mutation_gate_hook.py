@@ -29,6 +29,7 @@ assert error is None, error
 stamp = "2026-09-28T00:00:00+00:00"
 entry = {
     "content_sha256": sha,
+    "tests_sha256": evidence.tests_sha256(),
     "mutmut_version": "mutmut, version 3.8.0",
     "recorded_at": stamp,
     "mutants": 1,

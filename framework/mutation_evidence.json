@@ -5,8 +5,9 @@
       "killed": 0,
       "mutants": 0,
       "mutmut_version": "python -m mutmut, version 3.8.0",
-      "recorded_at": "2026-09-28T23:50:04+00:00",
-      "skipped": 0
+      "recorded_at": "2026-10-24T12:07:46+00:00",
+      "skipped": 0,
+      "tests_sha256": "860b60b0836ef61c32f5283d241a96baf3d4e925297f76b89e8ac5d4d80dcca6"
     },
     "research/params/registry.py": {
       "content_sha256": "cb7a07ee08324c8b8fc772f1081540e1f293de9a918e13b7e09ae41a2d6f0f54",
@@ -16,8 +17,9 @@
       ],
       "mutants": 1,
       "mutmut_version": "python -m mutmut, version 3.8.0",
-      "recorded_at": "2026-09-28T23:50:04+00:00",
-      "skipped": 0
+      "recorded_at": "2026-10-24T12:07:46+00:00",
+      "skipped": 0,
+      "tests_sha256": "860b60b0836ef61c32f5283d241a96baf3d4e925297f76b89e8ac5d4d80dcca6"
     },
     "research/params/resolve.py": {
       "content_sha256": "41165772dd775ed3299ba3593ae5525ecabd5dd08171b5642aef47163ac02b78",
@@ -43,8 +45,9 @@
       ],
       "mutants": 17,
       "mutmut_version": "python -m mutmut, version 3.8.0",
-      "recorded_at": "2026-09-28T23:50:04+00:00",
-      "skipped": 0
+      "recorded_at": "2026-10-24T12:07:46+00:00",
+      "skipped": 0,
+      "tests_sha256": "860b60b0836ef61c32f5283d241a96baf3d4e925297f76b89e8ac5d4d80dcca6"
     },
     "research/probe/__init__.py": {
       "content_sha256": "176d75a0e2c5865bd60e5da2ef79224d838a4643fe4b7ed70f113e51910a67de",
@@ -119,6 +122,6 @@
       "research/probe/*.py"
     ]
   },
-  "recorded_at": "2026-09-28T23:50:04+00:00",
-  "schema": "research.mutation-evidence.v1"
+  "recorded_at": "2026-10-24T12:07:46+00:00",
+  "schema": "research.mutation-evidence.v2"
 }

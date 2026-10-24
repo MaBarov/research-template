@@ -63,7 +63,23 @@ def _stage(repo: Path, rel: str, text: str) -> None:
 
 def _record(repo: Path, **overrides: object) -> None:
     """Write a ledger entry cleared for the *staged* content of MODULE."""
-    entry: dict[str, object] = {"content_sha256": evidence.staged_sha256(MODULE)}
+    entry = _cleared_entry(overrides)
+    evidence.save_ledger(
+        {
+            "schema": evidence.SCHEMA,
+            "population": POPULATION,
+            "mutmut_version": entry["mutmut_version"],
+            "modules": {MODULE: entry},
+        }
+    )
+
+
+def _cleared_entry(overrides: dict[str, object]) -> dict[str, object]:
+    """One cleared ledger entry: staged content, test surface, counts, overrides."""
+    entry: dict[str, object] = {
+        "content_sha256": evidence.staged_sha256(MODULE),
+        "tests_sha256": evidence.tests_sha256(),
+    }
     entry.update(
         {
             "mutmut_version": "mutmut, version 3.8.0",
@@ -81,14 +97,7 @@ def _record(repo: Path, **overrides: object) -> None:
         }
     )
     entry.update(overrides)
-    evidence.save_ledger(
-        {
-            "schema": evidence.SCHEMA,
-            "population": POPULATION,
-            "mutmut_version": entry["mutmut_version"],
-            "modules": {MODULE: entry},
-        }
-    )
+    return entry
 
 
 def test_absent_evidence_blocks_with_the_refresh_command(repo: Path) -> None:
