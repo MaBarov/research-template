@@ -54,6 +54,15 @@ if [ -x "$REPO/framework/gates/checks/sync_agents_mirrors.py" ]; then
     echo "[pre-push:strict] WARN: mirrors diverged — run: python framework/gates/checks/sync_agents_mirrors.py" >&2
 fi
 
+# 3b. static-type census (pyright, advisory). The blocking mypy decision lives in
+#     pre-commit, on staged blobs; this is the whole-tree second opinion, so a
+#     module the staged path never sees still shows up here.
+CHECK_TYPES="$REPO/framework/gates/typecheck/check_types.py"
+if [ -f "$CHECK_TYPES" ] && [ -n "$PY" ] && [ -x "$PY" ]; then
+  "$PY" "$CHECK_TYPES" --mode all --engine pyright 2>&1 | tail -n 12 || \
+    echo "[pre-push:strict] WARN: pyright census did not complete" >&2
+fi
+
 # 4. dead code (informational; research code has deliberate entrypoints)
 if [ -x "$VENV/bin/vulture" ]; then
   (cd "$REPO" && "$VENV/bin/vulture" scripts framework --min-confidence 90 2>&1 | head -n 20) || true

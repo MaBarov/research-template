@@ -123,6 +123,7 @@ Every code below is printed by the gate named beside it; the code prefix is
 | `checks/check_duplication.py` | CPD000-CPD002 | Is this clone new, and does the baseline only shrink? |
 | `params/check_param_duplicates.py` | HNS038-HNS043 | Is every parameter declared once in the registry, with no second default or alias? |
 | `distortion/check_distortion.py` | HNS044-HNS046 | Was this metric manufactured by a surrogate computation artifact? |
+| `typecheck/check_types.py` | mypy/pyright findings | Does the module I am touching type-check, judged on the staged blob? |
 | `mutation/check_mutation.py` | mutation findings | Do the tests kill the mutants of this exact content, scored against this exact test surface? |
 | `check_documentation.py` | doc-chain findings | Is there a manifest, metrics file and DVC/MLflow run behind the number? |
 | `check_sbatch_contract.sh` + `sbatch_gate.sh` | contract findings | Can this job be mapped back to a commit, and does it refuse a dirty tree? |
