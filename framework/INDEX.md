@@ -3,39 +3,40 @@
 > [!NOTE]
 > Sub-index for the `framework` package hierarchy. Use the line ranges below to load specific sections directly into context.
 
-**Repository Statistics**: 82 modules | 22 classes | 633 public functions.
+**Repository Statistics**: 83 modules | 22 classes | 685 public functions.
 
 ## Table of Contents
 
-- [`framework`](#package-framework) (lines 42–66) — *Repository gate framework (hooks + checkers).*
-- [`framework/gates`](#package-frameworkgates) (lines 67–94) — *Blocking and advisory repository gates.*
-- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 95–128) — *Internals of the production anti-pattern gate.*
-- [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 129–137) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
-- [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 138–144) — *Liveness checks for the production anti-pattern gate (HNS072).*
-- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 145–229) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
-- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 230–289) — *Internals of the per-file coverage and loop-iteration gate.*
-- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 290–336) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
-- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 337–375) — *Freshness and ref-provenance gates.*
-- [`framework/gates/instructions`](#package-frameworkgatesinstructions) (lines 376–393) — *Fail-closed reference check for agent instruction artifacts.*
-- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 394–451)
-- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 452–557) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
-- [`framework/gates/params`](#package-frameworkgatesparams) (lines 558–598) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
-- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 599–603) — *Pure AST and text primitives of the parameter-drift matchers.*
-- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 604–640) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
-- [`framework/gates/typecheck`](#package-frameworkgatestypecheck) (lines 641–708) — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
-- [`framework/indexing`](#package-frameworkindexing) (lines 709–760) — *AST-based repository mapping and Table-of-Contents indexing.*
-- [`framework/tests`](#package-frameworktests) (lines 761–919)
-- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 920–1007) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
-- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 1008–1018) — *Tests for the coverage gate and its probe plugin.*
-- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 1019–1045) — *Test package for the framework distortion gate.*
-- [`framework/tests/freshness`](#package-frameworktestsfreshness) (lines 1046–1049) — *Tests for freshness and ref guard gates.*
-- [`framework/tests/gates`](#package-frameworktestsgates) (lines 1050–1160) — *Package.*
-- [`framework/tests/gates/instructions`](#package-frameworktestsgatesinstructions) (lines 1161–1200) — *Tests for instruction reference validation.*
-- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1201–1259) — *Tests for the parameter registry gates.*
-- [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1260–1282) — *Ratchet gates: tables that may only shrink.*
-- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1283–1299) — *Harness registry tests: project identity and the interpreter floor.*
-- [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1300–1308) — *Tests for the hook/test-process boundary.*
-- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1309–1357) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework`](#package-framework) (lines 43–67) — *Repository gate framework (hooks + checkers).*
+- [`framework/gates`](#package-frameworkgates) (lines 68–95) — *Blocking and advisory repository gates.*
+- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 96–129) — *Internals of the production anti-pattern gate.*
+- [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 130–138) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
+- [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 139–145) — *Liveness checks for the production anti-pattern gate (HNS072).*
+- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 146–230) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
+- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 231–290) — *Internals of the per-file coverage and loop-iteration gate.*
+- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 291–337) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
+- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 338–376) — *Freshness and ref-provenance gates.*
+- [`framework/gates/instructions`](#package-frameworkgatesinstructions) (lines 377–394) — *Fail-closed reference check for agent instruction artifacts.*
+- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 395–452)
+- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 453–558) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
+- [`framework/gates/params`](#package-frameworkgatesparams) (lines 559–599) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
+- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 600–604) — *Pure AST and text primitives of the parameter-drift matchers.*
+- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 605–641) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
+- [`framework/gates/typecheck`](#package-frameworkgatestypecheck) (lines 642–720) — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
+- [`framework/indexing`](#package-frameworkindexing) (lines 721–772) — *AST-based repository mapping and Table-of-Contents indexing.*
+- [`framework/tests`](#package-frameworktests) (lines 773–931)
+- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 932–1019) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
+- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 1020–1030) — *Tests for the coverage gate and its probe plugin.*
+- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 1031–1057) — *Test package for the framework distortion gate.*
+- [`framework/tests/freshness`](#package-frameworktestsfreshness) (lines 1058–1110) — *Tests for freshness and ref guard gates.*
+- [`framework/tests/gates`](#package-frameworktestsgates) (lines 1111–1221) — *Package.*
+- [`framework/tests/gates/instructions`](#package-frameworktestsgatesinstructions) (lines 1222–1261) — *Tests for instruction reference validation.*
+- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1262–1320) — *Tests for the parameter registry gates.*
+- [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1321–1343) — *Ratchet gates: tables that may only shrink.*
+- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1344–1360) — *Harness registry tests: project identity and the interpreter floor.*
+- [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1361–1369) — *Tests for the hook/test-process boundary.*
+- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1370–1418) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework/tests/typecheck`](#package-frameworkteststypecheck) (lines 1419–1469) — *Tests for the static-type gate.*
 
 ---
 
@@ -375,20 +376,20 @@
 
 ## Package `framework/gates/instructions` — *Fail-closed reference check for agent instruction artifacts.*
 
-- [`framework/gates/instructions/check_instruction_refs.py`](framework/gates/instructions/check_instruction_refs.py) (488 lines)
+- [`framework/gates/instructions/check_instruction_refs.py`](framework/gates/instructions/check_instruction_refs.py) (489 lines)
   * *Module Purpose*: Fail-closed reference check for agent instruction artifacts (HNS073).
-  * [`class Finding`](framework/gates/instructions/check_instruction_refs.py#L123-L132)
+  * [`class Finding`](framework/gates/instructions/check_instruction_refs.py#L124-L133)
     * *Contract*: One stale file reference in an instruction artifact.
-    * [`Finding.format(self) -> str`](framework/gates/instructions/check_instruction_refs.py#L131-L132)
-  * [`class Root`](framework/gates/instructions/check_instruction_refs.py#L136-L144)
+    * [`Finding.format(self) -> str`](framework/gates/instructions/check_instruction_refs.py#L132-L133)
+  * [`class Root`](framework/gates/instructions/check_instruction_refs.py#L137-L145)
     * *Contract*: One tracked tree a reference may resolve in.
-  * [`class Census`](framework/gates/instructions/check_instruction_refs.py#L148-L152)
+  * [`class Census`](framework/gates/instructions/check_instruction_refs.py#L149-L153)
     * *Contract*: Bucket counts plus the findings for one graded artifact.
-  * [`census(path: str, text: str, roots: Sequence[Root], allow_placeholder: bool) -> Census`](framework/gates/instructions/check_instruction_refs.py#L305-L325)
+  * [`census(path: str, text: str, roots: Sequence[Root], allow_placeholder: bool) -> Census`](framework/gates/instructions/check_instruction_refs.py#L308-L328)
     * *Contract*: Classify every token of ``text``; counts are per occurrence.
-  * [`grade(path: str, text: str, tracked: list[str]) -> list[Finding]`](framework/gates/instructions/check_instruction_refs.py#L328-L338)
+  * [`grade(path: str, text: str, tracked: list[str]) -> list[Finding]`](framework/gates/instructions/check_instruction_refs.py#L331-L341)
     * *Contract*: Return HNS073 findings for ``text`` against one flat tracked list.
-  * [`main(argv: Sequence[str] | None) -> int`](framework/gates/instructions/check_instruction_refs.py#L455-L484)
+  * [`main(argv: Sequence[str] | None) -> int`](framework/gates/instructions/check_instruction_refs.py#L456-L485)
     * *Contract*: Grade the named instruction artifacts; 0 clean, 1 findings, 2 error.
 
 ## Package `framework/gates/limits`
@@ -640,9 +641,20 @@
 
 ## Package `framework/gates/typecheck` — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
 
-- [`framework/gates/typecheck/check_types.py`](framework/gates/typecheck/check_types.py) (1 lines)
+- [`framework/gates/typecheck/check_types.py`](framework/gates/typecheck/check_types.py) (123 lines)
+  * *Module Purpose*: CLI entry point of the static-type gate (mypy blocking, pyright census).
+  * [`build_parser() -> argparse.ArgumentParser`](framework/gates/typecheck/check_types.py#L36-L49)
+    * *Contract*: Return the CLI parser of the type gate.
+  * [`selection(args: argparse.Namespace) -> tuple[list[str], list[str]]`](framework/gates/typecheck/check_types.py#L52-L59)
+    * *Contract*: Return the modules to check and a decline note per named out-of-scope path.
+  * [`invoke(args: argparse.Namespace, modules: list[str]) -> runner.RunResult | None`](framework/gates/typecheck/check_types.py#L62-L69)
+    * *Contract*: Run the engine; on a missing checker print the hint and return ``None``.
+  * [`emit(args: argparse.Namespace, result: runner.RunResult, checked: int) -> int`](framework/gates/typecheck/check_types.py#L72-L94)
+    * *Contract*: Print one run's findings and census, then return its exit code.
+  * [`main(argv: list[str] | None) -> int`](framework/gates/typecheck/check_types.py#L97-L119)
+    * *Contract*: Execute the type gate and return its exit code.
 
-- [`framework/gates/typecheck/policy.py`](framework/gates/typecheck/policy.py) (217 lines)
+- [`framework/gates/typecheck/policy.py`](framework/gates/typecheck/policy.py) (223 lines)
   * *Module Purpose*: Typed population, engine and interpreter resolution of the static-type gate.
   * [`relative(path: str | Path) -> str`](framework/gates/typecheck/policy.py#L39-L47)
     * *Contract*: Return ``path`` as a repository-relative posix string when it is inside.
@@ -668,11 +680,11 @@
     * *Contract*: Write one staged blob to the shadow tree and return its path.
   * [`shadow_pairs(modules: Iterable[str]) -> tuple[list[str], list[str]]`](framework/gates/typecheck/policy.py#L175-L193)
     * *Contract*: Return ``(mypy --shadow-file argv, drifted paths)`` for staged modules.
-  * [`interpreter() -> Path`](framework/gates/typecheck/policy.py#L196-L198)
+  * [`interpreter() -> Path`](framework/gates/typecheck/policy.py#L199-L204)
     * *Contract*: Return the project interpreter from harness.
-  * [`engine_command(engine: str) -> list[str] | None`](framework/gates/typecheck/policy.py#L201-L211)
+  * [`engine_command(engine: str) -> list[str] | None`](framework/gates/typecheck/policy.py#L207-L217)
     * *Contract*: Return the resolved checker argv prefix, or ``None`` when it is absent.
-  * [`ensure_cache_dir() -> Path`](framework/gates/typecheck/policy.py#L214-L217)
+  * [`ensure_cache_dir() -> Path`](framework/gates/typecheck/policy.py#L220-L223)
     * *Contract*: Return the mypy cache directory, created under the ignored ``cache`` tree.
 
 - [`framework/gates/typecheck/report.py`](framework/gates/typecheck/report.py) (72 lines)
@@ -1045,7 +1057,56 @@
 
 ## Package `framework/tests/freshness` — *Tests for freshness and ref guard gates.*
 
-- [`framework/tests/freshness/test_ref_guard.py`](framework/tests/freshness/test_ref_guard.py) (0 lines)
+- [`framework/tests/freshness/test_ref_guard.py`](framework/tests/freshness/test_ref_guard.py) (378 lines)
+  * *Module Purpose*: Tests for the reference-transaction ref-provenance guard.
+  * [`repo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path`](framework/tests/freshness/test_ref_guard.py#L56-L65)
+    * *Contract*: A throwaway repository with one commit, as the guard's working directory.
+  * [`test_deletion_and_equal_updates_are_allowed(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L99-L105)
+    * *Contract*: A branch deletion (new is zero) and a no-op move are always allowed.
+  * [`test_rewind_to_an_ancestor_is_allowed(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L108-L114)
+    * *Contract*: `reset --hard HEAD~1` moves a branch back onto its own history.
+  * [`test_crafted_commit_into_a_new_branch_is_blocked(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L117-L122)
+    * *Contract*: `commit-tree` + `update-ref refs/heads/x` never reaches a live tip.
+  * [`test_force_branch_and_reset_to_crafted_are_blocked(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L125-L131)
+    * *Contract*: `branch -f` and `reset --hard` onto a crafted commit are refused.
+  * [`test_forward_move_to_a_reachable_tip_is_allowed(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L134-L142)
+    * *Contract*: A fast-forward onto another branch's tip is already in history.
+  * [`test_a_nested_branch_tip_is_trusted(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L145-L154)
+    * *Contract*: A tip under `fix/...` is a live tip; a fast-forward onto it lands.
+  * [`test_a_crafted_object_stays_refused_among_nested_tips(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L157-L168)
+    * *Contract*: Enumerating every ref keeps the reachability rule for a crafted object.
+  * [`test_unresolvable_new_value_is_blocked(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L171-L177)
+    * *Contract*: A branch pointed at a non-commit object is refused.
+  * [`test_non_gated_refs_pass(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L188-L192)
+    * *Contract*: HEAD, stash and notes carry no provenance guarantee and are untouched.
+  * [`test_marker_allows_and_is_consumed(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L195-L202)
+    * *Contract*: An armed marker matching pid, tree and starttime lets a gated commit land.
+  * [`test_marker_rejected_after_pid_reuse(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L205-L211)
+    * *Contract*: A stale starttime (the pid was reused) never vouches for a move.
+  * [`test_marker_rejected_when_stale(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L214-L221)
+    * *Contract*: A marker older than the freshness window is pruned and ignored.
+  * [`test_marker_rejected_for_a_different_tree(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L224-L230)
+    * *Contract*: A marker armed for another tree does not vouch for this commit.
+  * [`test_remote_tracking_ref_by_fetch_is_allowed(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L233-L239)
+    * *Contract*: A remote-tracking ref may move to an unreachable value under `git fetch`.
+  * [`test_remote_tracking_ref_by_update_ref_is_blocked(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L242-L248)
+    * *Contract*: A remote-tracking ref moved outside fetch/pull/push is refused.
+  * [`test_tag_rules(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L251-L256)
+    * *Contract*: A crafted tag is refused; a tag at a live branch tip is not.
+  * [`test_replace_ref_is_blocked(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L259-L263)
+    * *Contract*: A replace ref may only be deleted or reset to itself.
+  * [`test_grafts_file_fails_closed(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L266-L272)
+    * *Contract*: An info/grafts file blocks even an ordinary rewind.
+  * [`test_non_prepared_states_exit_zero_before_reading(monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L275-L281)
+    * *Contract*: committed/aborted never read stdin and never block.
+  * [`test_malformed_line_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/freshness/test_ref_guard.py#L284-L286)
+    * *Contract*: A malformed transaction record aborts the transaction.
+  * [`test_scratch_e2e_gated_commit_lands_and_no_verify_fails(tmp_path: Path) -> None`](framework/tests/freshness/test_ref_guard.py#L346-L352)
+    * *Contract*: The shipped guard arms a gated commit and refuses `--no-verify`.
+  * [`test_scratch_e2e_plumbing_moves_are_blocked(tmp_path: Path) -> None`](framework/tests/freshness/test_ref_guard.py#L355-L366)
+    * *Contract*: `commit-tree`+`update-ref`, `branch -f` and `reset --hard` are refused.
+  * [`test_scratch_e2e_rewind_is_allowed(tmp_path: Path) -> None`](framework/tests/freshness/test_ref_guard.py#L369-L378)
+    * *Contract*: A rewind onto an ancestor is not a bypass and lands.
 
 ## Package `framework/tests/gates` — *Package.*
 
@@ -1354,4 +1415,55 @@
     * *Contract*: Verify two-tier docstring parsing extracts thumbnail and structured sections.
   * [`test_two_tier_docstring_validation_errors() -> None`](framework/tests/indexing/test_scanner.py#L110-L126)
     * *Contract*: Verify validation errors are recorded for missing or invalid docstrings.
+
+## Package `framework/tests/typecheck` — *Tests for the static-type gate.*
+
+- [`framework/tests/typecheck/test_check_types.py`](framework/tests/typecheck/test_check_types.py) (411 lines)
+  * *Module Purpose*: Unit tests for the static-type gate: scope, parsing, CLI contract, index reads.
+  * [`test_scope_covers_four_roots_and_excludes_tests() -> None`](framework/tests/typecheck/test_check_types.py#L59-L69)
+    * *Contract*: Keep the typed population to the four roots and drop test/vendor paths.
+  * [`test_select_paths_keeps_explicit_outside_file_and_normalizes(tmp_path: Path) -> None`](framework/tests/typecheck/test_check_types.py#L72-L81)
+    * *Contract*: Normalize in-tree paths and honor an explicit file outside the roots.
+  * [`test_mypy_argv_pins_config_interpreter_and_cache(monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/typecheck/test_check_types.py#L84-L94)
+    * *Contract*: Pin the committed config, the resolved interpreter and the cache tree.
+  * [`test_mypy_argv_fails_closed_without_a_checker(monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/typecheck/test_check_types.py#L97-L104)
+    * *Contract*: Raise CheckerMissing (with an install hint) when no mypy resolves.
+  * [`test_run_mypy_keeps_scoped_errors_and_drops_foreign_ones(monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/typecheck/test_check_types.py#L107-L117)
+    * *Contract*: Attribute errors to the scope set, drop notes and foreign files.
+  * [`test_run_mypy_surfaces_unparsable_error_lines(monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/typecheck/test_check_types.py#L120-L129)
+    * *Contract*: Surface a location-less mypy error instead of reporting a clean run.
+  * [`test_run_pyright_reads_json_ranges(monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/typecheck/test_check_types.py#L132-L161)
+    * *Contract*: Parse pyright JSON and convert its zero-based range to a 1-based line.
+  * [`test_cli_strict_blocks_on_a_scoped_finding(monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/typecheck/test_check_types.py#L164-L174)
+    * *Contract*: Exit 1 under --strict when the staged module owns a finding.
+  * [`test_cli_clean_run_exits_zero_and_writes_report(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None`](framework/tests/typecheck/test_check_types.py#L177-L191)
+    * *Contract*: Exit 0 on a clean module and write the machine report on request.
+  * [`test_cli_missing_checker_blocks_only_under_strict(monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/typecheck/test_check_types.py#L194-L206)
+    * *Contract*: Fail closed under --strict when the checker is absent, NOTE otherwise.
+  * [`test_index_selection_reads_staged_typed_modules(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None`](framework/tests/typecheck/test_check_types.py#L209-L226)
+    * *Contract*: Select only staged typed modules from a real Git index.
+  * [`test_typed_sources_walks_roots_and_honors_exclusions(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None`](framework/tests/typecheck/test_check_types.py#L229-L248)
+    * *Contract*: Walk the four roots and never yield test or vendor modules.
+  * [`test_index_drift_flags_module_modified_after_staging(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None`](framework/tests/typecheck/test_check_types.py#L251-L266)
+    * *Contract*: Report a staged module whose working tree moved on after staging.
+  * [`test_mypy_argv_shadows_a_drifted_staged_module(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None`](framework/tests/typecheck/test_check_types.py#L269-L288)
+    * *Contract*: Check the staged blob when the working tree moved on after staging.
+  * [`test_cli_notes_shadowed_modules_without_blocking(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None`](framework/tests/typecheck/test_check_types.py#L291-L300)
+    * *Contract*: Report a shadowed staged module as a NOTE, never as a failure.
+  * [`test_run_mypy_executes_the_resolved_binary(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None`](framework/tests/typecheck/test_check_types.py#L303-L320)
+    * *Contract*: Execute a real checker process and parse its report end to end.
+  * [`test_select_paths_drops_explicit_in_tree_test_module() -> None`](framework/tests/typecheck/test_check_types.py#L323-L326)
+    * *Contract*: Never smuggle an in-tree excluded module into the typed population.
+  * [`test_select_paths_detailed_reports_every_decline_reason() -> None`](framework/tests/typecheck/test_check_types.py#L329-L349)
+    * *Contract*: A declined path carries the population rule's own reason.
+  * [`test_cli_fails_closed_when_every_named_path_is_out_of_scope(capsys: pytest.CaptureFixture[str]) -> None`](framework/tests/typecheck/test_check_types.py#L352-L362)
+    * *Contract*: Naming only out-of-population paths is an error, never a silent pass.
+  * [`test_cli_unnamed_empty_index_is_a_benign_skip(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None`](framework/tests/typecheck/test_check_types.py#L365-L371)
+    * *Contract*: Nothing staged and nothing named is a skip, not a failure.
+  * [`test_pyright_engine_is_advisory_without_strict(monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/typecheck/test_check_types.py#L374-L382)
+    * *Contract*: Pyright census never blocks unless --strict is given.
+  * [`test_engine_command_returns_none_when_checker_absent(monkeypatch: pytest.MonkeyPatch) -> None`](framework/tests/typecheck/test_check_types.py#L385-L393)
+    * *Contract*: Return None when the checker binary is absent from path and venv.
+  * [`test_report_write_report_and_census_lines(tmp_path: Path) -> None`](framework/tests/typecheck/test_check_types.py#L396-L411)
+    * *Contract*: Verify JSON report structure and census summary lines.
 

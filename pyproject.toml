@@ -22,6 +22,8 @@ dev = [
     "pyflakes",
     "vulture",
     "detect-secrets",
+    "mypy",
+    "pyright",
 ]
 # Documentation-chain tools: without them the adjudication gate refuses a run
 # that claims a doc chain, rather than passing it vacuously.
@@ -141,3 +143,21 @@ max-thumbnail-chars = 140
 required-sections = [
     "Invariants & Expected State",
 ]
+
+[tool.mypy]
+python_version = "3.11"
+follow_imports = "silent"
+check_untyped_defs = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+no_implicit_optional = true
+strict_equality = true
+show_error_codes = true
+pretty = false
+enable_error_code = ["ignore-without-code"]
+
+[tool.pyright]
+include = ["research", "experiments", "framework", "scripts"]
+exclude = ["**/tests/**", "**/__pycache__/**", "third_party", "cache", "mutants", "results", "models"]
+typeCheckingMode = "standard"
+pythonVersion = "3.11"

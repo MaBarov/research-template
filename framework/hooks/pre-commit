@@ -29,6 +29,7 @@ MIRROR_SCOPE="$(harness mirror-scope)"
 COVERAGE_SCOPE="$(harness coverage-scope)"
 TEST_SCOPE="$(harness test-scope)"
 DISTORTION_SCOPE="$(harness static-scope)"
+TYPE_SCOPE="$(harness static-scope)"
 INDEX_SCOPE="$(harness index-scope)"
 
 # ---------------------------------------------------------------------------
@@ -309,6 +310,33 @@ if [ -n "$STAGED_ALL" ]; then
     fi
     if ! "$PY" "$CHECK_DISTORTION" --strict --staged "${STAGED_DISTORTION_FILES[@]}"; then
       echo "[pre-commit] FAILED: surrogate distortion gate blocked this commit." >&2
+      exit 1
+    fi
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 5d7. BLOCKING STATIC-TYPE GATE (mypy, staged blobs)
+# Touching a typed module means leaving it type-clean, exactly as touching an
+# oversized file means splitting it: no baseline, no allowlist. The decision is
+# made on the staged blob (mypy --shadow-file), so a partially staged file is
+# judged by what the commit writes. A missing mypy fails closed under --strict,
+# and a foreign finding (an import's error) never blocks. The pyright census is
+# advisory and runs on pre-push.
+CHECK_TYPES="$REPO/framework/gates/typecheck/check_types.py"
+if [ -n "$STAGED_ALL" ]; then
+  mapfile -t STAGED_TYPED_FILES < <(
+    printf '%s\n' "$STAGED_ALL" | grep -E "$TYPE_SCOPE" || true
+  )
+  if [ "${#STAGED_TYPED_FILES[@]}" -gt 0 ]; then
+    if [ ! -f "$CHECK_TYPES" ]; then
+      echo "[pre-commit] FAILED: static-type gate missing at $CHECK_TYPES (fail-closed)." >&2
+      exit 1
+    fi
+    if ! "$PY" "$CHECK_TYPES" --mode staged --staged --strict "${STAGED_TYPED_FILES[@]}"; then
+      echo "[pre-commit] FAILED: the static-type gate blocked this commit (see above)." >&2
+      echo "[pre-commit] fix the annotation, then re-stage; mypy is declared in the" >&2
+      echo "[pre-commit] dev extras, and [tool.mypy] in pyproject.toml is the policy." >&2
       exit 1
     fi
   fi
