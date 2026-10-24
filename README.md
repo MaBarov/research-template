@@ -16,14 +16,23 @@ below) starts a project with the harness already wired.
 What you get:
 
 * **Commit gates** (`framework/hooks/pre-commit`, blocking): code-size limits,
-  test mirrors, per-file coverage clearance, docstring contracts, duplication,
-  a single parameter registry, mutation evidence, surrogate-distortion
-  anti-patterns, an sbatch provenance contract, and index freshness.
+oracle-graded test mirrors, per-file coverage clearance, docstring contracts,
+duplication, a single parameter registry, mutation evidence, surrogate-distortion
+anti-patterns, an sbatch provenance contract, and index freshness.
+* **Nothing that can only shrink is allowed to grow**: the mirror-alias table
+(MIR003), the loop-waiver table (COV005) and the duplication baseline (CPD002)
+are ratchets — an addition is refused, a removal passes.
+* **Tests that cannot be theater**: a mirror must parse to behavioral assertions
+and assert against something other than itself (HNS068/HNS070), every staged
+test file is graded the same way, and mutation evidence is stamped with the
+digest of the test surface it was scored against, so a verdict cached against
+older tests can neither be recorded nor believed.
 * **Submit gates** (`framework/gates/sbatch_gate.sh`, strict by default): dirty
-  tree, contract, execution paths, `local_gate`, stub smoke, GPU canary,
-  `sbatch --test-only`.
+tree, contract, execution paths, `local_gate`, stub smoke, GPU canary,
+`sbatch --test-only`.
 * **One place for every project token** (`framework/harness.py`): slug, env-var
-  prefix, gate-code prefix, source/test roots, interpreter, cluster names.
+prefix, gate-code prefix, source/test roots, interpreter, cluster names, cache
+and gate-state directories.
 * **A worked example** (`research/params/`, `research/probe/`,
   `experiments/example_plan/`, `scripts/smoke/plan_run_smoke.sh`) that clears
   every gate, including mutation evidence.

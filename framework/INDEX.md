@@ -3,35 +3,36 @@
 > [!NOTE]
 > Sub-index for the `framework` package hierarchy. Use the line ranges below to load specific sections directly into context.
 
-**Repository Statistics**: 74 modules | 15 classes | 583 public functions.
+**Repository Statistics**: 77 modules | 18 classes | 606 public functions.
 
 ## Table of Contents
 
-- [`framework`](#package-framework) (lines 38–62) — *Repository gate framework (hooks + checkers).*
-- [`framework/gates`](#package-frameworkgates) (lines 63–90) — *Blocking and advisory repository gates.*
-- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 91–124) — *Internals of the production anti-pattern gate.*
-- [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 125–133) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
-- [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 134–140) — *Liveness checks for the production anti-pattern gate (HNS072).*
-- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 141–225) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
-- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 226–285) — *Internals of the per-file coverage and loop-iteration gate.*
-- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 286–332) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
-- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 333–364)
-- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 365–422)
-- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 423–528) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
-- [`framework/gates/params`](#package-frameworkgatesparams) (lines 529–569) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
-- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 570–574) — *Pure AST and text primitives of the parameter-drift matchers.*
-- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 575–611) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
-- [`framework/indexing`](#package-frameworkindexing) (lines 612–663) — *AST-based repository mapping and Table-of-Contents indexing.*
-- [`framework/tests`](#package-frameworktests) (lines 664–820)
-- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 821–908) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
-- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 909–919) — *Tests for the coverage gate and its probe plugin.*
-- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 920–946) — *Test package for the framework distortion gate.*
-- [`framework/tests/gates`](#package-frameworktestsgates) (lines 947–1057) — *Package.*
-- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1058–1116) — *Tests for the parameter registry gates.*
-- [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1117–1139) — *Ratchet gates: tables that may only shrink.*
-- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1140–1156) — *Harness registry tests: project identity and the interpreter floor.*
-- [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1157–1165) — *Tests for the hook/test-process boundary.*
-- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1166–1214) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework`](#package-framework) (lines 39–63) — *Repository gate framework (hooks + checkers).*
+- [`framework/gates`](#package-frameworkgates) (lines 64–91) — *Blocking and advisory repository gates.*
+- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 92–125) — *Internals of the production anti-pattern gate.*
+- [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 126–134) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
+- [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 135–141) — *Liveness checks for the production anti-pattern gate (HNS072).*
+- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 142–226) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
+- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 227–286) — *Internals of the per-file coverage and loop-iteration gate.*
+- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 287–333) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
+- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 334–365)
+- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 366–423)
+- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 424–529) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
+- [`framework/gates/params`](#package-frameworkgatesparams) (lines 530–570) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
+- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 571–575) — *Pure AST and text primitives of the parameter-drift matchers.*
+- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 576–612) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
+- [`framework/gates/typecheck`](#package-frameworkgatestypecheck) (lines 613–678) — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
+- [`framework/indexing`](#package-frameworkindexing) (lines 679–730) — *AST-based repository mapping and Table-of-Contents indexing.*
+- [`framework/tests`](#package-frameworktests) (lines 731–887)
+- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 888–975) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
+- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 976–986) — *Tests for the coverage gate and its probe plugin.*
+- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 987–1013) — *Test package for the framework distortion gate.*
+- [`framework/tests/gates`](#package-frameworktestsgates) (lines 1014–1124) — *Package.*
+- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1125–1183) — *Tests for the parameter registry gates.*
+- [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1184–1206) — *Ratchet gates: tables that may only shrink.*
+- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1207–1223) — *Harness registry tests: project identity and the interpreter floor.*
+- [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1224–1232) — *Tests for the hook/test-process boundary.*
+- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1233–1281) — *Tests for framework.indexing Table-of-Contents subsystem.*
 
 ---
 
@@ -116,7 +117,7 @@
   * [`analyze_shell(source: str, path: str) -> list[framework.gates.antipattern.targets.Finding]`](framework/gates/antipattern/shell_checks.py#L418-L446)
     * *Contract*: Return findings for shell/slurm provenance and hygiene problems.
 
-- [`framework/gates/antipattern/targets.py`](framework/gates/antipattern/targets.py) (111 lines)
+- [`framework/gates/antipattern/targets.py`](framework/gates/antipattern/targets.py) (116 lines)
   * *Module Purpose*: Scope constants, findings and target-file resolution.
   * [`class Finding`](framework/gates/antipattern/targets.py#L32-L41)
     * *Contract*: One source-level anti-pattern finding.
@@ -608,6 +609,72 @@
 - [`framework/gates/provenance/verify_replay.py`](framework/gates/provenance/verify_replay.py) (131 lines)
   * *Module Purpose*: Run manifest verifier — re-derives hashes from live files (guardrail #3).
   * [`main(argv: list[str] | None) -> int`](framework/gates/provenance/verify_replay.py#L98-L127)
+
+## Package `framework/gates/typecheck` — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
+
+- [`framework/gates/typecheck/policy.py`](framework/gates/typecheck/policy.py) (217 lines)
+  * *Module Purpose*: Typed population, engine and interpreter resolution of the static-type gate.
+  * [`relative(path: str | Path) -> str`](framework/gates/typecheck/policy.py#L39-L47)
+    * *Contract*: Return ``path`` as a repository-relative posix string when it is inside.
+  * [`decline_reason(rel: str) -> str | None`](framework/gates/typecheck/policy.py#L50-L63)
+    * *Contract*: Return why ``rel`` is outside the typed population, or ``None``.
+  * [`is_typed_path(rel: str) -> bool`](framework/gates/typecheck/policy.py#L66-L68)
+    * *Contract*: Return whether a repository-relative path is inside the typed population.
+  * [`outside_repo(raw: str) -> bool`](framework/gates/typecheck/policy.py#L71-L80)
+    * *Contract*: Return whether ``raw`` is an absolute path that lives outside the repo.
+  * [`select_paths_detailed(paths: Iterable[str]) -> tuple[list[str], list[tuple[str, str]]]`](framework/gates/typecheck/policy.py#L83-L98)
+    * *Contract*: Return the typed selection and every declined path with its reason.
+  * [`select_paths(paths: Iterable[str]) -> list[str]`](framework/gates/typecheck/policy.py#L101-L103)
+    * *Contract*: Return the unique typed paths of an explicit file list, sorted.
+  * [`typed_sources() -> list[str]`](framework/gates/typecheck/policy.py#L106-L117)
+    * *Contract*: Return every typed module of the working tree, repository-relative.
+  * [`index_selection() -> list[str]`](framework/gates/typecheck/policy.py#L120-L131)
+    * *Contract*: Return the typed modules staged in the Git index, repository-relative.
+  * [`index_drift(paths: Iterable[str]) -> list[str]`](framework/gates/typecheck/policy.py#L134-L149)
+    * *Contract*: Return the paths whose working-tree content differs from the Git index.
+  * [`staged_blob(rel: str) -> str | None`](framework/gates/typecheck/policy.py#L152-L163)
+    * *Contract*: Return the staged text of a repository-relative path, or ``None``.
+  * [`write_shadow(rel: str, text: str) -> Path`](framework/gates/typecheck/policy.py#L166-L172)
+    * *Contract*: Write one staged blob to the shadow tree and return its path.
+  * [`shadow_pairs(modules: Iterable[str]) -> tuple[list[str], list[str]]`](framework/gates/typecheck/policy.py#L175-L193)
+    * *Contract*: Return ``(mypy --shadow-file argv, drifted paths)`` for staged modules.
+  * [`interpreter() -> Path`](framework/gates/typecheck/policy.py#L196-L198)
+    * *Contract*: Return the project interpreter from harness.
+  * [`engine_command(engine: str) -> list[str] | None`](framework/gates/typecheck/policy.py#L201-L211)
+    * *Contract*: Return the resolved checker argv prefix, or ``None`` when it is absent.
+  * [`ensure_cache_dir() -> Path`](framework/gates/typecheck/policy.py#L214-L217)
+    * *Contract*: Return the mypy cache directory, created under the ignored ``cache`` tree.
+
+- [`framework/gates/typecheck/report.py`](framework/gates/typecheck/report.py) (72 lines)
+  * *Module Purpose*: Rendering, machine reports and census aggregation of the static-type gate.
+  * [`print_findings(findings: Sequence[Finding], stream: TextIO, limit: int) -> None`](framework/gates/typecheck/report.py#L31-L41)
+    * *Contract*: Print findings (capped) and disclose how many were left out.
+  * [`write_report(path: Path, findings: Sequence[Finding]) -> None`](framework/gates/typecheck/report.py#L44-L55)
+    * *Contract*: Write the machine-readable JSON report of one run.
+  * [`per_tree(findings: Sequence[Finding]) -> list[tuple[str, int]]`](framework/gates/typecheck/report.py#L58-L61)
+    * *Contract*: Return ``(tree, count)`` rows for the typed roots, heaviest first.
+  * [`census_lines(findings: Sequence[Finding], checked: int) -> list[str]`](framework/gates/typecheck/report.py#L64-L72)
+    * *Contract*: Return the census summary: totals, per-tree rows and the worst files.
+
+- [`framework/gates/typecheck/runner.py`](framework/gates/typecheck/runner.py) (195 lines)
+  * *Module Purpose*: Checker invocation and diagnostic parsing of the static-type gate.
+  * [`class CheckerMissing(RuntimeError)`](framework/gates/typecheck/runner.py#L36-L42)
+    * *Contract*: Raised when the configured checker executable cannot be resolved.
+    * [`CheckerMissing.__init__(self, engine: str, hint: str) -> None`](framework/gates/typecheck/runner.py#L39-L42)
+  * [`class Finding`](framework/gates/typecheck/runner.py#L46-L56)
+    * *Contract*: One checker diagnostic with its file, line, error code and message.
+    * [`Finding.format(self) -> str`](framework/gates/typecheck/runner.py#L54-L56)
+      * *Contract*: Return the finding as one ``path:line: code message`` line.
+  * [`class RunResult`](framework/gates/typecheck/runner.py#L60-L67)
+    * *Contract*: Outcome of one checker invocation.
+  * [`mypy_argv(paths: Sequence[str], staged: bool) -> list[str]`](framework/gates/typecheck/runner.py#L99-L121)
+    * *Contract*: Return the mypy command line for ``paths`` under the committed config.
+  * [`run_mypy(paths: Sequence[str], scoped: set[str], staged: bool) -> RunResult`](framework/gates/typecheck/runner.py#L124-L139)
+    * *Contract*: Run mypy on ``paths`` and return the findings they own.
+  * [`run_pyright(paths: Sequence[str]) -> RunResult`](framework/gates/typecheck/runner.py#L167-L182)
+    * *Contract*: Run the pyright census engine on ``paths`` and return its findings.
+  * [`run(engine: str, paths: Sequence[str], scoped: set[str] | None, staged: bool) -> RunResult`](framework/gates/typecheck/runner.py#L185-L195)
+    * *Contract*: Dispatch one run to ``engine`` with the caller's scope filter.
 
 ## Package `framework/indexing` — *AST-based repository mapping and Table-of-Contents indexing.*
 

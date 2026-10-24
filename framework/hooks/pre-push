@@ -30,6 +30,19 @@ if [ -x "$RUFF" ]; then
   fi
 fi
 
+# 1b. pinned advisory rule set: defect-shaped rules whose whole-tree census makes
+#     commit-time blocking expensive. The selection is pinned here (not in
+#     pyproject) so a push always re-measures the same rules; it is advisory
+#     either way, and the blocking set stays in pyproject's lint config.
+if [ -x "$RUFF" ]; then
+  CHANGED=$(git diff --name-only origin/HEAD...HEAD 2>/dev/null | grep -E '\.py$' || true)
+  if [ -n "$CHANGED" ]; then
+    # shellcheck disable=SC2086
+    (cd "$REPO" && "$RUFF" check --select PT018,PERF401,RET503,TRY301 \
+      --statistics $CHANGED 2>&1 | head -n 12) || true
+  fi
+fi
+
 # 2. import layer contract (lint-imports), when the project declares one
 if [ -x "$VENV/bin/lint-imports" ]; then
   (cd "$REPO" && "$VENV/bin/lint-imports" 2>&1 | tail -n 25) || true
@@ -84,6 +97,25 @@ if [ -f "$REPO/framework/indexing/cli.py" ]; then
     tail -n 5 "$index_log" >&2
   fi
   rm -f "$index_log"
+fi
+
+# 9. whole-tree test suite backstop. The commit path only ever runs the mirror
+#    tests of the staged files, so a change that breaks an unrelated test can
+#    reach a branch unnoticed; the push is the last place it is cheap to see.
+#    Advisory like every step here: a red suite warns, it never refuses the push.
+if [ -f "$REPO/framework/harness.py" ] && [ -n "$PY" ] && [ -x "$PY" ]; then
+  test_root="$("$PY" "$REPO/framework/harness.py" --get test-root 2>/dev/null || true)"
+  if [ -n "$test_root" ] && [ -d "$REPO/$test_root" ]; then
+    suite_log=$(mktemp)
+    if ! "$PY" -m pytest "$REPO/$test_root" "$REPO/framework/tests" -q -p no:cacheprovider \
+        >"$suite_log" 2>&1; then
+      echo "[pre-push:strict] WARN: test suite red at push — inspect and fix:" >&2
+      tail -n 8 "$suite_log" >&2
+    else
+      echo "[pre-push:strict] suite: $(tail -n 1 "$suite_log")"
+    fi
+    rm -f "$suite_log"
+  fi
 fi
 
 echo "[pre-push:strict] advisory complete (non-blocking)"

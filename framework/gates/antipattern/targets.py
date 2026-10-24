@@ -57,12 +57,17 @@ def _is_production_path(path: str) -> bool:
 
 
 def _read_staged(path: str) -> str:
-    result = subprocess.run(
-        ["git", "show", f":{path}"],
-        cwd=REPO,
-        capture_output=True,
-        check=False,
-    )
+    """Return the staged blob of ``path``; a wedged git fails closed, never hangs."""
+    try:
+        result = subprocess.run(
+            ["git", "show", f":{path}"],
+            cwd=REPO,
+            capture_output=True,
+            check=False,
+            timeout=10,
+        )
+    except subprocess.TimeoutExpired:
+        raise RuntimeError(f"timed out reading staged file {path}") from None
     if result.returncode:
         raise RuntimeError(
             f"cannot read staged file {path}: {result.stderr.decode(errors='replace').strip()}"

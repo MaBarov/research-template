@@ -14,7 +14,10 @@ running the mechanical rename below; nothing else should need project names.
 | `ENV_PREFIX` | every environment variable the project owns | `RESEARCH` |
 | `CODE_PREFIX` | gate finding codes | `HNS` |
 | `SOURCE_ROOTS` | first-party Python roots | `research/` |
-| `TEST_ROOT` | root of the mirror test tree | `tests/research` |
+| `STATIC_ROOTS` | trees the static gates audit | `research`, `framework`, `scripts`, `experiments` |
+| `TEST_ROOT` | root of the whole test tree (mirrors, harness tests, fixtures) | `tests` |
+| `MIRROR_ROOT` | mirror test tree the mirror gate resolves against | `tests/research` |
+| `CACHE_DIR` / `GATE_STATE_DIR` | build cache / per-repository gate state (locks, canaries) | `cache` / `research-gate` |
 | `PRODUCTION_ROOTS` | trees the antipattern gate reads | `research`, `scripts`, `slurm` |
 | `CONSUMING_ROOTS` | trees the parameter gate reads | `research`, `experiments`, `framework`, `scripts`, `slurm` |
 | `PARAMS_MODULE` / `REGISTRY_PATH` | the parameter registry | `research.params` / `research/params/registry.py` |
@@ -95,6 +98,34 @@ Pick `<slug>`, `<PREFIX>` (upper-case) and `<CODE>` (2-4 upper-case letters), th
   surrogate artifact (post-quantization differencing, pooled-basis broadcast,
   un-errored ratios) rather than one paper's method. Extend them with your own
   class of artifact, in the same gate, when you find one.
+* No project judgment. The source project this harness was extracted from also
+  carries advisory gates that encode *its* notion of a good computation: a
+  hot-path/memory-bottleneck detector, an abstract-cost (proxy-quality) detector,
+  a statistics-policy gate over its own metric families, and a design judge for
+  SOLID/DRY shapes. They are calibrated against that project's labeled case
+  corpus, so shipping them here would ship its taste. If you want equivalents,
+  build them from the same generic mechanism: an AST visitor with one code per
+  shape, a labeled case table with its expected code set, and a printed
+  precision/recall so a rule that stops firing is visible.
+
+## 3a. What each blocking gate answers
+
+Every code below is printed by the gate named beside it; the code prefix is
+`harness.CODE_PREFIX` (`HNS` in the template).
+
+| Gate | Codes | Question it refuses to answer "probably" |
+| --- | --- | --- |
+| `check_antipatterns.py` | HNS005-HNS037, HNS066, HNS067, HNS069, HNS072, HNS081, HNS082 | Is this code shape a known failure mode (swallowed failure, unbounded loop, unquoted shell interpolation, dead guard, positional response read, unpinned tooling)? |
+| `checks/check_test_mirror.py` | MIRROR MISSING, ALIAS DANGLING/STALE, MIR003, HNS068, HNS070 | Does the mirror exist, does its table only shrink, and does it assert the module's behavior with an independent oracle? |
+| `check_coverage.py` | COV005 + coverage findings | Do the mirror tests alone clear the file's statements and every loop's 0/1/>=2 cases, and does the waiver table only shrink? |
+| `limits/check_limits.py` | LMT001-LMT003 | Is the file, function and directory under the size caps, as staged? |
+| `indexing/gate.py` | contract findings | Does the module docstring keep its thumbnail and its `Invariants & Expected State:` contract? |
+| `checks/check_duplication.py` | CPD000-CPD002 | Is this clone new, and does the baseline only shrink? |
+| `params/check_param_duplicates.py` | HNS038-HNS043 | Is every parameter declared once in the registry, with no second default or alias? |
+| `distortion/check_distortion.py` | HNS044-HNS046 | Was this metric manufactured by a surrogate computation artifact? |
+| `mutation/check_mutation.py` | mutation findings | Do the tests kill the mutants of this exact content, scored against this exact test surface? |
+| `check_documentation.py` | doc-chain findings | Is there a manifest, metrics file and DVC/MLflow run behind the number? |
+| `check_sbatch_contract.sh` + `sbatch_gate.sh` | contract findings | Can this job be mapped back to a commit, and does it refuse a dirty tree? |
 
 ## 4. Rules that are not negotiable
 
@@ -106,3 +137,13 @@ Pick `<slug>`, `<PREFIX>` (upper-case) and `<CODE>` (2-4 upper-case letters), th
   never invent a run.
 * Every ledger under `framework/` is content-addressed evidence: refreshing it
   means running the gate, and a stale entry is a finding, not a warning.
+* A test is an oracle or it is not a test. The mirror gate grades the mirror's
+  own text (HNS068 for no behavioral assertion, HNS070 for assertions pinned to
+  their own state), the hook grades every staged test file the same way, and the
+  mutation ledger stamps the digest of the whole test surface: a verdict scored
+  against older tests is refused, because mutmut reuses its cache across test
+  edits (`harness.TEST_ROOT`, the root `conftest.py` and the `[tool.mutmut]`/
+  `[tool.pytest.ini_options]` sections are inside that digest).
+* The alias, waiver and duplication-baseline tables are ratchets (MIR003,
+  COV005, CPD002): they may shrink, never grow. A new module earns a mirror; a
+  loop that cannot reach its 0-case is fixed in a test, not waived afresh.

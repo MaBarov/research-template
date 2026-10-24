@@ -64,6 +64,39 @@ no skip flag and no override.
   signature changes, the docstring contract changes with it (interface drift
   gate).
 
+### Test oracles and ratchet tables (blocking pre-commit)
+
+A test file that exists but asserts nothing is worse than a missing one: it
+satisfies an existence check and cannot catch a regression.
+
+* `framework/gates/checks/check_test_mirror.py` grades the mirror's own text.
+  `HNS068` fires when a non-exempt mirror parses to no behavioral assertion or
+  to nothing but tautologies (`assert True`, `assert 1 == 1`); `HNS070` fires
+  when every assertion is state-anchored or self-referential (`assert x == x`,
+  `assert f() == f()`, `assert len(x) >= 0`). `pytest.raises`/`pytest.warns`
+  blocks count as oracles; `conftest.py` and `*_fixtures.py` are exempt; an
+  unparseable mirror fails closed.
+* The same module grades every staged test file through `--oracle-files`, so
+  weakening a test blocks the commit that weakens it, whether or not the module
+  it mirrors is staged too.
+* `MIR003` (alias table), `COV005` (loop waivers) and `CPD002` (duplication
+  baseline) are ratchets: each compares the working table with the table
+  committed at `HEAD` and refuses an addition. Removals and identical tables
+  pass. A new module earns a dedicated mirror instead of borrowing a
+  neighbour's; a loop that cannot reach its 0-case is fixed in a test instead of
+  waived afresh; a new clone is deleted instead of baselined.
+* Mutation evidence is schema v2. Every ledger entry carries
+  `content_sha256` (the staged blob), `tests_sha256` (the digest of
+  `harness.TEST_ROOT`, the root `conftest.py` and the `[tool.mutmut]` /
+  `[tool.pytest.ini_options]` sections) and the mutmut verdict counts. A
+  refresh refuses while the test surface differs from the index, refuses to
+  record when the surface or the staged bytes moved during the run, and drops
+  mutmut's own verdict cache when the digest moved, because mutmut reuses cached
+  verdicts across test edits. A refresh serializes on an exclusive lock under
+  `harness.GATE_STATE_DIR`; a peer refresh is refused, never queued.
+* A `# pragma: no mutate` line generates no mutant at all, so it is reported as
+  a `NOTE` (never a verdict) when a staged blob adds one over `HEAD`.
+
 ### Submission provenance (strict by default)
 
 Every cluster job is identified by the commit it ran from, and nothing submits
