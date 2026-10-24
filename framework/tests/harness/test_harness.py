@@ -92,6 +92,13 @@ def test_static_scope_covers_the_static_roots() -> None:
     assert harness.STATIC_ROOTS == ("research", "framework", "scripts", "experiments")
 
 
+def test_test_scope_covers_the_test_root() -> None:
+    regex = harness.KEYS["test-scope"]()
+
+    assert regex == rf"^({harness.TEST_ROOT})/.*\.py$"
+    assert harness.main(["--get", "test-scope"]) == 0
+
+
 def test_gate_state_and_cache_dirs_are_slug_scoped(monkeypatch) -> None:
     assert harness.KEYS["gate-state-dir"] == f"{harness.SLUG}-gate"
     assert harness.KEYS["cache-dir"] == "cache"

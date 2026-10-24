@@ -59,21 +59,31 @@ def at_floor(interpreter: str) -> bool:
     return harness._floor_tuple(version) >= harness._floor_tuple(harness.PYTHON_FLOOR)
 
 
-def pick_interpreter(explicit: str | None) -> str:
-    """Return the interpreter to build the venv with, or fail with the floor message."""
+def _floor_failure() -> SystemExit:
+    """Return the fail-closed refusal for an interpreter under the floor."""
 
-    venv_python = Path(harness.venv()) / "bin" / "python"
-    for candidate in (explicit, str(venv_python)):
-        if candidate and Path(candidate).is_file() and at_floor(candidate):
-            return candidate
-    for name in CANDIDATES:
-        found = shutil.which(name)
-        if found and at_floor(found):
-            return found
-    raise SystemExit(
+    return SystemExit(
         f"FAIL: no Python >= {harness.PYTHON_FLOOR} found "
         f"({'tried ' + ', '.join(CANDIDATES)}): install one or pass --interpreter."
     )
+
+
+def pick_interpreter(explicit: str | None) -> str:
+    """Return the interpreter to build the venv with, or fail with the floor message."""
+
+    if explicit:
+        # An explicit choice is a claim about the tree the venv will import from:
+        # it is judged on its own, never replaced by a PATH candidate the caller
+        # did not ask for. Replacing it would run the bootstrap on an interpreter
+        # the caller ruled out.
+        if Path(explicit).is_file() and at_floor(explicit):
+            return explicit
+        raise _floor_failure()
+    venv_python = str(Path(harness.venv()) / "bin" / "python")
+    for candidate in (venv_python, *(shutil.which(name) or "" for name in CANDIDATES)):
+        if candidate and Path(candidate).is_file() and at_floor(candidate):
+            return candidate
+    raise _floor_failure()
 
 
 def build_steps(

@@ -129,7 +129,7 @@ def test_commit_of_a_file_outside_the_population_passes(tmp_path: Path) -> None:
     env = hook_checkout(tmp_path)
     note = tmp_path / "tests/framework/test_mutation_gate_note.py"
     note.parent.mkdir(parents=True, exist_ok=True)
-    note.write_text("def test_note():\n    assert True\n", encoding="utf-8")
+    note.write_text("def test_note():\n    assert len([1, 2]) == 2\n", encoding="utf-8")
     assert hook_fixtures.run_git(tmp_path, env, "add", "tests").returncode == 0
     accepted = hook_fixtures.run_git(
         tmp_path, env, "commit", "-qm", "outside the population"

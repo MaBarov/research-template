@@ -20,7 +20,7 @@ Keys: keys, slug, env-prefix, code-prefix, python, python-floor, dvc-bin, venv,
 deploy-root, source-roots, static-roots, static-scope, excluded-parts, cache-dir,
 gate-state-dir, mypy-bin, pyright-bin, test-root, mirror-root, params-module,
 registry-path, resolve-path, smoke-dir, slurm-dir, queue-clusters, default-cluster,
-mirror-scope, coverage-scope, index-scope, production-scope, run-manifest-schema,
+mirror-scope, coverage-scope, test-scope, index-scope, production-scope, run-manifest-schema,
 run-metrics-schema, canary-receipt-schema, env-regex.
 """
 
@@ -253,6 +253,7 @@ KEYS: dict[str, object] = {
     "default-cluster": QUEUE_CLUSTERS[0],
     "mirror-scope": lambda: scope_regex((*SOURCE_ROOTS, MIRROR_ROOT)),
     "coverage-scope": lambda: scope_regex(SOURCE_ROOTS, r".*\.py$"),
+    "test-scope": lambda: scope_regex((TEST_ROOT,), r".*\.py$"),
     "index-scope": lambda: scope_regex(INDEX_ROOTS),
     "production-scope": lambda: scope_regex(PRODUCTION_ROOTS),
     "env-regex": env_regex,

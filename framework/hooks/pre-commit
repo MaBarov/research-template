@@ -27,6 +27,7 @@ PY="$(harness python)" || {
 }
 MIRROR_SCOPE="$(harness mirror-scope)"
 COVERAGE_SCOPE="$(harness coverage-scope)"
+TEST_SCOPE="$(harness test-scope)"
 DISTORTION_SCOPE="$(harness static-scope)"
 INDEX_SCOPE="$(harness index-scope)"
 
@@ -108,6 +109,20 @@ if [ -n "$STAGED_ALL" ]; then
   if [ "${#STAGED_MIRROR_SCOPE[@]}" -gt 0 ] && [ -x "$REPO/framework/gates/checks/check_test_mirror.py" ]; then
     if ! "$PY" "$REPO/framework/gates/checks/check_test_mirror.py" --strict --staged "${STAGED_MIRROR_SCOPE[@]}"; then
       echo "[pre-commit] FAILED: test mirror gate blocked this commit." >&2
+      exit 1
+    fi
+  fi
+
+  # A staged test file is graded on its own text, not only as a neighbour's
+  # mirror: a file that parses to no behavioral assertion (HNS068) or to
+  # nothing but state-anchored tautologies (HNS070) is removal theater, and it
+  # blocks whether or not the module it mirrors is staged too.
+  mapfile -t STAGED_ORACLE_PY < <(printf '%s\n' "$STAGED_ALL" | grep -E "$TEST_SCOPE" || true)
+  if [ "${#STAGED_ORACLE_PY[@]}" -gt 0 ] && [ -x "$REPO/framework/gates/checks/check_test_mirror.py" ]; then
+    if ! "$PY" "$REPO/framework/gates/checks/check_test_mirror.py" --strict --staged \
+        --oracle-files "${STAGED_ORACLE_PY[@]}"; then
+      echo "[pre-commit] FAILED: a staged test file carries no independent" >&2
+      echo "[pre-commit] oracle (HNS068/HNS070). Assert the module's behavior." >&2
       exit 1
     fi
   fi

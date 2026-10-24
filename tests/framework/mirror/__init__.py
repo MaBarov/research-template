@@ -1,0 +1,1 @@
+"""Mirror-gate hook tests."""

@@ -3,7 +3,7 @@
 > [!NOTE]
 > Sub-index for the `framework` package hierarchy. Use the line ranges below to load specific sections directly into context.
 
-**Repository Statistics**: 71 modules | 14 classes | 529 public functions.
+**Repository Statistics**: 71 modules | 14 classes | 553 public functions.
 
 ## Table of Contents
 
@@ -12,30 +12,30 @@
 - [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 89–122) — *Internals of the production anti-pattern gate.*
 - [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 123–131) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
 - [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 132–138) — *Liveness checks for the production anti-pattern gate (HNS072).*
-- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 139–211) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
-- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 212–269) — *Internals of the per-file coverage and loop-iteration gate.*
-- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 270–316) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
-- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 317–348)
-- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 349–406)
-- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 407–475) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
-- [`framework/gates/params`](#package-frameworkgatesparams) (lines 476–516) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
-- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 517–521) — *Pure AST and text primitives of the parameter-drift matchers.*
-- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 522–558) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
-- [`framework/indexing`](#package-frameworkindexing) (lines 559–610) — *AST-based repository mapping and Table-of-Contents indexing.*
-- [`framework/tests`](#package-frameworktests) (lines 611–741)
-- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 742–829) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
-- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 830–840) — *Tests for the coverage gate and its probe plugin.*
-- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 841–867) — *Test package for the framework distortion gate.*
-- [`framework/tests/gates`](#package-frameworktestsgates) (lines 868–978) — *Package.*
-- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 979–1037) — *Tests for the parameter registry gates.*
-- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1038–1053) — *Harness registry tests: project identity and the interpreter floor.*
-- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1054–1102) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 139–219) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
+- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 220–277) — *Internals of the per-file coverage and loop-iteration gate.*
+- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 278–324) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
+- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 325–356)
+- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 357–414)
+- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 415–483) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
+- [`framework/gates/params`](#package-frameworkgatesparams) (lines 484–524) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
+- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 525–529) — *Pure AST and text primitives of the parameter-drift matchers.*
+- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 530–566) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
+- [`framework/indexing`](#package-frameworkindexing) (lines 567–618) — *AST-based repository mapping and Table-of-Contents indexing.*
+- [`framework/tests`](#package-frameworktests) (lines 619–775)
+- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 776–863) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
+- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 864–874) — *Tests for the coverage gate and its probe plugin.*
+- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 875–901) — *Test package for the framework distortion gate.*
+- [`framework/tests/gates`](#package-frameworktestsgates) (lines 902–1012) — *Package.*
+- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1013–1071) — *Tests for the parameter registry gates.*
+- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1072–1088) — *Harness registry tests: project identity and the interpreter floor.*
+- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1089–1137) — *Tests for framework.indexing Table-of-Contents subsystem.*
 
 ---
 
 ## Package `framework` — *Repository gate framework (hooks + checkers).*
 
-- [`framework/harness.py`](framework/harness.py) (298 lines)
+- [`framework/harness.py`](framework/harness.py) (299 lines)
   * *Module Purpose*: Single registry for the project identity, path roots and interpreter the harness uses.
   * [`env(name: str) -> str`](framework/harness.py#L114-L117)
     * *Contract*: Return the canonical env-var spelling of a harness parameter.
@@ -55,7 +55,7 @@
     * *Contract*: Return an external checker: env override, the venv binary, else ``name`` on PATH.
   * [`scope_regex(roots: tuple[str, ...], suffix: str) -> str`](framework/harness.py#L217-L221)
     * *Contract*: Return an ERE anchoring ``roots`` (plus optional per-root suffix) at the start.
-  * [`main(argv: list[str]) -> int`](framework/harness.py#L274-L294)
+  * [`main(argv: list[str]) -> int`](framework/harness.py#L275-L295)
     * *Contract*: Print every key, one key (``--get``), or the hook assignments (``--shell``).
 
 ## Package `framework/gates` — *Blocking and advisory repository gates.*
@@ -174,22 +174,30 @@
   * [`main(argv: Sequence[str] | None) -> int`](framework/gates/checks/check_duplication.py#L334-L357)
     * *Contract*: Run duplication evaluation and exit with status code.
 
-- [`framework/gates/checks/check_test_mirror.py`](framework/gates/checks/check_test_mirror.py) (257 lines)
+- [`framework/gates/checks/check_test_mirror.py`](framework/gates/checks/check_test_mirror.py) (529 lines)
   * *Module Purpose*: Fail-closed test-mirror check for the production source tree.
-  * [`class Finding`](framework/gates/checks/check_test_mirror.py#L62-L70)
+  * [`class Finding`](framework/gates/checks/check_test_mirror.py#L88-L96)
     * *Contract*: One missing or broken src -> test mirror.
-    * [`Finding.format(self) -> str`](framework/gates/checks/check_test_mirror.py#L69-L70)
-  * [`mirror_paths(rel: str, tests_root: str) -> list[str]`](framework/gates/checks/check_test_mirror.py#L73-L82)
+    * [`Finding.format(self) -> str`](framework/gates/checks/check_test_mirror.py#L95-L96)
+  * [`mirror_paths(rel: str, tests_root: str) -> list[str]`](framework/gates/checks/check_test_mirror.py#L99-L108)
     * *Contract*: Return the accepted mirror test paths for one source file.
-  * [`is_checked_path(rel: str, src: str) -> bool`](framework/gates/checks/check_test_mirror.py#L85-L88)
+  * [`is_checked_path(rel: str, src: str) -> bool`](framework/gates/checks/check_test_mirror.py#L111-L114)
     * *Contract*: Return whether ``rel`` is a source module the gate is responsible for.
-  * [`is_skipped(rel: str) -> bool`](framework/gates/checks/check_test_mirror.py#L91-L92)
-  * [`collect_files(src: str, staged: Sequence[str] | None) -> list[str]`](framework/gates/checks/check_test_mirror.py#L95-L103)
+  * [`is_skipped(rel: str) -> bool`](framework/gates/checks/check_test_mirror.py#L117-L118)
+  * [`collect_files(src: str, staged: Sequence[str] | None) -> list[str]`](framework/gates/checks/check_test_mirror.py#L121-L129)
     * *Contract*: Return the source files to check, sorted and de-duplicated.
-  * [`evaluate(files: Sequence[str], aliases: Mapping[str, Sequence[str]], exists: Callable[[str], bool], tests_root: str) -> list[Finding]`](framework/gates/checks/check_test_mirror.py#L135-L149)
+  * [`is_exempt_mirror_test(mirror: str) -> bool`](framework/gates/checks/check_test_mirror.py#L138-L141)
+    * *Contract*: Return whether ``mirror`` is a fixture module exempt from HNS068.
+  * [`defines_test_function(source: str) -> bool`](framework/gates/checks/check_test_mirror.py#L266-L276)
+    * *Contract*: True when ``source`` defines at least one ``test_*`` function.
+  * [`grade_oracle_file(rel: str, source: str) -> list[Finding]`](framework/gates/checks/check_test_mirror.py#L279-L285)
+    * *Contract*: Return HNS068/HNS070 findings for one test file's own text.
+  * [`evaluate(files: Sequence[str], aliases: Mapping[str, Sequence[str]], exists: Callable[[str], bool], tests_root: str) -> list[Finding]`](framework/gates/checks/check_test_mirror.py#L317-L331)
     * *Contract*: Return one finding per source module without a valid test mirror.
-  * [`load_aliases(path: Path) -> dict[str, list[str]]`](framework/gates/checks/check_test_mirror.py#L152-L168)
-  * [`main(argv: Sequence[str] | None) -> int`](framework/gates/checks/check_test_mirror.py#L228-L253)
+  * [`load_aliases(path: Path) -> dict[str, list[str]]`](framework/gates/checks/check_test_mirror.py#L334-L350)
+  * [`check_alias_ratchet(repo_root: Path, alias_path: Path, current_aliases: Mapping[str, Sequence[str]]) -> list[Finding]`](framework/gates/checks/check_test_mirror.py#L368-L396)
+    * *Contract*: Block newly added alias mappings (MIR003); the table may only shrink.
+  * [`main(argv: Sequence[str] | None) -> int`](framework/gates/checks/check_test_mirror.py#L497-L525)
 
 - [`framework/gates/checks/local_gate.py`](framework/gates/checks/local_gate.py) (225 lines)
   * *Module Purpose*: Local pre-submit gate (run BEFORE any sbatch submission).
@@ -722,22 +730,48 @@
   * [`test_cli_records_then_replays_clearance(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/test_coverage_gate.py#L506-L520)
     * *Contract*: One staged run records clearance; replays are instant and void after edits.
 
-- [`framework/tests/test_test_mirror_gate.py`](framework/tests/test_test_mirror_gate.py) (158 lines)
+- [`framework/tests/test_test_mirror_gate.py`](framework/tests/test_test_mirror_gate.py) (373 lines)
   * *Module Purpose*: Tests for the src -> test mirror gate.
-  * [`test_mirror_paths_accepts_both_spellings() -> None`](framework/tests/test_test_mirror_gate.py#L27-L31)
-  * [`test_evaluate_accepts_both_spellings_and_exempts_packages() -> None`](framework/tests/test_test_mirror_gate.py#L34-L52)
-  * [`test_alias_satisfies_a_missing_mirror() -> None`](framework/tests/test_test_mirror_gate.py#L55-L62)
-  * [`test_dangling_alias_is_a_finding() -> None`](framework/tests/test_test_mirror_gate.py#L65-L73)
-  * [`test_stale_alias_beside_a_real_mirror_is_a_finding() -> None`](framework/tests/test_test_mirror_gate.py#L76-L83)
-  * [`test_collect_files_skips_caches_and_third_party(tmp_path, monkeypatch) -> None`](framework/tests/test_test_mirror_gate.py#L86-L94)
-  * [`test_collect_files_staged_filter_ignores_other_roots(tmp_path, monkeypatch) -> None`](framework/tests/test_test_mirror_gate.py#L97-L101)
-  * [`test_load_aliases_reads_targets(tmp_path) -> None`](framework/tests/test_test_mirror_gate.py#L104-L109)
-  * [`test_load_aliases_rejects_a_non_object(tmp_path) -> None`](framework/tests/test_test_mirror_gate.py#L112-L116)
-  * [`test_cli_blocks_a_missing_mirror(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L119-L126)
-  * [`test_cli_passes_with_a_real_mirror(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L129-L134)
-  * [`test_cli_missing_alias_table_is_an_environment_error(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L137-L142)
-  * [`test_cli_staged_ignores_non_source_paths(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L145-L148)
-  * [`test_cli_json_report_lists_findings(tmp_path, monkeypatch) -> None`](framework/tests/test_test_mirror_gate.py#L151-L158)
+  * [`test_mirror_paths_accepts_both_spellings() -> None`](framework/tests/test_test_mirror_gate.py#L36-L40)
+  * [`test_evaluate_accepts_both_spellings_and_exempts_packages() -> None`](framework/tests/test_test_mirror_gate.py#L43-L61)
+  * [`test_alias_satisfies_a_missing_mirror() -> None`](framework/tests/test_test_mirror_gate.py#L64-L71)
+  * [`test_dangling_alias_is_a_finding() -> None`](framework/tests/test_test_mirror_gate.py#L74-L82)
+  * [`test_stale_alias_beside_a_real_mirror_is_a_finding() -> None`](framework/tests/test_test_mirror_gate.py#L85-L92)
+  * [`test_collect_files_skips_caches_and_third_party(tmp_path, monkeypatch) -> None`](framework/tests/test_test_mirror_gate.py#L95-L103)
+  * [`test_collect_files_staged_filter_ignores_other_roots(tmp_path, monkeypatch) -> None`](framework/tests/test_test_mirror_gate.py#L106-L110)
+  * [`test_load_aliases_reads_targets(tmp_path) -> None`](framework/tests/test_test_mirror_gate.py#L113-L118)
+  * [`test_load_aliases_rejects_a_non_object(tmp_path) -> None`](framework/tests/test_test_mirror_gate.py#L121-L125)
+  * [`test_cli_blocks_a_missing_mirror(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L128-L135)
+  * [`test_cli_passes_with_a_real_mirror(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L138-L143)
+  * [`test_cli_missing_alias_table_is_an_environment_error(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L146-L151)
+  * [`test_cli_staged_ignores_non_source_paths(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L154-L157)
+  * [`test_cli_json_report_lists_findings(tmp_path, monkeypatch) -> None`](framework/tests/test_test_mirror_gate.py#L160-L167)
+  * [`test_count_oracles_counts_tautologies() -> None`](framework/tests/test_test_mirror_gate.py#L175-L183)
+  * [`test_count_oracles_counts_state_anchored_assertions() -> None`](framework/tests/test_test_mirror_gate.py#L186-L194)
+  * [`test_count_oracles_treats_unparseable_as_empty() -> None`](framework/tests/test_test_mirror_gate.py#L197-L198)
+  * [`test_count_oracles_counts_context_managers(source: str) -> None`](framework/tests/test_test_mirror_gate.py#L216-L217)
+  * [`test_is_exempt_mirror_test() -> None`](framework/tests/test_test_mirror_gate.py#L220-L223)
+  * [`test_evaluate_flags_an_assertion_free_mirror(tmp_path, monkeypatch) -> None`](framework/tests/test_test_mirror_gate.py#L226-L235)
+  * [`test_evaluate_flags_a_tautological_mirror(tmp_path, monkeypatch) -> None`](framework/tests/test_test_mirror_gate.py#L238-L243)
+  * [`test_evaluate_flags_state_anchored_mirrors(tmp_path, monkeypatch, assertion) -> None`](framework/tests/test_test_mirror_gate.py#L256-L265)
+  * [`test_evaluate_accepts_genuine_value_comparisons(tmp_path, monkeypatch) -> None`](framework/tests/test_test_mirror_gate.py#L268-L276)
+  * [`test_evaluate_accepts_a_behavioral_mirror(tmp_path, monkeypatch) -> None`](framework/tests/test_test_mirror_gate.py#L279-L283)
+  * [`test_evaluate_exempts_fixture_mirrors(tmp_path, monkeypatch) -> None`](framework/tests/test_test_mirror_gate.py#L286-L290)
+  * [`test_cli_blocks_an_assertion_free_mirror(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L293-L298)
+  * [`test_grade_oracle_file_flags_zero_oracle_tests() -> None`](framework/tests/test_test_mirror_gate.py#L316-L320)
+    * *Contract*: An assertion-free test function is HNS068.
+  * [`test_grade_oracle_file_accepts_a_real_assertion() -> None`](framework/tests/test_test_mirror_gate.py#L323-L326)
+    * *Contract*: An assertion against an independent expectation passes.
+  * [`test_grade_oracle_file_flags_tautologies() -> None`](framework/tests/test_test_mirror_gate.py#L329-L333)
+    * *Contract*: An all-tautological body is HNS070 (state-anchored).
+  * [`test_grade_oracle_file_skips_support_modules() -> None`](framework/tests/test_test_mirror_gate.py#L336-L339)
+    * *Contract*: A module without a test_* function is support code, not a test.
+  * [`test_grade_oracle_file_skips_exempt_names() -> None`](framework/tests/test_test_mirror_gate.py#L342-L348)
+    * *Contract*: conftest and *_fixtures modules are fixtures, not oracle targets.
+  * [`test_grade_oracle_file_treats_unparseable_source_as_no_test() -> None`](framework/tests/test_test_mirror_gate.py#L351-L353)
+    * *Contract*: A file that does not parse defines no test function.
+  * [`test_oracle_cli_reads_the_staged_blob(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L356-L373)
+    * *Contract*: --staged decides from the Git index, not the working tree.
 
 ## Package `framework/tests/antipattern` — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
 
@@ -1037,7 +1071,7 @@
 
 ## Package `framework/tests/harness` — *Harness registry tests: project identity and the interpreter floor.*
 
-- [`framework/tests/harness/test_harness.py`](framework/tests/harness/test_harness.py) (120 lines)
+- [`framework/tests/harness/test_harness.py`](framework/tests/harness/test_harness.py) (127 lines)
   * *Module Purpose*: Tests for the harness registry: project identity and the interpreter floor.
   * [`test_python_refuses_an_interpreter_below_the_floor(tmp_path, monkeypatch) -> None`](framework/tests/harness/test_harness.py#L30-L39)
   * [`test_python_accepts_an_interpreter_at_the_floor(tmp_path, monkeypatch) -> None`](framework/tests/harness/test_harness.py#L42-L46)
@@ -1046,10 +1080,11 @@
   * [`test_dvc_bin_prefers_the_venv_binary(tmp_path, monkeypatch) -> None`](framework/tests/harness/test_harness.py#L59-L70)
   * [`test_engine_bin_prefers_env_then_venv_then_path(tmp_path, monkeypatch) -> None`](framework/tests/harness/test_harness.py#L73-L85)
   * [`test_static_scope_covers_the_static_roots() -> None`](framework/tests/harness/test_harness.py#L88-L92)
-  * [`test_gate_state_and_cache_dirs_are_slug_scoped(monkeypatch) -> None`](framework/tests/harness/test_harness.py#L95-L98)
-  * [`test_keys_key_lists_every_key() -> None`](framework/tests/harness/test_harness.py#L101-L106)
-  * [`test_bare_invocation_prints_every_key(capsys) -> None`](framework/tests/harness/test_harness.py#L109-L114)
-  * [`test_superseded_distortion_scope_key_is_unknown(capsys) -> None`](framework/tests/harness/test_harness.py#L117-L120)
+  * [`test_test_scope_covers_the_test_root() -> None`](framework/tests/harness/test_harness.py#L95-L99)
+  * [`test_gate_state_and_cache_dirs_are_slug_scoped(monkeypatch) -> None`](framework/tests/harness/test_harness.py#L102-L105)
+  * [`test_keys_key_lists_every_key() -> None`](framework/tests/harness/test_harness.py#L108-L113)
+  * [`test_bare_invocation_prints_every_key(capsys) -> None`](framework/tests/harness/test_harness.py#L116-L121)
+  * [`test_superseded_distortion_scope_key_is_unknown(capsys) -> None`](framework/tests/harness/test_harness.py#L124-L127)
 
 ## Package `framework/tests/indexing` — *Tests for framework.indexing Table-of-Contents subsystem.*
 
