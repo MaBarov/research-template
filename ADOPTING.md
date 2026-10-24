@@ -100,15 +100,19 @@ Pick `<slug>`, `<PREFIX>` (upper-case) and `<CODE>` (2-4 upper-case letters), th
   surrogate artifact (post-quantization differencing, pooled-basis broadcast,
   un-errored ratios) rather than one paper's method. Extend them with your own
   class of artifact, in the same gate, when you find one.
-* No project judgment. The source project this harness was extracted from also
-  carries advisory gates that encode *its* notion of a good computation: a
-  hot-path/memory-bottleneck detector, an abstract-cost (proxy-quality) detector,
-  a statistics-policy gate over its own metric families, and a design judge for
-  SOLID/DRY shapes. They are calibrated against that project's labeled case
-  corpus, so shipping them here would ship its taste. If you want equivalents,
-  build them from the same generic mechanism: an AST visitor with one code per
-  shape, a labeled case table with its expected code set, and a printed
-  precision/recall so a rule that stops firing is visible.
+* No project judgment where it would bind you. The source project this harness
+  was extracted from also carries policy gates calibrated against *its* labelled
+  case corpus. Two families ship here because they are mechanical and their taste
+  is quarantined: the hot-path detector (`hotpath/`, HNS089-HNS094) and the
+  abstract-cost/PROXY-quality detector (`abstract_cost/`, HNS095-HNS099) run as
+  **advisories** — their recorded recall is pinned (16/18 and 16/19), and they
+  print findings while the commit proceeds. Adopt them tightly by adding
+  `--strict` in the hook step, or ignore their census entirely. Still absent: a
+  statistics-policy gate over one project's metric families and a design judge for
+  SOLID/DRY shapes, both of which need that project's module graph and receipt
+  schemas. If you want equivalents, build them the same way: an AST visitor with
+  one code per shape, a labelled case table with its expected code set, and a
+  printed precision/recall so a rule that stops firing is visible.
 
 ## 3a. What each blocking gate answers
 
@@ -126,6 +130,10 @@ Every code below is printed by the gate named beside it; the code prefix is
 | `params/check_param_duplicates.py` | HNS038-HNS043 | Is every parameter declared once in the registry, with no second default or alias? |
 | `distortion/check_distortion.py` | HNS044-HNS046 | Was this metric manufactured by a surrogate computation artifact? |
 | `typecheck/check_types.py` | mypy/pyright findings | Does the module I am touching type-check, judged on the staged blob? |
+| `transfers/check_device_transfers.py` | HNS056-HNS060, HNS088 | Does this loop move data to the host, mix devices in one expression, or synchronize redundantly? |
+| `memory/check_memory_bottlenecks.py` | HNS083-HNS086 | Does this step allocate per iteration, retain an autograd graph, or keep a tensor alive for the whole run? |
+| `hotpath/check_hotpath.py` (advisory) | HNS089-HNS094 | Does this shape match a measured hot-path defect in the labelled corpus (census only, never blocking)? |
+| `abstract_cost/check_abstract_cost.py` (advisory) | HNS095-HNS099 | Is this a proxy-quality computation (census only, never blocking)? |
 | `mutation/check_mutation.py` | mutation findings | Do the tests kill the mutants of this exact content, scored against this exact test surface? |
 | `check_documentation.py` | doc-chain findings | Is there a manifest, metrics file and DVC/MLflow run behind the number? |
 | `check_sbatch_contract.sh` + `sbatch_gate.sh` | contract findings | Can this job be mapped back to a commit, and does it refuse a dirty tree? |

@@ -224,6 +224,29 @@ Three holes that surface only after the fact, closed at commit and at ref move:
   transaction aborts; every decision is appended to
   `<common-dir>/research-gate/ref_audit.jsonl`.
 
+### Device transfers and memory bottlenecks (blocking), hot path and abstract cost (advisory)
+
+Four gates read the same static population and share one loader
+(`framework/gates/static/sources.py`), so they cannot disagree about which file
+they are willing to read:
+
+* `framework/gates/transfers/check_device_transfers.py`, pre-commit step
+  **5d8**: `HNS056`-`HNS060` grade host↔device transfer shapes (a copy inside a
+  loop or comprehension, `to("cpu")` in either spelling, a concatenation built
+  from moved pieces) and `HNS088` an expression that mixes two devices. Every
+  finding carries its `trigger` (`loop`, `aggregate`, `streaming`, `static`), so
+  a name-triggered hit is never read as a measured per-iteration cost.
+* `framework/gates/memory/check_memory_bottlenecks.py`, step **5d11**:
+  `HNS083`-`HNS086` grade per-iteration allocation and retention — an
+  un-detached tensor appended to a list keeps its graph alive for the whole run.
+* `framework/gates/hotpath/check_hotpath.py` (**5d12**) and
+  `framework/gates/abstract_cost/check_abstract_cost.py` (**5d13**) are
+  **advisory**: they print a census and a `WARN`, and never fail a commit. Their
+  calibration is the source project's labelled corpus, so shipping them as vetoes
+  would ship its taste; their recorded recall (16/18 and 16/19) is pinned, which
+  means a rule that stops firing fails the pinned battery instead of decaying
+  silently. `--strict` is how a project that adopts the notion flips the posture.
+
 ### Pinned acceptance battery (blocking pre-commit)
 
 A `pinned` test carries a number a human recorded — a census floor, a recall

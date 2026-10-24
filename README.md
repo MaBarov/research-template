@@ -8,7 +8,7 @@ paper.
 
 [![template](https://img.shields.io/badge/GitHub-template_repository-2ea44f)](https://github.com/MaBarov/research-template)
 ![python](https://img.shields.io/badge/python-3.11%2B-blue)
-![status](https://img.shields.io/badge/gates-green%20%C2%B7%20504%20tests-success)
+![status](https://img.shields.io/badge/gates-green%20%C2%B7%20829%20tests-success)
 
 Marked as a GitHub template repository: **Use this template** (or the `git clone`
 below) starts a project with the harness already wired.
@@ -18,8 +18,10 @@ What you get:
 * **Commit gates** (`framework/hooks/pre-commit`, blocking): code-size limits,
 oracle-graded test mirrors, per-file coverage clearance, docstring contracts,
 duplication, a single parameter registry, mutation evidence, surrogate-distortion
-anti-patterns, static types over the staged blob, instruction references, an
-sbatch provenance contract, and index freshness.
+anti-patterns, static types over the staged blob, device transfers, memory
+bottlenecks, instruction references, the pinned acceptance battery, an sbatch
+provenance contract, and index freshness. Two advisory censuses (hot path,
+abstract cost) print findings without ever blocking.
 * **Ref gates** (`framework/hooks/reference-transaction`,
 `framework/hooks/pre-merge-commit`): a ref move lands only when the new commit's
 tree was armed by the battery that graded it, so `--no-verify`, a rewritten
@@ -92,7 +94,7 @@ tables, `[tool.<slug>.contracts]`) and the ledgers the gates refresh themselves.
 ## Verifying the harness
 
 ```bash
-python -m pytest framework/tests tests -q          # 504 tests: gate contracts + example suite
+python -m pytest framework/tests tests -q          # 829 tests: gate contracts + example suite
 bash framework/hooks/pre-commit                    # the commit battery, on the staged tree
 bash framework/gates/sbatch_gate.sh slurm/template.sbatch --dry-run
 ```
@@ -121,6 +123,10 @@ RESEARCH_PYTHON=/path/to/python3.11 bash framework/hooks/pre-commit
 | Instruction refs | commit | `python framework/gates/instructions/check_instruction_refs.py --strict --staged AGENTS.md` |
 | Ref provenance | any ref move | `framework/gates/freshness/ref_guard.py --state prepared` (fed by git's `reference-transaction` hook) |
 | Pinned battery | commit | `python -m pytest -m pinned -q framework/tests tests` |
+| Device transfers | commit | `python framework/gates/transfers/check_device_transfers.py --mode staged --staged --strict FILE...` |
+| Memory bottlenecks | commit | `python framework/gates/memory/check_memory_bottlenecks.py --mode staged --staged --strict FILE...` |
+| Hot path (advisory) | never (warns) | `python framework/gates/hotpath/check_hotpath.py --mode all` |
+| Abstract cost (advisory) | never (warns) | `python framework/gates/abstract_cost/check_abstract_cost.py --mode all` |
 | Index freshness | commit | `python -m framework.indexing.cli --output INDEX.md --check` |
 | Submit gate | submit | `bash framework/gates/sbatch_gate.sh slurm/job.sbatch` |
 
