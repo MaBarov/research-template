@@ -12,6 +12,12 @@ Invariants & Expected State:
       selects exactly the mirror/alias tests of the staged files.
     * Baseline, waiver and alias data are read from the paths declared in
       ``framework.gates.coverage.config``; the module never invents them.
+    * ``check_waiver_ratchet`` compares the loaded waiver table with the table
+      committed at HEAD and raises COV005 for an added ``(file, ordinal)``
+      pair: the waiver table is monotonic non-increasing, so a loop that
+      cannot reach its 0-case is fixed in a test, never waived afresh. A
+      missing or unreadable HEAD table is not a finding, because a fresh
+      checkout has nothing to ratchet against.
 """
 
 from __future__ import annotations
@@ -103,6 +109,7 @@ def _run_evidence_only(
         require_cleared=args.mode == "staged",
         refresh_hint=_evidence_refresh_hint(files),
     )
+    findings.extend(_waiver_ratchet(args, waivers))
     return _report_evidence(files, findings, args.strict)
 
 
@@ -398,6 +405,90 @@ def _record_staged_evidence(
     ledger.write_evidence(config.REPO / args.evidence, entries)
 
 
+def check_waiver_ratchet(
+    repo: Path,
+    waivers_path: Path,
+    current_waivers: Mapping[str, Mapping[str, str]],
+) -> list[Finding]:
+    """Block loop-waiver additions absent from HEAD; waivers only shrink."""
+
+    try:
+        rel = waivers_path.resolve().relative_to(repo.resolve()).as_posix()
+    except ValueError:
+        return []
+    head_waivers = _head_waivers(repo, rel)
+    if head_waivers is None:
+        return []
+    added = _added_waivers(head_waivers, current_waivers)
+    if not added:
+        return []
+    listed = ", ".join(f"{file}#{ordinal}" for file, ordinal in added[:5])
+    return [
+        Finding(
+            path=rel,
+            code="COV005",
+            message=(
+                "loop waiver addition blocked; waivers are ratchet-only. Cover "
+                "loop boundary conditions with unit tests instead of adding "
+                f"waivers: {listed}"
+            ),
+        )
+    ]
+
+
+def _head_waivers(repo: Path, rel: str) -> dict[str, dict[str, str]] | None:
+    """Read the committed waivers of HEAD, or ``None`` when unavailable."""
+
+    try:
+        shown = subprocess.run(
+            ["git", "-C", str(repo), "show", f"HEAD:{rel}"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except OSError:
+        return None
+    if shown.returncode != 0:
+        return None
+    try:
+        payload = json.loads(shown.stdout)
+    except json.JSONDecodeError:
+        return None
+    if not isinstance(payload, dict):
+        return None
+    return {
+        str(file): {str(ordinal): str(reason) for ordinal, reason in entries.items()}
+        for file, entries in payload.items()
+        if isinstance(entries, dict)
+    }
+
+
+def _added_waivers(
+    head: Mapping[str, Mapping[str, str]],
+    current: Mapping[str, Mapping[str, str]],
+) -> list[tuple[str, str]]:
+    """Return the ``(file, ordinal)`` pairs that current introduces."""
+
+    committed = {
+        (file, ordinal) for file, entries in head.items() for ordinal in entries
+    }
+    return [
+        (file, ordinal)
+        for file, entries in current.items()
+        for ordinal in entries
+        if (file, ordinal) not in committed
+    ]
+
+
+def _waiver_ratchet(
+    args: argparse.Namespace,
+    waivers: Mapping[str, Mapping[str, str]],
+) -> list[Finding]:
+    """Return the ratchet findings for the current waiver table."""
+
+    return check_waiver_ratchet(config.REPO, config.REPO / args.waivers, waivers)
+
+
 def _collect_findings(
     args: argparse.Namespace,
     run: _ProbeRun,
@@ -420,4 +511,5 @@ def _collect_findings(
         min_coverage=args.min_coverage,
     )
     findings.extend(_test_failure_finding(args, run.report))
+    findings.extend(_waiver_ratchet(args, waivers))
     return findings

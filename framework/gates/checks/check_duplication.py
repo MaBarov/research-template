@@ -9,6 +9,11 @@ Invariants & Expected State:
       user-local bin directory; failure in strict mode reports CPD000.
     - Baseline Invariance: Existing clones registered in baseline JSON
       are ignored; only newly introduced clones are reported as CPD001.
+    - Baseline Ratchet: ``check_baseline_ratchet`` ensures fingerprints in
+      the baseline file only remain identical or decrease (CPD002); on a
+      violation it names the clone locations by rescanning against the
+      committed (HEAD) baseline, so the offending block is visible without
+      a rerun.
     - Verdict-Path Unity: Every finding names the offending file and
       exact lines where duplication begins and ends.
 """
@@ -26,6 +31,7 @@ import tempfile
 from collections.abc import Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 REPO = Path(__file__).resolve().parents[3]
 DEFAULT_BASELINE = REPO / "framework" / "jscpd-baseline.json"
@@ -223,6 +229,36 @@ def run_jscpd(
         return ret, findings, f"{out}\n{err}".strip()
 
 
+def uncovered_clone_findings(
+    jscpd_bin: str,
+    target_paths: Sequence[str],
+    config_path: Path | None,
+    baseline_path: Path,
+    repo_root: Path,
+) -> list[Finding]:
+    """Locate the clones the committed (HEAD) baseline does not cover."""
+    rel = Path(os.path.relpath(baseline_path.resolve(), repo_root)).as_posix()
+    head = subprocess.run(
+        ["git", "-C", str(repo_root), "show", f"HEAD:{rel}"],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+        timeout=30,
+    )
+    if head.returncode != 0 or not head.stdout.strip():
+        return []
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        tmp_path = Path(tmp_dir)
+        baseline = tmp_path / "head-baseline.json"
+        baseline.write_text(head.stdout, encoding="utf-8")
+        args = build_jscpd_args(
+            jscpd_bin, target_paths, config_path, baseline, False, tmp_path
+        )
+        _execute_jscpd(args, repo_root)
+        return parse_jscpd_json(tmp_path / "jscpd-report.json", baseline_active=True)
+
+
 def _matches_staged(finding: Finding, staged_set: set[str]) -> bool:
     """Check if finding or its cloned peer involves a staged file."""
     if not staged_set:
@@ -252,6 +288,64 @@ def _resolve_targets(
     return [str(repo / r) for r in DEFAULT_ROOTS if (repo / r).exists()], staged_set
 
 
+def _baseline_expansion(repo_root: Path, baseline_path: Path) -> set[str]:
+    """Fingerprints the working baseline carries that HEAD's baseline lacks."""
+    rel = Path(os.path.relpath(baseline_path.resolve(), repo_root)).as_posix()
+    res = subprocess.run(
+        ["git", "-C", str(repo_root), "show", f"HEAD:{rel}"],
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        check=False,
+        timeout=30,
+    )
+    if res.returncode != 0:
+        return set()
+    try:
+        head_fp = json.loads(res.stdout).get("fingerprints", {})
+        current_fp = json.loads(baseline_path.read_text(encoding="utf-8")).get(
+            "fingerprints", {}
+        )
+    except (json.JSONDecodeError, OSError):
+        return set()
+    return set(current_fp.keys()) - set(head_fp.keys())
+
+
+def check_baseline_ratchet(
+    repo_root: Path, baseline_path: Path, uncovered: Sequence[Finding] = ()
+) -> list[Finding]:
+    """Block expansion of the committed jscpd baseline (ratchet-only)."""
+    rel = Path(os.path.relpath(baseline_path.resolve(), repo_root)).as_posix()
+    added = _baseline_expansion(repo_root, baseline_path)
+    if not added:
+        return []
+    where = "; ".join(f"{f.path}:{f.line} {f.message}" for f in uncovered[:4])
+    if len(uncovered) > 4:
+        where += f" (+{len(uncovered) - 4} more)"
+    msg = (
+        f"jscpd baseline expansion blocked ({len(added)} new fingerprint(s))"
+        + (f": {where}" if where else "")
+        + "; baseline is ratchet-only (monotonic non-increasing)"
+    )
+    return [Finding(code="CPD002", path=rel, line=1, message=msg)]
+
+
+def _finalize(
+    findings: list[Finding],
+    staged_set: set[str],
+    has_base: bool,
+    baseline_path: Path | None,
+    repo_root: Path,
+    uncovered: Sequence[Finding] = (),
+) -> list[Finding]:
+    """Filter to staged findings and append baseline-ratchet findings."""
+    if staged_set and findings:
+        findings = [f for f in findings if _matches_staged(f, staged_set)]
+    if has_base and baseline_path is not None:
+        findings.extend(check_baseline_ratchet(repo_root, baseline_path, uncovered))
+    return findings
+
+
 def evaluate_duplication(
     target_files: Sequence[str],
     staged: bool,
@@ -272,22 +366,70 @@ def evaluate_duplication(
     targets, staged_set = _resolve_targets(target_files, staged, has_base, repo_root)
     if not targets:
         return [], "No targets to scan."
+    findings, uncovered, retcode, output = _scan_and_collect_evidence(
+        bin_path, targets, config_path, baseline_path, update_baseline, repo_root
+    )
+    findings = _finalize(
+        findings, staged_set, has_base, baseline_path, repo_root, uncovered
+    )
+    _append_missing_clone_fallback(retcode, findings, staged_set, output)
+    return findings, output
+
+
+def _scan_and_collect_evidence(
+    bin_path: str,
+    targets: Sequence[str],
+    config_path: Path | None,
+    baseline_path: Path | None,
+    update_baseline: bool,
+    repo_root: Path,
+) -> tuple[list[Finding], list[Finding], int, str]:
+    """Run the scan and collect the clones it found plus the ratchet evidence."""
+    has_base = bool(baseline_path and baseline_path.is_file() and not update_baseline)
     retcode, findings, output = run_jscpd(
         bin_path, targets, config_path, baseline_path, update_baseline, repo_root
     )
-    if staged_set and findings:
-        findings = [f for f in findings if _matches_staged(f, staged_set)]
+    uncovered = _uncovered_clone_evidence(
+        has_base, baseline_path, repo_root, bin_path, targets, config_path
+    )
+    return findings, uncovered, retcode, output
+
+
+def _uncovered_clone_evidence(
+    has_base: bool,
+    baseline_path: Path | None,
+    repo_root: Path,
+    bin_path: str,
+    targets: Sequence[str],
+    config_path: Path | None,
+) -> list[Finding]:
+    """The located uncovered clones, or none when the baseline never expanded."""
+    uncovered: list[Finding] = []
+    if (
+        has_base
+        and baseline_path is not None
+        and _baseline_expansion(repo_root, baseline_path)
+    ):
+        uncovered = uncovered_clone_findings(
+            bin_path, targets, config_path, baseline_path, repo_root
+        )
+    return uncovered
+
+
+def _append_missing_clone_fallback(
+    retcode: int, findings: list[Finding], staged_set: set[str], output: str
+) -> None:
+    """Attach jscpd's own output when it failed without naming clones."""
     if retcode != 0 and not findings and not staged_set:
         findings.append(
             Finding(code="CPD002", path="jscpd", line=1, message=output[:200])
         )
-    return findings, output
 
 
 def _add_arguments(parser: argparse.ArgumentParser) -> None:
     """Register CLI arguments on parser."""
     parser.add_argument("files", nargs="*", help="Files or directories to scan.")
-    flags: list[tuple[str, dict[str, object]]] = [
+    flags: list[tuple[str, dict[str, Any]]] = [
         ("--strict", {"action": "store_true", "help": "Fail closed on findings."}),
         (
             "--staged",
