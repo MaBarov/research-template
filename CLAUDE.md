@@ -200,8 +200,12 @@ Three holes that surface only after the fact, closed at commit and at ref move:
   finding never blocks (`--follow-imports=silent`, filtered to the caller's
   scope), an unreadable blob is never reported clean, and a missing mypy fails
   closed under `--strict`. `--mode all` is the census; pyright is the advisory
-  second opinion on pre-push. Policy lives in `[tool.mypy]`/`[tool.pyright]` in
-  `pyproject.toml`, and both engines are dev extras.
+  second opinion on pre-push. The census is a debt meter, not a block: it prints
+  per-tree counts and the worst files, and exits 0 without `--strict`. The
+  blocking decision is staged-only, so the debt falls as files are touched —
+  exactly the posture the code-size rule already takes. Policy lives in
+  `[tool.mypy]`/`[tool.pyright]` in `pyproject.toml`, and both engines are dev
+  extras.
 * `framework/gates/instructions/check_instruction_refs.py`, pre-commit step
   **5d8**: every backticked file path an instruction artifact names must resolve
   against `git ls-files`. `HNS073` buckets each unresolved token (`placeholder`,
