@@ -47,7 +47,7 @@ and gate-state directories.
 | | |
 | --- | --- |
 | Required | Python **≥ 3.11**, `git`. The floor is declared once (`PYTHON_FLOOR`, `requires-python`) and every hook, smoke driver and submit gate refuses below it. |
-| Hook tooling | Declared once in `pyproject.toml` (`[project.optional-dependencies]`): `pip install -e ".[dev]"` pulls `pytest`, `coverage`, `mutmut`, `ruff`, `rope`, `pyflakes`, `vulture`, `detect-secrets`. |
+| Hook tooling | Declared once in `pyproject.toml` (`[project.optional-dependencies]`): `pip install -e ".[dev]"` pulls `pytest`, `coverage`, `mutmut`, `ruff`, `rope`, `pyflakes`, `vulture`, `detect-secrets`, `mypy`, `pyright`. |
 | Optional | `dvc` and `mlflow` (`pip install -e ".[docs]"`) for the documentation-chain gate; without them the gate refuses with the install hint instead of passing vacuously. The advisory tools degrade quietly: the duplication gate reports a note when the `jscpd` binary (npm) is absent, and the pre-push steps for `vulture`/`detect-secrets`/`lint-imports` run only when those binaries exist. |
 | Not needed | A GPU, a scheduler, or any network service to run the harness itself. |
 
@@ -117,6 +117,10 @@ RESEARCH_PYTHON=/path/to/python3.11 bash framework/hooks/pre-commit
 | Parameters | commit | `python framework/gates/params/check_param_duplicates.py --strict FILE...` |
 | Mutation evidence | commit | `python framework/gates/mutation/check_mutation.py --mode staged --staged FILE...` |
 | Distortion | commit | `python framework/gates/distortion/check_distortion.py --strict --staged FILE...` |
+| Static types | commit | `python framework/gates/typecheck/check_types.py --mode staged --staged --strict FILE...` |
+| Instruction refs | commit | `python framework/gates/instructions/check_instruction_refs.py --strict --staged AGENTS.md` |
+| Ref provenance | any ref move | `framework/gates/freshness/ref_guard.py --state prepared` (fed by git's `reference-transaction` hook) |
+| Pinned battery | commit | `python -m pytest -m pinned -q framework/tests tests` |
 | Index freshness | commit | `python -m framework.indexing.cli --output INDEX.md --check` |
 | Submit gate | submit | `bash framework/gates/sbatch_gate.sh slurm/job.sbatch` |
 

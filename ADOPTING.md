@@ -15,6 +15,7 @@ running the mechanical rename below; nothing else should need project names.
 | `CODE_PREFIX` | gate finding codes | `HNS` |
 | `SOURCE_ROOTS` | first-party Python roots | `research/` |
 | `STATIC_ROOTS` | trees the static gates audit | `research`, `framework`, `scripts`, `experiments` |
+| `EXCLUDED_PARTS` | path components no static gate reads (tests, vendored trees, caches) | `tests`, `third_party`, `cache`, `mutants`, `__pycache__`, `.venv`, `venv`, `results`, `models`, `.git` |
 | `TEST_ROOT` | root of the whole test tree (mirrors, harness tests, fixtures) | `tests` |
 | `MIRROR_ROOT` | mirror test tree the mirror gate resolves against | `tests/research` |
 | `CACHE_DIR` / `GATE_STATE_DIR` | build cache / per-repository gate state (locks, canaries) | `cache` / `research-gate` |

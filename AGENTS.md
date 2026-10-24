@@ -269,3 +269,21 @@ Three holes that surface only after the fact, closed at commit and at ref move:
   time, 600 s window, consumed on the match). Anything else is `GUARD001` and the
   transaction aborts; every decision is appended to
   `<common-dir>/research-gate/ref_audit.jsonl`.
+
+### Pinned acceptance battery (blocking pre-commit)
+
+A `pinned` test carries a number a human recorded — a census floor, a recall
+figure, a wiring fact — rather than a behavior. Those are the tests a silent
+refactor breaks first while every behavioral test keeps passing, so pre-commit
+step **5d10** runs `pytest -m pinned` over `framework/tests` and the project's
+test root on every commit:
+
+* Mark a case `pytestmark = pytest.mark.pinned` when its expectation is a
+  recorded number or an acceptance fact that a refactor could move without
+  failing anything else. Do not mark ordinary behavior: the battery is meant to
+  stay a few seconds.
+* The step fails closed twice: a failing pinned case (re-census the number, or
+  fix the regression it caught), and a selection that collects nothing (pytest
+  exit 5) — a marker whose last carrier was deleted cannot pin anything.
+* The marker is registered in `[tool.pytest.ini_options]`, so an unregistered
+  warning is never the reason a battery silently runs nothing.
