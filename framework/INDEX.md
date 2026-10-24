@@ -1322,25 +1322,25 @@
 
 ## Package `framework/tests/gates/ratchet` — *Ratchet gates: tables that may only shrink.*
 
-- [`framework/tests/gates/ratchet/test_ratchet_gates.py`](framework/tests/gates/ratchet/test_ratchet_gates.py) (193 lines)
+- [`framework/tests/gates/ratchet/test_ratchet_gates.py`](framework/tests/gates/ratchet/test_ratchet_gates.py) (201 lines)
   * *Module Purpose*: Tests for the ratchet gates that block waiver, alias and baseline additions.
-  * [`test_waiver_addition_is_blocked(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L49-L58)
+  * [`test_waiver_addition_is_blocked(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L57-L66)
     * *Contract*: A new ``(file, ordinal)`` waiver absent from HEAD yields COV005.
-  * [`test_unchanged_waivers_are_allowed(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L61-L69)
+  * [`test_unchanged_waivers_are_allowed(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L69-L77)
     * *Contract*: A candidate table identical to HEAD produces no finding.
-  * [`test_removed_waivers_are_allowed(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L72-L85)
+  * [`test_removed_waivers_are_allowed(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L80-L93)
     * *Contract*: Shrinking the waiver table (partially or wholly) is always permitted.
-  * [`test_alias_addition_is_blocked(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L88-L100)
+  * [`test_alias_addition_is_blocked(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L96-L108)
     * *Contract*: A new module key absent from HEAD yields MIR003.
-  * [`test_unchanged_aliases_are_allowed(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L103-L111)
+  * [`test_unchanged_aliases_are_allowed(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L111-L119)
     * *Contract*: An alias table identical to HEAD produces no finding.
-  * [`test_removed_aliases_are_allowed(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L114-L132)
+  * [`test_removed_aliases_are_allowed(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L122-L140)
     * *Contract*: Dropping an alias mapping (or all of them) is always permitted.
-  * [`test_baseline_ratchet_blocks_expansion(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L145-L156)
+  * [`test_baseline_ratchet_blocks_expansion(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L153-L164)
     * *Contract*: A current baseline with a fingerprint absent from HEAD is blocking.
-  * [`test_baseline_ratchet_names_the_uncovered_clone(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L159-L179)
+  * [`test_baseline_ratchet_names_the_uncovered_clone(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L167-L187)
     * *Contract*: An expansion finding names the clone locations it blocks.
-  * [`test_baseline_ratchet_allows_shrink_or_identical(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L182-L193)
+  * [`test_baseline_ratchet_allows_shrink_or_identical(tmp_path: Path) -> None`](framework/tests/gates/ratchet/test_ratchet_gates.py#L190-L201)
     * *Contract*: Shrinking the baseline or keeping it identical is allowed.
 
 ## Package `framework/tests/harness` — *Harness registry tests: project identity and the interpreter floor.*

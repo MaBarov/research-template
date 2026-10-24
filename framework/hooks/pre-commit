@@ -326,8 +326,16 @@ fi
 # advisory and runs on pre-push.
 CHECK_TYPES="$REPO/framework/gates/typecheck/check_types.py"
 if [ -n "$STAGED_ALL" ]; then
+  # The gate answers two different questions: an explicitly named path outside
+  # its population is a usage error (fail closed), while the hook asks "which of
+  # these staged files does the population contain?" -- so the hook narrows to
+  # that set itself, using the registry's own tree exclusions, and skips when the
+  # narrowing leaves nothing to judge.
+  EXCLUDED_RE="$("$PY" "$HARNESS" --get excluded-parts | tr ' ' '|')"
   mapfile -t STAGED_TYPED_FILES < <(
-    printf '%s\n' "$STAGED_ALL" | grep -E "$TYPE_SCOPE" || true
+    printf '%s\n' "$STAGED_ALL" \
+      | grep -E "$TYPE_SCOPE" \
+      | grep -vE "/($EXCLUDED_RE)/" || true
   )
   if [ "${#STAGED_TYPED_FILES[@]}" -gt 0 ]; then
     if [ ! -f "$CHECK_TYPES" ]; then
@@ -367,6 +375,38 @@ if [ -n "$STAGED_ALL" ]; then
       exit 1
     fi
   fi
+fi
+
+# ---------------------------------------------------------------------------
+# 5d10. BLOCKING PINNED ACCEPTANCE BATTERY
+# A `pinned` test carries a number a human recorded -- a census floor, a recall
+# figure, a wiring fact -- and those are the tests a silent refactor breaks first
+# while every behavioral test keeps passing. They are cheap by construction, so
+# they run in full on every commit. The battery fails closed on two different
+# failures: a pinned test that fails (the recorded number moved or the wiring
+# broke), and a selection that collects nothing (pytest exits 5), because a marker
+# whose carrier was deleted would otherwise report success by being asleep.
+if [ -n "$STAGED_ALL" ]; then
+  # `set -e` would abort on the assignment itself, so the status is captured in
+  # the conditional and read in the else branch.
+  if PINNED_OUT="$("$PY" -m pytest -m pinned -q -p no:cacheprovider "$REPO/framework/tests" "$REPO/$("$PY" "$HARNESS" --get test-root)" 2>&1)"; then
+    PINNED_RC=0
+  else
+    PINNED_RC=$?
+  fi
+  if [ "$PINNED_RC" -eq 5 ]; then
+    echo "[pre-commit] FAILED: no pinned acceptance test was collected." >&2
+    echo "[pre-commit] a marker with no carrier cannot pin anything; restore the test" >&2
+    echo "[pre-commit] (or drop the marker in the same commit that drops the fact)." >&2
+    exit 1
+  fi
+  if [ "$PINNED_RC" -ne 0 ]; then
+    printf '%s\n' "$PINNED_OUT" | tail -n 25
+    echo "[pre-commit] FAILED: pinned acceptance tests failed (recorded numbers/floors/wiring above)." >&2
+    echo "[pre-commit] re-census the recorded number the failing case pins, or fix the regression it caught." >&2
+    exit 1
+  fi
+  echo "[pre-commit] ${PINNED_OUT##*$'\n'}"
 fi
 
 # ---------------------------------------------------------------------------

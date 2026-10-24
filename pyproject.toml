@@ -43,6 +43,13 @@ pythonpath = ["."]
 testpaths = ["tests"]
 python_files = ["test_*.py", "tests_*.py"]
 addopts = ["--import-mode=importlib"]
+# `pinned` marks a test carrying a number a human recorded — a census floor, a
+# recall figure, a hook-wiring fact. The pre-commit battery runs exactly these on
+# every commit (step 5d10), so a silent refactor that moves a recorded number
+# fails at commit time instead of at review time.
+markers = [
+    "pinned: recorded numbers, census floors and hook wiring; the pre-commit battery runs these on every commit",
+]
 
 [tool.mutmut]
 # Mutation testing is a commit gate: the pre-commit hook (step 5d5) refuses a

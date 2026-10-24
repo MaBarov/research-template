@@ -19,10 +19,18 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from framework.gates.checks.check_duplication import Finding, check_baseline_ratchet
 from framework.gates.checks.check_test_mirror import check_alias_ratchet
 from framework.gates.coverage.run import check_waiver_ratchet
 from framework.tests.hook_hygiene.git_env_fixture import run_git
+
+# The ratchet contracts are acceptance facts, not unit behavior: each case pins
+# the exact verdict the battery must reach on a candidate table. They are cheap
+# enough to run on every commit, and that is where a silent refactor of the
+# comparison would otherwise survive.
+pytestmark = pytest.mark.pinned
 
 WAIVERS_REL = "framework/loop_waivers.json"
 ALIASES_REL = "framework/test_mirror_aliases.json"
