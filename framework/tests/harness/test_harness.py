@@ -95,7 +95,8 @@ def test_static_scope_covers_the_static_roots() -> None:
 def test_test_scope_covers_the_test_root() -> None:
     regex = harness.KEYS["test-scope"]()
 
-    assert regex == rf"^({harness.TEST_ROOT})/.*\.py$"
+    assert regex == rf"^({harness.TEST_ROOT}|{harness.SELF_TEST_ROOT})/.*\.py$"
+    assert harness.SELF_TEST_ROOT.startswith("framework/")
     assert harness.main(["--get", "test-scope"]) == 0
 
 

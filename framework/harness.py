@@ -61,6 +61,10 @@ CANARY_RECEIPT_SCHEMA = f"{SLUG}.canary-receipt.v1"
 SOURCE_ROOTS = (SLUG,)
 TEST_ROOT = "tests"
 MIRROR_ROOT = f"{TEST_ROOT}/{SLUG}"
+# The harness's own suite is a test tree too: the oracle rule grades a tautology
+# there exactly as it grades one in a project mirror, so both roots are in scope.
+SELF_TEST_ROOT = f"framework/{TEST_ROOT}"
+TEST_SCOPE_ROOTS = (TEST_ROOT, SELF_TEST_ROOT)
 PRODUCTION_ROOTS = (SLUG, "scripts", "slurm")
 CONSUMING_ROOTS = (SLUG, "experiments", "framework", "scripts", "slurm")
 INDEX_ROOTS = (SLUG, "framework", "experiments", "scripts")
@@ -253,7 +257,7 @@ KEYS: dict[str, object] = {
     "default-cluster": QUEUE_CLUSTERS[0],
     "mirror-scope": lambda: scope_regex((*SOURCE_ROOTS, MIRROR_ROOT)),
     "coverage-scope": lambda: scope_regex(SOURCE_ROOTS, r".*\.py$"),
-    "test-scope": lambda: scope_regex((TEST_ROOT,), r".*\.py$"),
+    "test-scope": lambda: scope_regex(TEST_SCOPE_ROOTS, r".*\.py$"),
     "index-scope": lambda: scope_regex(INDEX_ROOTS),
     "production-scope": lambda: scope_regex(PRODUCTION_ROOTS),
     "env-regex": env_regex,

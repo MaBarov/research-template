@@ -3,63 +3,65 @@
 > [!NOTE]
 > Sub-index for the `framework` package hierarchy. Use the line ranges below to load specific sections directly into context.
 
-**Repository Statistics**: 79 modules | 21 classes | 610 public functions.
+**Repository Statistics**: 82 modules | 22 classes | 633 public functions.
 
 ## Table of Contents
 
-- [`framework`](#package-framework) (lines 40–64) — *Repository gate framework (hooks + checkers).*
-- [`framework/gates`](#package-frameworkgates) (lines 65–92) — *Blocking and advisory repository gates.*
-- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 93–126) — *Internals of the production anti-pattern gate.*
-- [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 127–135) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
-- [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 136–142) — *Liveness checks for the production anti-pattern gate (HNS072).*
-- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 143–227) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
-- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 228–287) — *Internals of the per-file coverage and loop-iteration gate.*
-- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 288–334) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
-- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 335–366) — *Freshness and ref-provenance gates.*
-- [`framework/gates/instructions`](#package-frameworkgatesinstructions) (lines 367–384) — *Fail-closed reference check for agent instruction artifacts.*
-- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 385–442)
-- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 443–548) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
-- [`framework/gates/params`](#package-frameworkgatesparams) (lines 549–589) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
-- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 590–594) — *Pure AST and text primitives of the parameter-drift matchers.*
-- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 595–631) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
-- [`framework/gates/typecheck`](#package-frameworkgatestypecheck) (lines 632–699) — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
-- [`framework/indexing`](#package-frameworkindexing) (lines 700–751) — *AST-based repository mapping and Table-of-Contents indexing.*
-- [`framework/tests`](#package-frameworktests) (lines 752–910)
-- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 911–998) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
-- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 999–1009) — *Tests for the coverage gate and its probe plugin.*
-- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 1010–1036) — *Test package for the framework distortion gate.*
-- [`framework/tests/gates`](#package-frameworktestsgates) (lines 1037–1147) — *Package.*
-- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1148–1206) — *Tests for the parameter registry gates.*
-- [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1207–1229) — *Ratchet gates: tables that may only shrink.*
-- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1230–1246) — *Harness registry tests: project identity and the interpreter floor.*
-- [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1247–1255) — *Tests for the hook/test-process boundary.*
-- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1256–1304) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework`](#package-framework) (lines 42–66) — *Repository gate framework (hooks + checkers).*
+- [`framework/gates`](#package-frameworkgates) (lines 67–94) — *Blocking and advisory repository gates.*
+- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 95–128) — *Internals of the production anti-pattern gate.*
+- [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 129–137) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
+- [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 138–144) — *Liveness checks for the production anti-pattern gate (HNS072).*
+- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 145–229) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
+- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 230–289) — *Internals of the per-file coverage and loop-iteration gate.*
+- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 290–336) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
+- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 337–375) — *Freshness and ref-provenance gates.*
+- [`framework/gates/instructions`](#package-frameworkgatesinstructions) (lines 376–393) — *Fail-closed reference check for agent instruction artifacts.*
+- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 394–451)
+- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 452–557) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
+- [`framework/gates/params`](#package-frameworkgatesparams) (lines 558–598) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
+- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 599–603) — *Pure AST and text primitives of the parameter-drift matchers.*
+- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 604–640) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
+- [`framework/gates/typecheck`](#package-frameworkgatestypecheck) (lines 641–708) — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
+- [`framework/indexing`](#package-frameworkindexing) (lines 709–760) — *AST-based repository mapping and Table-of-Contents indexing.*
+- [`framework/tests`](#package-frameworktests) (lines 761–919)
+- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 920–1007) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
+- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 1008–1018) — *Tests for the coverage gate and its probe plugin.*
+- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 1019–1045) — *Test package for the framework distortion gate.*
+- [`framework/tests/freshness`](#package-frameworktestsfreshness) (lines 1046–1049) — *Tests for freshness and ref guard gates.*
+- [`framework/tests/gates`](#package-frameworktestsgates) (lines 1050–1160) — *Package.*
+- [`framework/tests/gates/instructions`](#package-frameworktestsgatesinstructions) (lines 1161–1200) — *Tests for instruction reference validation.*
+- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1201–1259) — *Tests for the parameter registry gates.*
+- [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1260–1282) — *Ratchet gates: tables that may only shrink.*
+- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1283–1299) — *Harness registry tests: project identity and the interpreter floor.*
+- [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1300–1308) — *Tests for the hook/test-process boundary.*
+- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1309–1357) — *Tests for framework.indexing Table-of-Contents subsystem.*
 
 ---
 
 ## Package `framework` — *Repository gate framework (hooks + checkers).*
 
-- [`framework/harness.py`](framework/harness.py) (299 lines)
+- [`framework/harness.py`](framework/harness.py) (303 lines)
   * *Module Purpose*: Single registry for the project identity, path roots and interpreter the harness uses.
-  * [`env(name: str) -> str`](framework/harness.py#L114-L117)
+  * [`env(name: str) -> str`](framework/harness.py#L118-L121)
     * *Contract*: Return the canonical env-var spelling of a harness parameter.
-  * [`env_regex() -> str`](framework/harness.py#L120-L123)
+  * [`env_regex() -> str`](framework/harness.py#L124-L127)
     * *Contract*: Return the ERE that matches every canonical env var of this project.
-  * [`venv() -> str`](framework/harness.py#L126-L135)
+  * [`venv() -> str`](framework/harness.py#L130-L139)
     * *Contract*: Return the interpreter directory: override, per-cluster, or the checkout venv.
-  * [`python() -> str`](framework/harness.py#L162-L180)
+  * [`python() -> str`](framework/harness.py#L166-L184)
     * *Contract*: Return the project interpreter: env override, venv binary, else this one.
-  * [`deploy_root() -> str`](framework/harness.py#L183-L186)
+  * [`deploy_root() -> str`](framework/harness.py#L187-L190)
     * *Contract*: Return the checkout the jobs import: env override, else this repository.
-  * [`mlflow_uri() -> str`](framework/harness.py#L189-L192)
+  * [`mlflow_uri() -> str`](framework/harness.py#L193-L196)
     * *Contract*: Return the MLflow tracking URI: env override, else this checkout's mlruns dir.
-  * [`dvc_bin() -> str`](framework/harness.py#L195-L202)
+  * [`dvc_bin() -> str`](framework/harness.py#L199-L206)
     * *Contract*: Return the DVC executable: env override, the venv binary, else ``dvc`` on PATH.
-  * [`engine_bin(name: str) -> str`](framework/harness.py#L205-L214)
+  * [`engine_bin(name: str) -> str`](framework/harness.py#L209-L218)
     * *Contract*: Return an external checker: env override, the venv binary, else ``name`` on PATH.
-  * [`scope_regex(roots: tuple[str, ...], suffix: str) -> str`](framework/harness.py#L217-L221)
+  * [`scope_regex(roots: tuple[str, ...], suffix: str) -> str`](framework/harness.py#L221-L225)
     * *Contract*: Return an ERE anchoring ``roots`` (plus optional per-root suffix) at the start.
-  * [`main(argv: list[str]) -> int`](framework/harness.py#L275-L295)
+  * [`main(argv: list[str]) -> int`](framework/harness.py#L279-L299)
     * *Contract*: Print every key, one key (``--get``), or the hook assignments (``--shell``).
 
 ## Package `framework/gates` — *Blocking and advisory repository gates.*
@@ -344,6 +346,13 @@
     * *Contract*: Return one finding per staged path the working tree does not corroborate.
   * [`main(argv: list[str] | None) -> int`](framework/gates/freshness/check_index_freshness.py#L147-L163)
     * *Contract*: Run the gate; return the process exit code.
+
+- [`framework/gates/freshness/ref_guard.py`](framework/gates/freshness/ref_guard.py) (363 lines)
+  * *Module Purpose*: Block ref moves that would bypass the pre-commit gate battery.
+  * [`class TransLine`](framework/gates/freshness/ref_guard.py#L71-L76)
+    * *Contract*: One ``<old> <new> <ref>`` line of a reference transaction.
+  * [`main(argv: Sequence[str] | None) -> int`](framework/gates/freshness/ref_guard.py#L347-L359)
+    * *Contract*: Judge a prepared transaction; allow non-prepared states and fail closed.
 
 - [`framework/gates/freshness/test_index_freshness.py`](framework/gates/freshness/test_index_freshness.py) (137 lines)
   * *Module Purpose*: Tests for the index-freshness gate.
@@ -631,7 +640,7 @@
 
 ## Package `framework/gates/typecheck` — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
 
-- [`framework/gates/typecheck/check_types.py`](framework/gates/typecheck/check_types.py) (0 lines)
+- [`framework/gates/typecheck/check_types.py`](framework/gates/typecheck/check_types.py) (1 lines)
 
 - [`framework/gates/typecheck/policy.py`](framework/gates/typecheck/policy.py) (217 lines)
   * *Module Purpose*: Typed population, engine and interpreter resolution of the static-type gate.
@@ -1034,6 +1043,10 @@
   * [`test_cli_unreadable_staged_blob_fails_closed() -> None`](framework/tests/distortion/test_distortion_gate.py#L156-L159)
     * *Contract*: CLI emits HNS010 and exits with 1 when staged file cannot be read.
 
+## Package `framework/tests/freshness` — *Tests for freshness and ref guard gates.*
+
+- [`framework/tests/freshness/test_ref_guard.py`](framework/tests/freshness/test_ref_guard.py) (0 lines)
+
 ## Package `framework/tests/gates` — *Package.*
 
 - [`framework/tests/gates/test_antipattern_expansion.py`](framework/tests/gates/test_antipattern_expansion.py) (406 lines)
@@ -1145,6 +1158,46 @@
   * [`test_bad_manifest_fails_clean(tmp_path: Path) -> None`](framework/tests/gates/test_log_mlflow_run.py#L82-L99)
   * [`test_invalid_metric_kv_fails(tmp_path: Path) -> None`](framework/tests/gates/test_log_mlflow_run.py#L102-L105)
 
+## Package `framework/tests/gates/instructions` — *Tests for instruction reference validation.*
+
+- [`framework/tests/gates/instructions/test_instruction_refs.py`](framework/tests/gates/instructions/test_instruction_refs.py) (276 lines)
+  * *Module Purpose*: Tests for the instruction-reference gate (HNS073).
+  * [`test_an_exact_tracked_path_resolves() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L30-L33)
+  * [`test_a_path_with_anchor_resolves() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L36-L39)
+  * [`test_a_path_boundary_suffix_resolves() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L42-L44)
+  * [`test_a_non_boundary_suffix_does_not_resolve() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L47-L50)
+  * [`test_non_path_shapes_stay_silent() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L53-L62)
+  * [`test_a_fenced_command_path_resolves() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L77-L81)
+    * *Contract*: A bare script path on a fenced command line is a graded token.
+  * [`test_a_fenced_command_path_reports_its_line() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L84-L88)
+    * *Contract*: A missing fenced command path is a finding on the command's line.
+  * [`test_paths_outside_fenced_commands_stay_silent() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L91-L97)
+    * *Contract*: A bare path is graded only when a fence holds a command line.
+  * [`test_a_fenced_command_placeholder_is_preserved() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L100-L104)
+    * *Contract*: Angle brackets in a command path survive and classify as placeholder.
+  * [`test_a_stale_token_reports_its_line() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L107-L111)
+  * [`test_a_token_repeated_names_its_first_line_only() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L114-L117)
+  * [`test_cli_staged_reads_the_index(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L120-L135)
+  * [`test_cli_unreadable_file_is_an_environment_error(tmp_path, monkeypatch) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L138-L144)
+  * [`test_cli_passes_on_the_real_instruction_file() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L147-L149)
+    * *Contract*: The canonical AGENTS.md resolves every path it names.
+  * [`test_roots_count_a_sibling_tree(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L152-L166)
+    * *Contract*: A token only a sibling tree provides is counted, never failed.
+  * [`test_moved_bucket_names_the_target(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L169-L182)
+    * *Contract*: A basename that lives at another path fails and names the target.
+  * [`test_placeholder_fails_unless_allowed(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L185-L196)
+    * *Contract*: Example-shaped paths fail by default and are counted under the flag.
+  * [`test_corpus_omp_enumerates_rules_and_skills(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L199-L220)
+    * *Contract*: --corpus omp grades the harness rules, skills and AGENTS.md.
+  * [`test_bare_filename_is_counted_under_roots(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L223-L237)
+    * *Contract*: A bare filename is ambiguous across roots: counted, never failed.
+  * [`test_output_path_is_counted_not_failed(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L240-L254)
+    * *Contract*: A path under a directory no root tracks (a produced artifact) passes.
+  * [`test_files_outside_corpus_stay_silent(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L257-L266)
+    * *Contract*: A file outside the declared corpus is skipped without findings.
+  * [`test_missing_manifest_is_environment_error(tmp_path: Path, monkeypatch) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L269-L276)
+    * *Contract*: --manifest with a nonexistent file exits 2 with an error message.
+
 ## Package `framework/tests/gates/params` — *Tests for the parameter registry gates.*
 
 - [`framework/tests/gates/params/test_param_duplicates.py`](framework/tests/gates/params/test_param_duplicates.py) (419 lines)
@@ -1229,7 +1282,7 @@
 
 ## Package `framework/tests/harness` — *Harness registry tests: project identity and the interpreter floor.*
 
-- [`framework/tests/harness/test_harness.py`](framework/tests/harness/test_harness.py) (127 lines)
+- [`framework/tests/harness/test_harness.py`](framework/tests/harness/test_harness.py) (128 lines)
   * *Module Purpose*: Tests for the harness registry: project identity and the interpreter floor.
   * [`test_python_refuses_an_interpreter_below_the_floor(tmp_path, monkeypatch) -> None`](framework/tests/harness/test_harness.py#L30-L39)
   * [`test_python_accepts_an_interpreter_at_the_floor(tmp_path, monkeypatch) -> None`](framework/tests/harness/test_harness.py#L42-L46)
@@ -1238,11 +1291,11 @@
   * [`test_dvc_bin_prefers_the_venv_binary(tmp_path, monkeypatch) -> None`](framework/tests/harness/test_harness.py#L59-L70)
   * [`test_engine_bin_prefers_env_then_venv_then_path(tmp_path, monkeypatch) -> None`](framework/tests/harness/test_harness.py#L73-L85)
   * [`test_static_scope_covers_the_static_roots() -> None`](framework/tests/harness/test_harness.py#L88-L92)
-  * [`test_test_scope_covers_the_test_root() -> None`](framework/tests/harness/test_harness.py#L95-L99)
-  * [`test_gate_state_and_cache_dirs_are_slug_scoped(monkeypatch) -> None`](framework/tests/harness/test_harness.py#L102-L105)
-  * [`test_keys_key_lists_every_key() -> None`](framework/tests/harness/test_harness.py#L108-L113)
-  * [`test_bare_invocation_prints_every_key(capsys) -> None`](framework/tests/harness/test_harness.py#L116-L121)
-  * [`test_superseded_distortion_scope_key_is_unknown(capsys) -> None`](framework/tests/harness/test_harness.py#L124-L127)
+  * [`test_test_scope_covers_the_test_root() -> None`](framework/tests/harness/test_harness.py#L95-L100)
+  * [`test_gate_state_and_cache_dirs_are_slug_scoped(monkeypatch) -> None`](framework/tests/harness/test_harness.py#L103-L106)
+  * [`test_keys_key_lists_every_key() -> None`](framework/tests/harness/test_harness.py#L109-L114)
+  * [`test_bare_invocation_prints_every_key(capsys) -> None`](framework/tests/harness/test_harness.py#L117-L122)
+  * [`test_superseded_distortion_scope_key_is_unknown(capsys) -> None`](framework/tests/harness/test_harness.py#L125-L128)
 
 ## Package `framework/tests/hook_hygiene` — *Tests for the hook/test-process boundary.*
 

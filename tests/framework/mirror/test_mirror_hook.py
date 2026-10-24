@@ -19,6 +19,7 @@ from pathlib import Path
 from tests.framework.scratch import hook_fixtures
 
 MIRROR = "tests/research/probe/tests_plan.py"
+SELF_TEST = "framework/tests/probe/test_demo.py"
 
 
 def hook_checkout(root: Path) -> dict[str, str]:
@@ -27,13 +28,15 @@ def hook_checkout(root: Path) -> dict[str, str]:
     return hook_fixtures.hook_checkout(root, registry=True)
 
 
-def stage_mirror(root: Path, env: dict[str, str], source: str) -> None:
-    """Write ``source`` to the mirror path and stage it."""
+def stage_mirror(
+    root: Path, env: dict[str, str], source: str, rel: str = MIRROR
+) -> None:
+    """Write ``source`` to ``rel`` and stage it."""
 
-    mirror = root / MIRROR
+    mirror = root / rel
     mirror.parent.mkdir(parents=True, exist_ok=True)
     mirror.write_text(source, encoding="utf-8")
-    assert hook_fixtures.run_git(root, env, "add", MIRROR).returncode == 0
+    assert hook_fixtures.run_git(root, env, "add", rel).returncode == 0
 
 
 def test_tautological_staged_test_file_blocks_the_commit(tmp_path: Path) -> None:
@@ -47,6 +50,24 @@ def test_tautological_staged_test_file_blocks_the_commit(tmp_path: Path) -> None
     output = refused.stdout + refused.stderr
     assert refused.returncode != 0, output
     assert "HNS068" in output, output
+
+
+def test_tautological_harness_test_blocks_too(tmp_path: Path) -> None:
+    """The harness's own suite is held to the same oracle rule as a mirror."""
+
+    env = hook_checkout(tmp_path)
+    stage_mirror(
+        tmp_path,
+        env,
+        "def test_demo(items) -> None:\n    assert len(items) >= 0\n",
+        SELF_TEST,
+    )
+    refused = hook_fixtures.run_git(
+        tmp_path, env, "commit", "-qm", "tautological harness test"
+    )
+    output = refused.stdout + refused.stderr
+    assert refused.returncode != 0, output
+    assert "HNS070" in output, output
 
 
 def test_behavioral_staged_test_file_commits(tmp_path: Path) -> None:

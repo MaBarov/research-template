@@ -116,7 +116,9 @@ if [ -n "$STAGED_ALL" ]; then
   # A staged test file is graded on its own text, not only as a neighbour's
   # mirror: a file that parses to no behavioral assertion (HNS068) or to
   # nothing but state-anchored tautologies (HNS070) is removal theater, and it
-  # blocks whether or not the module it mirrors is staged too.
+  # blocks whether or not the module it mirrors is staged too. The scope is
+  # harness `test-scope`, which covers the project's test root and the
+  # harness's own suite: a tautology is a tautology in either tree.
   mapfile -t STAGED_ORACLE_PY < <(printf '%s\n' "$STAGED_ALL" | grep -E "$TEST_SCOPE" || true)
   if [ "${#STAGED_ORACLE_PY[@]}" -gt 0 ] && [ -x "$REPO/framework/gates/checks/check_test_mirror.py" ]; then
     if ! "$PY" "$REPO/framework/gates/checks/check_test_mirror.py" --strict --staged \
