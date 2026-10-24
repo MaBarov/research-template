@@ -15,17 +15,17 @@
 
 ## Package `scripts/setup` — *Framework wiring, scaffolding, and hook installation tools.*
 
-- [`scripts/setup/bootstrap.py`](scripts/setup/bootstrap.py) (148 lines)
+- [`scripts/setup/bootstrap.py`](scripts/setup/bootstrap.py) (147 lines)
   * *Module Purpose*: One-command bootstrap: floor interpreter, venv, toolchain, hooks, example suite.
-  * [`at_floor(interpreter: str) -> bool`](scripts/setup/bootstrap.py#L53-L59)
+  * [`at_floor(interpreter: str) -> bool`](scripts/setup/bootstrap.py#L52-L58)
     * *Contract*: Return whether ``interpreter`` runs and meets the harness floor.
-  * [`pick_interpreter(explicit: str | None) -> str`](scripts/setup/bootstrap.py#L71-L86)
+  * [`pick_interpreter(explicit: str | None) -> str`](scripts/setup/bootstrap.py#L70-L85)
     * *Contract*: Return the interpreter to build the venv with, or fail with the floor message.
-  * [`build_steps(interpreter: str, skip_install: bool, skip_suite: bool) -> list[list[str]]`](scripts/setup/bootstrap.py#L89-L105)
+  * [`build_steps(interpreter: str, skip_install: bool, skip_suite: bool) -> list[list[str]]`](scripts/setup/bootstrap.py#L88-L104)
     * *Contract*: Return the commands to run, in order, for the resolved interpreter.
-  * [`run_step(step: list[str], dry_run: bool) -> None`](scripts/setup/bootstrap.py#L108-L121)
+  * [`run_step(step: list[str], dry_run: bool) -> None`](scripts/setup/bootstrap.py#L107-L120)
     * *Contract*: Print and run one step, stopping the bootstrap when it fails or overruns.
-  * [`main(argv: list[str] | None) -> int`](scripts/setup/bootstrap.py#L124-L144)
+  * [`main(argv: list[str] | None) -> int`](scripts/setup/bootstrap.py#L123-L143)
     * *Contract*: Resolve the interpreter, run every step in order, report the next action.
 
 - [`scripts/setup/check_framework_wiring.py`](scripts/setup/check_framework_wiring.py) (114 lines)

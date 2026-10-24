@@ -253,7 +253,7 @@ Three holes that surface only after the fact, closed at commit and at ref move:
   `[tool.mypy]`/`[tool.pyright]` in `pyproject.toml`, and both engines are dev
   extras.
 * `framework/gates/instructions/check_instruction_refs.py`, pre-commit step
-  **5d8**: every backticked file path an instruction artifact names must resolve
+  **5d9**: every backticked file path an instruction artifact names must resolve
   against `git ls-files`. `HNS073` buckets each unresolved token (`placeholder`,
   `moved` with the sole match named, `output`, `dead`) and blocks on a dead or
   placeholder reference. `--corpus-root DIR` extends one census over a second

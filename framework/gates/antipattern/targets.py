@@ -13,11 +13,12 @@ Invariants & Expected State:
 
 from __future__ import annotations
 
-import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
 from framework import harness
+from framework.gates.static.sources import read_staged
+from framework.gates.static.sources import relative_path as _relative_path
 
 REPO = Path(__file__).resolve().parents[3]
 
@@ -41,38 +42,14 @@ class Finding:
         return f"{self.path}:{self.line}: {self.code} {self.message}"
 
 
-def _relative_path(path: str | Path) -> str:
-    candidate = Path(path)
-    if candidate.is_absolute():
-        try:
-            candidate = candidate.resolve().relative_to(REPO)
-        except ValueError:
-            return candidate.as_posix()
-    return candidate.as_posix()
-
-
 def _is_production_path(path: str) -> bool:
     parts = Path(path).parts
     return bool(parts) and parts[0] in PRODUCTION_ROOTS
 
 
 def _read_staged(path: str) -> str:
-    """Return the staged blob of ``path``; a wedged git fails closed, never hangs."""
-    try:
-        result = subprocess.run(
-            ["git", "show", f":{path}"],
-            cwd=REPO,
-            capture_output=True,
-            check=False,
-            timeout=10,
-        )
-    except subprocess.TimeoutExpired:
-        raise RuntimeError(f"timed out reading staged file {path}") from None
-    if result.returncode:
-        raise RuntimeError(
-            f"cannot read staged file {path}: {result.stderr.decode(errors='replace').strip()}"
-        )
-    return result.stdout.decode("utf-8")
+    """Read ``path`` from this module's repository (a caller may redirect REPO)."""
+    return read_staged(path, repo=REPO)
 
 
 def _checked_directory(directory: Path) -> list[str]:

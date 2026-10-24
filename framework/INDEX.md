@@ -3,40 +3,47 @@
 > [!NOTE]
 > Sub-index for the `framework` package hierarchy. Use the line ranges below to load specific sections directly into context.
 
-**Repository Statistics**: 83 modules | 22 classes | 686 public functions.
+**Repository Statistics**: 99 modules | 28 classes | 760 public functions.
 
 ## Table of Contents
 
-- [`framework`](#package-framework) (lines 43–67) — *Repository gate framework (hooks + checkers).*
-- [`framework/gates`](#package-frameworkgates) (lines 68–95) — *Blocking and advisory repository gates.*
-- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 96–129) — *Internals of the production anti-pattern gate.*
-- [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 130–138) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
-- [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 139–145) — *Liveness checks for the production anti-pattern gate (HNS072).*
-- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 146–230) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
-- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 231–290) — *Internals of the per-file coverage and loop-iteration gate.*
-- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 291–337) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
-- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 338–376) — *Freshness and ref-provenance gates.*
-- [`framework/gates/instructions`](#package-frameworkgatesinstructions) (lines 377–394) — *Fail-closed reference check for agent instruction artifacts.*
-- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 395–452)
-- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 453–558) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
-- [`framework/gates/params`](#package-frameworkgatesparams) (lines 559–599) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
-- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 600–604) — *Pure AST and text primitives of the parameter-drift matchers.*
-- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 605–641) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
-- [`framework/gates/typecheck`](#package-frameworkgatestypecheck) (lines 642–720) — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
-- [`framework/indexing`](#package-frameworkindexing) (lines 721–772) — *AST-based repository mapping and Table-of-Contents indexing.*
-- [`framework/tests`](#package-frameworktests) (lines 773–931)
-- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 932–1019) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
-- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 1020–1030) — *Tests for the coverage gate and its probe plugin.*
-- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 1031–1057) — *Test package for the framework distortion gate.*
-- [`framework/tests/freshness`](#package-frameworktestsfreshness) (lines 1058–1110) — *Tests for freshness and ref guard gates.*
-- [`framework/tests/gates`](#package-frameworktestsgates) (lines 1111–1223) — *Package.*
-- [`framework/tests/gates/instructions`](#package-frameworktestsgatesinstructions) (lines 1224–1263) — *Tests for instruction reference validation.*
-- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1264–1322) — *Tests for the parameter registry gates.*
-- [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1323–1345) — *Ratchet gates: tables that may only shrink.*
-- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1346–1362) — *Harness registry tests: project identity and the interpreter floor.*
-- [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1363–1371) — *Tests for the hook/test-process boundary.*
-- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1372–1420) — *Tests for framework.indexing Table-of-Contents subsystem.*
-- [`framework/tests/typecheck`](#package-frameworkteststypecheck) (lines 1421–1471) — *Tests for the static-type gate.*
+- [`framework`](#package-framework) (lines 50–74) — *Repository gate framework (hooks + checkers).*
+- [`framework/gates`](#package-frameworkgates) (lines 75–102) — *Blocking and advisory repository gates.*
+- [`framework/gates/advisory`](#package-frameworkgatesadvisory) (lines 103–127) — *Advisory static gates shared model and runner package.*
+- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 128–161) — *Internals of the production anti-pattern gate.*
+- [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 162–170) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
+- [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 171–177) — *Liveness checks for the production anti-pattern gate (HNS072).*
+- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 178–262) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
+- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 263–322) — *Internals of the per-file coverage and loop-iteration gate.*
+- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 323–367) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
+- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 368–406) — *Freshness and ref-provenance gates.*
+- [`framework/gates/instructions`](#package-frameworkgatesinstructions) (lines 407–424) — *Fail-closed reference check for agent instruction artifacts.*
+- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 425–482)
+- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 483–588) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
+- [`framework/gates/params`](#package-frameworkgatesparams) (lines 589–629) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
+- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 630–634) — *Pure AST and text primitives of the parameter-drift matchers.*
+- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 635–671) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
+- [`framework/gates/static`](#package-frameworkgatesstatic) (lines 672–684) — *Shared plumbing for the static-analysis gates.*
+- [`framework/gates/transfers`](#package-frameworkgatestransfers) (lines 685–771) — *Device transfer bottleneck detection package.*
+- [`framework/gates/transfers/provenance`](#package-frameworkgatestransfersprovenance) (lines 772–787) — *Device provenance inference for the host-device transfer gate.*
+- [`framework/gates/traversal`](#package-frameworkgatestraversal) (lines 788–798) — *Shared AST traversal helpers for the gate visitors.*
+- [`framework/gates/typecheck`](#package-frameworkgatestypecheck) (lines 799–877) — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
+- [`framework/indexing`](#package-frameworkindexing) (lines 878–929) — *AST-based repository mapping and Table-of-Contents indexing.*
+- [`framework/tests`](#package-frameworktests) (lines 930–1101)
+- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 1102–1189) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
+- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 1190–1200) — *Tests for the coverage gate and its probe plugin.*
+- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 1201–1227) — *Test package for the framework distortion gate.*
+- [`framework/tests/freshness`](#package-frameworktestsfreshness) (lines 1228–1280) — *Tests for freshness and ref guard gates.*
+- [`framework/tests/gates`](#package-frameworktestsgates) (lines 1281–1393) — *Package.*
+- [`framework/tests/gates/instructions`](#package-frameworktestsgatesinstructions) (lines 1394–1433) — *Tests for instruction reference validation.*
+- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1434–1492) — *Tests for the parameter registry gates.*
+- [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1493–1515) — *Ratchet gates: tables that may only shrink.*
+- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1516–1532) — *Harness registry tests: project identity and the interpreter floor.*
+- [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1533–1541) — *Tests for the hook/test-process boundary.*
+- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1542–1590) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework/tests/transfers`](#package-frameworkteststransfers) (lines 1591–1680) — *Test package for device transfer bottleneck gate.*
+- [`framework/tests/transfers/provenance`](#package-frameworkteststransfersprovenance) (lines 1681–1698) — *Test package for device provenance inference and mixing detection.*
+- [`framework/tests/typecheck`](#package-frameworkteststypecheck) (lines 1699–1749) — *Tests for the static-type gate.*
 
 ---
 
@@ -82,16 +89,41 @@
   * [`mlflow_has_run(run: str) -> bool`](framework/gates/check_documentation.py#L62-L64)
   * [`main(argv: list[str] | None) -> int`](framework/gates/check_documentation.py#L116-L137)
 
-- [`framework/gates/check_dvc_tracked.py`](framework/gates/check_dvc_tracked.py) (114 lines)
+- [`framework/gates/check_dvc_tracked.py`](framework/gates/check_dvc_tracked.py) (113 lines)
   * *Module Purpose*: Pre-submit guard: every prompt/data bank referenced by a job must be DVC-tracked.
-  * [`dvc_status(path: Path) -> str`](framework/gates/check_dvc_tracked.py#L43-L52)
-  * [`main(argv: list[str] | None) -> int`](framework/gates/check_dvc_tracked.py#L91-L110)
+  * [`dvc_status(path: Path) -> str`](framework/gates/check_dvc_tracked.py#L42-L51)
+  * [`main(argv: list[str] | None) -> int`](framework/gates/check_dvc_tracked.py#L90-L109)
 
 - [`framework/gates/check_structure.py`](framework/gates/check_structure.py) (189 lines)
   * *Module Purpose*: Experimental layout contract checker (advisory by default, exit 1 with --strict).
   * [`classify(path: Path, rel: str) -> str | None`](framework/gates/check_structure.py#L71-L95)
   * [`module_needs_test(rel: str, text: str) -> bool`](framework/gates/check_structure.py#L98-L104)
   * [`main() -> int`](framework/gates/check_structure.py#L166-L185)
+
+## Package `framework/gates/advisory` — *Advisory static gates shared model and runner package.*
+
+- [`framework/gates/advisory/model.py`](framework/gates/advisory/model.py) (132 lines)
+  * *Module Purpose*: Shared plumbing for the advisory static gates.
+  * [`class Finding`](framework/gates/advisory/model.py#L30-L52)
+    * *Contract*: One static finding: file, line, code, message and its evidence class.
+    * [`Finding.format(self) -> str`](framework/gates/advisory/model.py#L39-L42)
+      * *Contract*: Format the finding as a compiler-style diagnostic line.
+    * [`Finding.as_dict(self) -> dict[str, object]`](framework/gates/advisory/model.py#L44-L52)
+      * *Contract*: Return the JSON-serializable form used by --report.
+  * [`files_to_check(paths: Sequence[str]) -> list[str]`](framework/gates/advisory/model.py#L55-L57)
+    * *Contract*: Resolve CLI paths into the production-root Python modules to scan.
+  * [`load_source(path: str, staged: bool) -> tuple[str | None, Finding | None]`](framework/gates/advisory/model.py#L60-L65)
+    * *Contract*: Load one source from the Git index or disk, converting the error finding.
+  * [`scan(paths: Iterable[str], staged: bool, analyze: Callable[[str, str], list[Finding]]) -> list[Finding]`](framework/gates/advisory/model.py#L68-L79)
+    * *Contract*: Analyze every path with the gate's own analyzer, collecting findings.
+  * [`write_report(report_path: Path, findings: Sequence[Finding]) -> None`](framework/gates/advisory/model.py#L82-L85)
+    * *Contract*: Serialize findings to a JSON report.
+  * [`emit(findings: Sequence[Finding], strict: bool, label: str) -> int`](framework/gates/advisory/model.py#L88-L97)
+    * *Contract*: Print every finding plus a summary line and return the exit code.
+  * [`build_parser(description: str) -> argparse.ArgumentParser`](framework/gates/advisory/model.py#L111-L117)
+    * *Contract*: Build the argument parser every advisory gate shares.
+  * [`run(argv: list[str] | None, analyze: Callable[[str, str], list[Finding]], label: str, description: str) -> int`](framework/gates/advisory/model.py#L120-L132)
+    * *Contract*: Parse arguments, scan the requested population, report, and return the code.
 
 ## Package `framework/gates/antipattern` — *Internals of the production anti-pattern gate.*
 
@@ -121,11 +153,11 @@
   * [`analyze_shell(source: str, path: str) -> list[framework.gates.antipattern.targets.Finding]`](framework/gates/antipattern/shell_checks.py#L418-L446)
     * *Contract*: Return findings for shell/slurm provenance and hygiene problems.
 
-- [`framework/gates/antipattern/targets.py`](framework/gates/antipattern/targets.py) (116 lines)
+- [`framework/gates/antipattern/targets.py`](framework/gates/antipattern/targets.py) (93 lines)
   * *Module Purpose*: Scope constants, findings and target-file resolution.
-  * [`class Finding`](framework/gates/antipattern/targets.py#L32-L41)
+  * [`class Finding`](framework/gates/antipattern/targets.py#L33-L42)
     * *Contract*: One source-level anti-pattern finding.
-    * [`Finding.format(self) -> str`](framework/gates/antipattern/targets.py#L40-L41)
+    * [`Finding.format(self) -> str`](framework/gates/antipattern/targets.py#L41-L42)
 
 ## Package `framework/gates/antipattern/execution` — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
 
@@ -310,14 +342,12 @@
   * [`check_hns046_ratio_of_means(node: ast.BinOp, mean_vars: set[str]) -> tuple[str, str] | None`](framework/gates/distortion/rules.py#L164-L180)
     * *Contract*: Detect ratio-of-means scalar reduction (1 - mean(a)/mean(b) or ratio - 1).
 
-- [`framework/gates/distortion/targets.py`](framework/gates/distortion/targets.py) (124 lines)
+- [`framework/gates/distortion/targets.py`](framework/gates/distortion/targets.py) (100 lines)
   * *Module Purpose*: Target definitions and source loaders for the surrogate distortion gate.
-  * [`class Finding`](framework/gates/distortion/targets.py#L35-L45)
+  * [`class Finding`](framework/gates/distortion/targets.py#L38-L48)
     * *Contract*: One anti-pattern finding with file path, line number, code, and message.
-    * [`Finding.format(self) -> str`](framework/gates/distortion/targets.py#L43-L45)
+    * [`Finding.format(self) -> str`](framework/gates/distortion/targets.py#L46-L48)
       * *Contract*: Format finding for standard compiler-style CLI diagnostic output.
-  * [`is_target_python(path: str) -> bool`](framework/gates/distortion/targets.py#L54-L62)
-    * *Contract*: Return True if path points to a scoped production Python module.
 
 - [`framework/gates/distortion/visitor.py`](framework/gates/distortion/visitor.py) (101 lines)
   * *Module Purpose*: AST visitor for detecting surrogate distortion anti-patterns.
@@ -639,6 +669,133 @@
   * *Module Purpose*: Run manifest verifier — re-derives hashes from live files (guardrail #3).
   * [`main(argv: list[str] | None) -> int`](framework/gates/provenance/verify_replay.py#L98-L127)
 
+## Package `framework/gates/static` — *Shared plumbing for the static-analysis gates.*
+
+- [`framework/gates/static/sources.py`](framework/gates/static/sources.py) (75 lines)
+  * *Module Purpose*: Shared target selection and fail-closed source loading for the static gates.
+  * [`relative_path(path: str | Path) -> str`](framework/gates/static/sources.py#L32-L40)
+    * *Contract*: Normalize an absolute or relative path to a repository-relative string.
+  * [`is_production_path(path: str) -> bool`](framework/gates/static/sources.py#L43-L46)
+    * *Contract*: Return True if the path's first component is a static root.
+  * [`is_target_python(path: str) -> bool`](framework/gates/static/sources.py#L49-L57)
+    * *Contract*: Return True if the path names a scoped, non-package production module.
+  * [`read_staged(path: str, repo: Path | None) -> str`](framework/gates/static/sources.py#L60-L75)
+    * *Contract*: Return the staged blob of ``path``; a wedged git fails closed, never hangs.
+
+## Package `framework/gates/transfers` — *Device transfer bottleneck detection package.*
+
+- [`framework/gates/transfers/check_device_transfers.py`](framework/gates/transfers/check_device_transfers.py) (123 lines)
+  * *Module Purpose*: CLI entry point for the device-transfer bottleneck gate.
+  * [`main(argv: list[str] | None) -> int`](framework/gates/transfers/check_device_transfers.py#L110-L119)
+    * *Contract*: CLI entry point executing host-device transfer audit.
+
+- [`framework/gates/transfers/rules.py`](framework/gates/transfers/rules.py) (479 lines)
+  * *Module Purpose*: AST predicates for detecting host-device transfer bottlenecks.
+  * [`is_streaming_method_name(fn_name: str) -> bool`](framework/gates/transfers/rules.py#L154-L161)
+    * *Contract*: Return True if the name marks a streaming or capture pass.
+  * [`is_cpu_transfer_call(node: ast.Call) -> bool`](framework/gates/transfers/rules.py#L185-L197)
+    * *Contract*: Return True if node represents a .cpu() or .to('cpu') call.
+  * [`is_tensor_cast_sync_call(node: ast.Call, host_names: frozenset[str]) -> bool`](framework/gates/transfers/rules.py#L212-L241)
+    * *Contract*: Return True for ``float(...)``/``int(...)``/``bool(...)`` over a tensor reduction.
+  * [`is_device_sync_call(node: ast.Call, host_names: frozenset[str]) -> bool`](framework/gates/transfers/rules.py#L300-L310)
+    * *Contract*: Return True if node represents a device-to-host synchronization.
+  * [`is_aggregate_transfer_call(node: ast.Call) -> bool`](framework/gates/transfers/rules.py#L313-L322)
+    * *Contract*: Return True for a concatenation whose elements are transferred one by one.
+  * [`is_cuda_sync_call(node: ast.Call) -> bool`](framework/gates/transfers/rules.py#L362-L367)
+    * *Contract*: Return True if node represents an in-loop CUDA synchronize or empty_cache call.
+  * [`is_device_to_transfer_call(node: ast.Call) -> bool`](framework/gates/transfers/rules.py#L382-L397)
+    * *Contract*: Return True if node represents a .cuda() or .to(device) transfer inside a loop.
+  * [`is_payload_method_name(fn_name: str) -> bool`](framework/gates/transfers/rules.py#L400-L408)
+    * *Contract*: Return True for host-materialization contexts (artifacts, checkpoints).
+  * [`is_redundant_device_transfer(node: ast.Call, loop_names: frozenset[str]) -> bool`](framework/gates/transfers/rules.py#L418-L425)
+    * *Contract*: Return True for an in-loop host-to-device transfer of an invariant target.
+  * [`trigger_for(code: str, in_loop: bool) -> str`](framework/gates/transfers/rules.py#L432-L447)
+    * *Contract*: Map a finding's code and repetition context to its evidence state.
+  * [`check_transfer_node(node: ast.Call, in_loop: bool, fn_name: str, discarded: bool, loop_names: frozenset[str], host_names: frozenset[str]) -> tuple[str, str] | None`](framework/gates/transfers/rules.py#L450-L479)
+    * *Contract*: Evaluate an AST call node against the transfer rules.
+
+- [`framework/gates/transfers/targets.py`](framework/gates/transfers/targets.py) (141 lines)
+  * *Module Purpose*: Target definitions and source loaders for the device transfer gate.
+  * [`class Finding`](framework/gates/transfers/targets.py#L29-L51)
+    * *Contract*: One anti-pattern finding with file path, line number, code, and message.
+    * [`Finding.format(self) -> str`](framework/gates/transfers/targets.py#L49-L51)
+      * *Contract*: Format finding for standard compiler-style CLI diagnostic output.
+  * [`is_target_python(path: str) -> bool`](framework/gates/transfers/targets.py#L71-L79)
+    * *Contract*: Return True if path points to a scoped production Python module.
+
+- [`framework/gates/transfers/visitor.py`](framework/gates/transfers/visitor.py) (398 lines)
+  * *Module Purpose*: AST visitor for traversing module trees and detecting transfer bottlenecks.
+  * [`class TransferBottleneckVisitor(RepeatedLoopVisitor)`](framework/gates/transfers/visitor.py#L38-L386)
+    * *Contract*: AST visitor collecting host-device transfer and synchronization findings.
+    * [`TransferBottleneckVisitor.__init__(self, path: str) -> None`](framework/gates/transfers/visitor.py#L41-L52)
+    * [`TransferBottleneckVisitor.visit_Module(self, node: ast.Module) -> None`](framework/gates/transfers/visitor.py#L54-L58)
+      * *Contract*: Pre-scan module bindings and function returns before walking bodies.
+    * [`TransferBottleneckVisitor.visit_ClassDef(self, node: ast.ClassDef) -> None`](framework/gates/transfers/visitor.py#L60-L66)
+      * *Contract*: A class body binds its own names; they must not leak to module scope.
+    * [`TransferBottleneckVisitor.current_function(self) -> str`](framework/gates/transfers/visitor.py#L69-L71)
+      * *Contract*: Return the innermost enclosing function or method name.
+    * [`TransferBottleneckVisitor.visit_FunctionDef(self, node: ast.FunctionDef) -> None`](framework/gates/transfers/visitor.py#L73-L75)
+      * *Contract*: Track the innermost enclosing function name.
+    * [`TransferBottleneckVisitor.visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None`](framework/gates/transfers/visitor.py#L77-L79)
+      * *Contract*: Track the innermost enclosing async function name.
+    * [`TransferBottleneckVisitor.visit_Assert(self, node: ast.Assert) -> None`](framework/gates/transfers/visitor.py#L94-L99)
+      * *Contract*: Assertions in tests verify values and are exempt from transfer stalls.
+    * [`TransferBottleneckVisitor.visit_While(self, node: ast.While) -> None`](framework/gates/transfers/visitor.py#L101-L113)
+      * *Contract*: A while-loop test re-evaluates every iteration, so it stays in-loop.
+    * [`TransferBottleneckVisitor.enclosing_loop_names(self) -> frozenset[str]`](framework/gates/transfers/visitor.py#L171-L175)
+      * *Contract*: Return every name bound by an enclosing loop or comprehension.
+    * [`TransferBottleneckVisitor.visit_ListComp(self, node: ast.ListComp) -> None`](framework/gates/transfers/visitor.py#L177-L179)
+      * *Contract*: Visit a list comprehension with its element expression repeating.
+    * [`TransferBottleneckVisitor.visit_SetComp(self, node: ast.SetComp) -> None`](framework/gates/transfers/visitor.py#L181-L183)
+      * *Contract*: Visit a set comprehension with its element expression repeating.
+    * [`TransferBottleneckVisitor.visit_GeneratorExp(self, node: ast.GeneratorExp) -> None`](framework/gates/transfers/visitor.py#L185-L187)
+      * *Contract*: Visit a generator expression with its element expression repeating.
+    * [`TransferBottleneckVisitor.visit_DictComp(self, node: ast.DictComp) -> None`](framework/gates/transfers/visitor.py#L189-L191)
+      * *Contract*: Visit a dict comprehension with key and value expressions repeating.
+    * [`TransferBottleneckVisitor.visit_Expr(self, node: ast.Expr) -> None`](framework/gates/transfers/visitor.py#L262-L267)
+      * *Contract*: A bare call discards its result: it moves state, not data rows.
+    * [`TransferBottleneckVisitor.visit_Assign(self, node: ast.Assign) -> None`](framework/gates/transfers/visitor.py#L269-L273)
+      * *Contract*: Track locals that provably hold a host-built tensor, and only those.
+    * [`TransferBottleneckVisitor.visit_AnnAssign(self, node: ast.AnnAssign) -> None`](framework/gates/transfers/visitor.py#L275-L280)
+      * *Contract*: An annotated assignment binds a host tensor exactly like a plain one.
+    * [`TransferBottleneckVisitor.visit_BinOp(self, node: ast.BinOp) -> None`](framework/gates/transfers/visitor.py#L282-L285)
+      * *Contract*: Flag arithmetic that provably mixes a host with a device tensor.
+    * [`TransferBottleneckVisitor.visit_Compare(self, node: ast.Compare) -> None`](framework/gates/transfers/visitor.py#L287-L290)
+      * *Contract*: Flag a comparison that provably mixes a host with a device tensor.
+    * [`TransferBottleneckVisitor.visit_AugAssign(self, node: ast.AugAssign) -> None`](framework/gates/transfers/visitor.py#L292-L297)
+      * *Contract*: Flag in-place arithmetic over mixed devices, then forget the target.
+    * [`TransferBottleneckVisitor.visit_Call(self, node: ast.Call) -> None`](framework/gates/transfers/visitor.py#L375-L386)
+      * *Contract*: Evaluate call expression against transfer bottleneck predicates.
+  * [`analyze_transfers(source: str, path: str) -> list[Finding]`](framework/gates/transfers/visitor.py#L389-L398)
+    * *Contract*: Parse Python source and collect all transfer bottleneck findings.
+
+## Package `framework/gates/transfers/provenance` — *Device provenance inference for the host-device transfer gate.*
+
+- [`framework/gates/transfers/provenance/infer.py`](framework/gates/transfers/provenance/infer.py) (227 lines)
+  * *Module Purpose*: Device provenance inference for tensor expressions.
+  * [`module_bindings(body: Sequence[ast.stmt]) -> dict[str, str]`](framework/gates/transfers/provenance/infer.py#L53-L62)
+    * *Contract*: Return placement of the module-scope names assigned by simple literals.
+  * [`function_returns(body: Sequence[ast.stmt], names: Mapping[str, str]) -> dict[str, str]`](framework/gates/transfers/provenance/infer.py#L65-L76)
+    * *Contract*: Return placement of each top-level function whose returns all agree.
+  * [`provenance_of(node: ast.AST, names: Mapping[str, str], returns: Mapping[str, str]) -> str`](framework/gates/transfers/provenance/infer.py#L79-L94)
+    * *Contract*: Return the provable placement of one expression, UNKNOWN when not provable.
+
+- [`framework/gates/transfers/provenance/mixed.py`](framework/gates/transfers/provenance/mixed.py) (104 lines)
+  * *Module Purpose*: Mixed-device operand detection for tensor expressions.
+  * [`mixing_finding(node: ast.AST, names: Mapping[str, str], returns: Mapping[str, str]) -> tuple[str, str] | None`](framework/gates/transfers/provenance/mixed.py#L55-L67)
+    * *Contract*: Return the HNS088 finding for one expression, None when it is safe.
+
+## Package `framework/gates/traversal` — *Shared AST traversal helpers for the gate visitors.*
+
+- [`framework/gates/traversal/loops.py`](framework/gates/traversal/loops.py) (54 lines)
+  * *Module Purpose*: Shared loop traversal for the AST gate visitors.
+  * [`class RepeatedLoopVisitor(ast.NodeVisitor, ABC)`](framework/gates/traversal/loops.py#L19-L54)
+    * *Contract*: Visit iterables once and hand repeated bodies to the subclass hook.
+    * [`RepeatedLoopVisitor.visit_For(self, node: ast.For) -> None`](framework/gates/traversal/loops.py#L22-L30)
+      * *Contract*: A for-loop iterable is evaluated once; only the body repeats.
+    * [`RepeatedLoopVisitor.visit_AsyncFor(self, node: ast.AsyncFor) -> None`](framework/gates/traversal/loops.py#L44-L47)
+      * *Contract*: An async for-loop evaluates its iterable once as well.
+
 ## Package `framework/gates/typecheck` — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
 
 - [`framework/gates/typecheck/check_types.py`](framework/gates/typecheck/check_types.py) (123 lines)
@@ -771,6 +928,19 @@
     * *Contract*: Scan all specified subtrees of a repository and return sorted ModuleEntries.
 
 ## Package `framework/tests`
+
+- [`framework/tests/advisory_scoring_fixture.py`](framework/tests/advisory_scoring_fixture.py) (68 lines)
+  * *Module Purpose*: Shared scoring helpers for the advisory gate benchmark suites.
+  * [`class Coded(Protocol)`](framework/tests/advisory_scoring_fixture.py#L22-L25)
+    * *Contract*: The one attribute scoring needs from a finding.
+  * [`detected(analyze: Analyzer, case: TransferBenchmarkCase) -> set[str]`](framework/tests/advisory_scoring_fixture.py#L31-L33)
+    * *Contract*: Return the set of codes one analyzer reports for a benchmark case.
+  * [`confusion(analyze: Analyzer, cases: Sequence[TransferBenchmarkCase], code: str | None) -> tuple[int, int, int, int]`](framework/tests/advisory_scoring_fixture.py#L36-L53)
+    * *Contract*: Return tp, fp, fn, tn over one case set, for a code or for any finding.
+  * [`precision_recall(tp: int, fp: int, fn: int) -> tuple[float, float]`](framework/tests/advisory_scoring_fixture.py#L56-L61)
+    * *Contract*: Precision and recall; an empty denominator counts as perfect.
+  * [`case_matches(analyze: Analyzer, case: TransferBenchmarkCase) -> bool`](framework/tests/advisory_scoring_fixture.py#L64-L68)
+    * *Contract*: A supported case must match exactly; a known miss must stay undetected.
 
 - [`framework/tests/test_antipattern_gate.py`](framework/tests/test_antipattern_gate.py) (599 lines)
   * *Module Purpose*: Tests for the production anti-pattern gate.
@@ -1417,6 +1587,114 @@
     * *Contract*: Verify two-tier docstring parsing extracts thumbnail and structured sections.
   * [`test_two_tier_docstring_validation_errors() -> None`](framework/tests/indexing/test_scanner.py#L110-L126)
     * *Contract*: Verify validation errors are recorded for missing or invalid docstrings.
+
+## Package `framework/tests/transfers` — *Test package for device transfer bottleneck gate.*
+
+- [`framework/tests/transfers/dataset_fixture.py`](framework/tests/transfers/dataset_fixture.py) (566 lines)
+  * *Module Purpose*: Benchmark evaluation dataset for host-device transfer bottleneck detection.
+  * [`class TransferBenchmarkCase`](framework/tests/transfers/dataset_fixture.py#L20-L27)
+    * *Contract*: Single benchmark snippet with ground-truth expected gate codes.
+
+- [`framework/tests/transfers/test_dataset.py`](framework/tests/transfers/test_dataset.py) (91 lines)
+  * *Module Purpose*: Benchmark regression suite for the device transfer gate.
+  * [`test_dataset_case_matches_expected_codes(case: TransferBenchmarkCase) -> None`](framework/tests/transfers/test_dataset.py#L31-L36)
+    * *Contract*: Detected codes equal ground truth for supported cases; known misses fail closed.
+  * [`test_dataset_covers_every_rule_and_negative_controls() -> None`](framework/tests/transfers/test_dataset.py#L39-L44)
+    * *Contract*: The frozen dataset exercises all five codes and enough negative controls.
+  * [`test_dataset_precision_and_recall_are_perfect() -> None`](framework/tests/transfers/test_dataset.py#L47-L61)
+    * *Contract*: In-sample confusion matrix over supported cases asserts 1.0 floor.
+  * [`test_dataset_per_code_metrics_are_perfect() -> None`](framework/tests/transfers/test_dataset.py#L64-L80)
+    * *Contract*: Per-code precision and recall over each of the five transfer anti-patterns.
+  * [`test_dataset_tracks_known_misses_and_open_gap() -> None`](framework/tests/transfers/test_dataset.py#L83-L91)
+    * *Contract*: Known misses are catalogued, so a 1.0 recall claim stays impossible.
+
+- [`framework/tests/transfers/test_device_transfers.py`](framework/tests/transfers/test_device_transfers.py) (385 lines)
+  * *Module Purpose*: Unit tests for the device transfer bottleneck static analysis gate.
+  * [`test_trigger_state_distinguishes_evidence_source() -> None`](framework/tests/transfers/test_device_transfers.py#L22-L41)
+    * *Contract*: Loop, aggregate and name-triggered evidence are three separate states.
+  * [`test_hns056_flags_in_loop_cpu_transfer() -> None`](framework/tests/transfers/test_device_transfers.py#L44-L55)
+    * *Contract*: Flag GPU-to-CPU tensor transfer inside a for-loop body.
+  * [`test_hns056_flags_streaming_accumulator_cpu_transfer() -> None`](framework/tests/transfers/test_device_transfers.py#L58-L67)
+    * *Contract*: Flag CPU transfer inside streaming accumulation method.
+  * [`test_hns056_passes_on_outside_loop_transfer() -> None`](framework/tests/transfers/test_device_transfers.py#L70-L78)
+    * *Contract*: Pass on CPU transfer occurring outside of loops for checkpoint export.
+  * [`test_hns057_flags_in_loop_item_sync() -> None`](framework/tests/transfers/test_device_transfers.py#L81-L91)
+    * *Contract*: Flag .item() synchronization inside a loop.
+  * [`test_hns057_passes_on_deferred_reduction() -> None`](framework/tests/transfers/test_device_transfers.py#L94-L102)
+    * *Contract*: Pass on deferred device-side boolean reduction without .item() in hook.
+  * [`test_hns058_flags_in_loop_device_transfer() -> None`](framework/tests/transfers/test_device_transfers.py#L105-L113)
+    * *Contract*: Flag redundant .to(device) transfer inside an inner loop.
+  * [`test_hns058_passes_on_pre_pinned_table() -> None`](framework/tests/transfers/test_device_transfers.py#L116-L125)
+    * *Contract*: Pass on device pinning done once outside the iteration loop.
+  * [`test_hns059_flags_in_loop_cuda_sync() -> None`](framework/tests/transfers/test_device_transfers.py#L128-L137)
+    * *Contract*: Flag torch.cuda.synchronize() or empty_cache() inside an inner loop.
+  * [`test_hns059_passes_on_outside_loop_sync() -> None`](framework/tests/transfers/test_device_transfers.py#L140-L149)
+    * *Contract*: Pass on synchronization surrounding an entire timed phase.
+  * [`test_hns056_flags_comprehension_cpu_transfer() -> None`](framework/tests/transfers/test_device_transfers.py#L152-L156)
+    * *Contract*: Flag GPU-to-CPU transfer inside list comprehension.
+  * [`test_hns056_flags_torch_device_cpu() -> None`](framework/tests/transfers/test_device_transfers.py#L159-L166)
+    * *Contract*: Flag to(torch.device('cpu')) transfer inside loop.
+  * [`test_hns057_flags_generator_item_sync() -> None`](framework/tests/transfers/test_device_transfers.py#L169-L173)
+    * *Contract*: Flag .item() synchronization inside generator expression.
+  * [`test_hns057_flags_forward_hook_sync() -> None`](framework/tests/transfers/test_device_transfers.py#L176-L183)
+    * *Contract*: Flag .item() synchronization inside a forward hook.
+  * [`test_hns058_passes_on_pure_dtype_cast() -> None`](framework/tests/transfers/test_device_transfers.py#L186-L194)
+    * *Contract*: Pass on in-loop pure dtype downcast without device movement.
+  * [`test_cli_clean_file_exits_zero(tmp_path: Path) -> None`](framework/tests/transfers/test_device_transfers.py#L197-L202)
+    * *Contract*: CLI exits with 0 on clean scoped sources under --strict.
+  * [`test_cli_dirty_file_exits_one_and_writes_report(tmp_path: Path) -> None`](framework/tests/transfers/test_device_transfers.py#L205-L215)
+    * *Contract*: CLI exits with 1 on dirty sources under --strict and outputs json report.
+  * [`test_cli_unreadable_staged_blob_fails_closed() -> None`](framework/tests/transfers/test_device_transfers.py#L218-L221)
+    * *Contract*: CLI emits HNS010 and exits with 1 when staged file cannot be read.
+  * [`test_cli_skips_paths_outside_the_gate_population() -> None`](framework/tests/transfers/test_device_transfers.py#L224-L236)
+    * *Contract*: A named repository test module is outside the population, a temp path is not.
+  * [`test_hns057_exempts_host_constructed_tensor_factories() -> None`](framework/tests/transfers/test_device_transfers.py#L239-L254)
+    * *Contract*: A .tolist() on a tensor the same function built on the host moves nothing.
+  * [`test_hns057_still_flags_device_and_untyped_tensors() -> None`](framework/tests/transfers/test_device_transfers.py#L257-L268)
+    * *Contract*: An explicit device placement or an opaque receiver keeps the sync.
+  * [`test_hns057_survives_device_rebinding_and_to_chains() -> None`](framework/tests/transfers/test_device_transfers.py#L295-L299)
+    * *Contract*: A moved host local, or a chain that moves, stays flagged.
+  * [`test_hns057_flags_alias_constructors_that_keep_the_input_device() -> None`](framework/tests/transfers/test_device_transfers.py#L302-L310)
+    * *Contract*: ``as_tensor``/``asarray`` hand back a tensor argument, device included.
+  * [`test_hns057_exempts_numpy_pixel_reduction_methods() -> None`](framework/tests/transfers/test_device_transfers.py#L313-L327)
+    * *Contract*: Numpy pixel reductions do not touch the stream and are exempt.
+  * [`test_hns057_tracks_host_torch_load_placement() -> None`](framework/tests/transfers/test_device_transfers.py#L330-L343)
+    * *Contract*: torch.load with map_location='cpu' binds host tensors and stays clean.
+  * [`test_hns057_flags_detached_loss_synchronization() -> None`](framework/tests/transfers/test_device_transfers.py#L346-L356)
+    * *Contract*: In-loop float(loss.detach()) stalls the CUDA stream and is flagged.
+  * [`test_hns058_flags_in_loop_as_tensor_device_conversion() -> None`](framework/tests/transfers/test_device_transfers.py#L359-L367)
+    * *Contract*: In-loop torch.as_tensor with device argument causes redundant PCIe transfers.
+  * [`test_hns057_exempts_test_assertions() -> None`](framework/tests/transfers/test_device_transfers.py#L370-L385)
+    * *Contract*: Test assertions verifying values via .item()/.tolist() do not flag stalls.
+
+- [`framework/tests/transfers/test_historical_cases.py`](framework/tests/transfers/test_historical_cases.py) (76 lines)
+  * *Module Purpose*: Historical revision pins for the device transfer gate.
+  * [`test_host_bound_accumulator_revision_is_flagged() -> None`](framework/tests/transfers/test_historical_cases.py#L54-L59)
+    * *Contract*: The host-bound fp64 accumulator pattern raises HNS056 twice.
+  * [`test_pre_fix_arm_writer_revision_is_flagged() -> None`](framework/tests/transfers/test_historical_cases.py#L62-L65)
+    * *Contract*: The pre-fix arm writer raises HNS056 on its per-run CPU round trip.
+  * [`test_sanctioned_band_pinning_revision_is_clean() -> None`](framework/tests/transfers/test_historical_cases.py#L68-L70)
+    * *Contract*: The band-table fix pins once per blend and raises nothing.
+  * [`test_device_mismatch_fixes_stay_out_of_static_reach() -> None`](framework/tests/transfers/test_historical_cases.py#L73-L76)
+    * *Contract*: Device mismatches without transfers stay invisible to transfer gate.
+
+## Package `framework/tests/transfers/provenance` — *Test package for device provenance inference and mixing detection.*
+
+- [`framework/tests/transfers/provenance/mixing_cases_fixture.py`](framework/tests/transfers/provenance/mixing_cases_fixture.py) (280 lines)
+  * *Module Purpose*: Benchmark evaluation dataset for the mixed-device (HNS088) rule.
+
+- [`framework/tests/transfers/provenance/test_mixing.py`](framework/tests/transfers/provenance/test_mixing.py) (68 lines)
+  * *Module Purpose*: Benchmark regression suite for the mixed-device (HNS088) rule.
+  * [`test_case_matches_expected_codes(case: TransferBenchmarkCase) -> None`](framework/tests/transfers/provenance/test_mixing.py#L33-L35)
+    * *Contract*: Detected codes equal ground truth; a catalogued miss stays undetected.
+  * [`test_supported_set_precision_and_recall() -> None`](framework/tests/transfers/provenance/test_mixing.py#L38-L42)
+    * *Contract*: Over the supported set the rule is exact: every case lands on its side.
+  * [`test_all_cases_precision_and_recall_with_open_gaps() -> None`](framework/tests/transfers/provenance/test_mixing.py#L45-L51)
+    * *Contract*: Counting known misses, recall drops to the measured 20/23 = 0.8696.
+  * [`test_known_misses_are_the_documented_gap() -> None`](framework/tests/transfers/provenance/test_mixing.py#L54-L60)
+    * *Contract*: Every open gap is catalogued and named, so no 1.0 recall claim survives.
+  * [`test_mixed_device_findings_carry_the_static_trigger() -> None`](framework/tests/transfers/provenance/test_mixing.py#L63-L68)
+    * *Contract*: A mixture fails on every run, so its evidence state is static, not loop.
 
 ## Package `framework/tests/typecheck` — *Tests for the static-type gate.*
 

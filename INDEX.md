@@ -3,7 +3,7 @@
 > [!NOTE]
 > Master architectural directory. Sub-indices are maintained for major subtrees. Use the sub-index links and line ranges below to load target sections into context.
 
-**Repository Statistics**: 102 modules | 42 classes | 801 public functions.
+**Repository Statistics**: 118 modules | 48 classes | 875 public functions.
 
 ## Master Table of Contents
 
@@ -11,38 +11,45 @@
 
 - [`experiments/example_plan`](experiments/INDEX.md#L14-L22) (lines 14–22 in `experiments/INDEX.md`)
 
-### [`framework/INDEX.md`](framework/INDEX.md) — 83 modules | 708 symbols
+### [`framework/INDEX.md`](framework/INDEX.md) — 99 modules | 788 symbols
 
-- [`framework`](framework/INDEX.md#L43-L67) (lines 43–67 in `framework/INDEX.md`) — *Repository gate framework (hooks + checkers).*
-- [`framework/gates`](framework/INDEX.md#L68-L95) (lines 68–95 in `framework/INDEX.md`) — *Blocking and advisory repository gates.*
-- [`framework/gates/antipattern`](framework/INDEX.md#L96-L129) (lines 96–129 in `framework/INDEX.md`) — *Internals of the production anti-pattern gate.*
-- [`framework/gates/antipattern/execution`](framework/INDEX.md#L130-L138) (lines 130–138 in `framework/INDEX.md`) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
-- [`framework/gates/antipattern/liveness`](framework/INDEX.md#L139-L145) (lines 139–145 in `framework/INDEX.md`) — *Liveness checks for the production anti-pattern gate (HNS072).*
-- [`framework/gates/checks`](framework/INDEX.md#L146-L230) (lines 146–230 in `framework/INDEX.md`) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
-- [`framework/gates/coverage`](framework/INDEX.md#L231-L290) (lines 231–290 in `framework/INDEX.md`) — *Internals of the per-file coverage and loop-iteration gate.*
-- [`framework/gates/distortion`](framework/INDEX.md#L291-L337) (lines 291–337 in `framework/INDEX.md`) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
-- [`framework/gates/freshness`](framework/INDEX.md#L338-L376) (lines 338–376 in `framework/INDEX.md`) — *Freshness and ref-provenance gates.*
-- [`framework/gates/instructions`](framework/INDEX.md#L377-L394) (lines 377–394 in `framework/INDEX.md`) — *Fail-closed reference check for agent instruction artifacts.*
-- [`framework/gates/limits`](framework/INDEX.md#L395-L452) (lines 395–452 in `framework/INDEX.md`)
-- [`framework/gates/mutation`](framework/INDEX.md#L453-L558) (lines 453–558 in `framework/INDEX.md`) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
-- [`framework/gates/params`](framework/INDEX.md#L559-L599) (lines 559–599 in `framework/INDEX.md`) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
-- [`framework/gates/params/primitives`](framework/INDEX.md#L600-L604) (lines 600–604 in `framework/INDEX.md`) — *Pure AST and text primitives of the parameter-drift matchers.*
-- [`framework/gates/provenance`](framework/INDEX.md#L605-L641) (lines 605–641 in `framework/INDEX.md`) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
-- [`framework/gates/typecheck`](framework/INDEX.md#L642-L720) (lines 642–720 in `framework/INDEX.md`) — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
-- [`framework/indexing`](framework/INDEX.md#L721-L772) (lines 721–772 in `framework/INDEX.md`) — *AST-based repository mapping and Table-of-Contents indexing.*
-- [`framework/tests`](framework/INDEX.md#L773-L931) (lines 773–931 in `framework/INDEX.md`)
-- [`framework/tests/antipattern`](framework/INDEX.md#L932-L1019) (lines 932–1019 in `framework/INDEX.md`) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
-- [`framework/tests/coverage_gate`](framework/INDEX.md#L1020-L1030) (lines 1020–1030 in `framework/INDEX.md`) — *Tests for the coverage gate and its probe plugin.*
-- [`framework/tests/distortion`](framework/INDEX.md#L1031-L1057) (lines 1031–1057 in `framework/INDEX.md`) — *Test package for the framework distortion gate.*
-- [`framework/tests/freshness`](framework/INDEX.md#L1058-L1110) (lines 1058–1110 in `framework/INDEX.md`) — *Tests for freshness and ref guard gates.*
-- [`framework/tests/gates`](framework/INDEX.md#L1111-L1223) (lines 1111–1223 in `framework/INDEX.md`) — *Package.*
-- [`framework/tests/gates/instructions`](framework/INDEX.md#L1224-L1263) (lines 1224–1263 in `framework/INDEX.md`) — *Tests for instruction reference validation.*
-- [`framework/tests/gates/params`](framework/INDEX.md#L1264-L1322) (lines 1264–1322 in `framework/INDEX.md`) — *Tests for the parameter registry gates.*
-- [`framework/tests/gates/ratchet`](framework/INDEX.md#L1323-L1345) (lines 1323–1345 in `framework/INDEX.md`) — *Ratchet gates: tables that may only shrink.*
-- [`framework/tests/harness`](framework/INDEX.md#L1346-L1362) (lines 1346–1362 in `framework/INDEX.md`) — *Harness registry tests: project identity and the interpreter floor.*
-- [`framework/tests/hook_hygiene`](framework/INDEX.md#L1363-L1371) (lines 1363–1371 in `framework/INDEX.md`) — *Tests for the hook/test-process boundary.*
-- [`framework/tests/indexing`](framework/INDEX.md#L1372-L1420) (lines 1372–1420 in `framework/INDEX.md`) — *Tests for framework.indexing Table-of-Contents subsystem.*
-- [`framework/tests/typecheck`](framework/INDEX.md#L1421-L1471) (lines 1421–1471 in `framework/INDEX.md`) — *Tests for the static-type gate.*
+- [`framework`](framework/INDEX.md#L50-L74) (lines 50–74 in `framework/INDEX.md`) — *Repository gate framework (hooks + checkers).*
+- [`framework/gates`](framework/INDEX.md#L75-L102) (lines 75–102 in `framework/INDEX.md`) — *Blocking and advisory repository gates.*
+- [`framework/gates/advisory`](framework/INDEX.md#L103-L127) (lines 103–127 in `framework/INDEX.md`) — *Advisory static gates shared model and runner package.*
+- [`framework/gates/antipattern`](framework/INDEX.md#L128-L161) (lines 128–161 in `framework/INDEX.md`) — *Internals of the production anti-pattern gate.*
+- [`framework/gates/antipattern/execution`](framework/INDEX.md#L162-L170) (lines 162–170 in `framework/INDEX.md`) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
+- [`framework/gates/antipattern/liveness`](framework/INDEX.md#L171-L177) (lines 171–177 in `framework/INDEX.md`) — *Liveness checks for the production anti-pattern gate (HNS072).*
+- [`framework/gates/checks`](framework/INDEX.md#L178-L262) (lines 178–262 in `framework/INDEX.md`) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
+- [`framework/gates/coverage`](framework/INDEX.md#L263-L322) (lines 263–322 in `framework/INDEX.md`) — *Internals of the per-file coverage and loop-iteration gate.*
+- [`framework/gates/distortion`](framework/INDEX.md#L323-L367) (lines 323–367 in `framework/INDEX.md`) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
+- [`framework/gates/freshness`](framework/INDEX.md#L368-L406) (lines 368–406 in `framework/INDEX.md`) — *Freshness and ref-provenance gates.*
+- [`framework/gates/instructions`](framework/INDEX.md#L407-L424) (lines 407–424 in `framework/INDEX.md`) — *Fail-closed reference check for agent instruction artifacts.*
+- [`framework/gates/limits`](framework/INDEX.md#L425-L482) (lines 425–482 in `framework/INDEX.md`)
+- [`framework/gates/mutation`](framework/INDEX.md#L483-L588) (lines 483–588 in `framework/INDEX.md`) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
+- [`framework/gates/params`](framework/INDEX.md#L589-L629) (lines 589–629 in `framework/INDEX.md`) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
+- [`framework/gates/params/primitives`](framework/INDEX.md#L630-L634) (lines 630–634 in `framework/INDEX.md`) — *Pure AST and text primitives of the parameter-drift matchers.*
+- [`framework/gates/provenance`](framework/INDEX.md#L635-L671) (lines 635–671 in `framework/INDEX.md`) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
+- [`framework/gates/static`](framework/INDEX.md#L672-L684) (lines 672–684 in `framework/INDEX.md`) — *Shared plumbing for the static-analysis gates.*
+- [`framework/gates/transfers`](framework/INDEX.md#L685-L771) (lines 685–771 in `framework/INDEX.md`) — *Device transfer bottleneck detection package.*
+- [`framework/gates/transfers/provenance`](framework/INDEX.md#L772-L787) (lines 772–787 in `framework/INDEX.md`) — *Device provenance inference for the host-device transfer gate.*
+- [`framework/gates/traversal`](framework/INDEX.md#L788-L798) (lines 788–798 in `framework/INDEX.md`) — *Shared AST traversal helpers for the gate visitors.*
+- [`framework/gates/typecheck`](framework/INDEX.md#L799-L877) (lines 799–877 in `framework/INDEX.md`) — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
+- [`framework/indexing`](framework/INDEX.md#L878-L929) (lines 878–929 in `framework/INDEX.md`) — *AST-based repository mapping and Table-of-Contents indexing.*
+- [`framework/tests`](framework/INDEX.md#L930-L1101) (lines 930–1101 in `framework/INDEX.md`)
+- [`framework/tests/antipattern`](framework/INDEX.md#L1102-L1189) (lines 1102–1189 in `framework/INDEX.md`) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
+- [`framework/tests/coverage_gate`](framework/INDEX.md#L1190-L1200) (lines 1190–1200 in `framework/INDEX.md`) — *Tests for the coverage gate and its probe plugin.*
+- [`framework/tests/distortion`](framework/INDEX.md#L1201-L1227) (lines 1201–1227 in `framework/INDEX.md`) — *Test package for the framework distortion gate.*
+- [`framework/tests/freshness`](framework/INDEX.md#L1228-L1280) (lines 1228–1280 in `framework/INDEX.md`) — *Tests for freshness and ref guard gates.*
+- [`framework/tests/gates`](framework/INDEX.md#L1281-L1393) (lines 1281–1393 in `framework/INDEX.md`) — *Package.*
+- [`framework/tests/gates/instructions`](framework/INDEX.md#L1394-L1433) (lines 1394–1433 in `framework/INDEX.md`) — *Tests for instruction reference validation.*
+- [`framework/tests/gates/params`](framework/INDEX.md#L1434-L1492) (lines 1434–1492 in `framework/INDEX.md`) — *Tests for the parameter registry gates.*
+- [`framework/tests/gates/ratchet`](framework/INDEX.md#L1493-L1515) (lines 1493–1515 in `framework/INDEX.md`) — *Ratchet gates: tables that may only shrink.*
+- [`framework/tests/harness`](framework/INDEX.md#L1516-L1532) (lines 1516–1532 in `framework/INDEX.md`) — *Harness registry tests: project identity and the interpreter floor.*
+- [`framework/tests/hook_hygiene`](framework/INDEX.md#L1533-L1541) (lines 1533–1541 in `framework/INDEX.md`) — *Tests for the hook/test-process boundary.*
+- [`framework/tests/indexing`](framework/INDEX.md#L1542-L1590) (lines 1542–1590 in `framework/INDEX.md`) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework/tests/transfers`](framework/INDEX.md#L1591-L1680) (lines 1591–1680 in `framework/INDEX.md`) — *Test package for device transfer bottleneck gate.*
+- [`framework/tests/transfers/provenance`](framework/INDEX.md#L1681-L1698) (lines 1681–1698 in `framework/INDEX.md`) — *Test package for device provenance inference and mixing detection.*
+- [`framework/tests/typecheck`](framework/INDEX.md#L1699-L1749) (lines 1699–1749 in `framework/INDEX.md`) — *Tests for the static-type gate.*
 
 ### [`research/INDEX.md`](research/INDEX.md) — 3 modules | 13 symbols
 

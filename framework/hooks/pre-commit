@@ -30,6 +30,10 @@ COVERAGE_SCOPE="$(harness coverage-scope)"
 TEST_SCOPE="$(harness test-scope)"
 DISTORTION_SCOPE="$(harness static-scope)"
 TYPE_SCOPE="$(harness static-scope)"
+# Path components no static gate reads, as a regex built from the registry row
+# (never a restated list): the same narrowing decides which staged files reach
+# every static-family gate below.
+EXCLUDED_RE="$("$PY" "$HARNESS" --get excluded-parts | tr ' ' '|')"
 GATE_STATE="$(harness gate-state-dir)"
 INDEX_SCOPE="$(harness index-scope)"
 
@@ -329,9 +333,7 @@ if [ -n "$STAGED_ALL" ]; then
   # The gate answers two different questions: an explicitly named path outside
   # its population is a usage error (fail closed), while the hook asks "which of
   # these staged files does the population contain?" -- so the hook narrows to
-  # that set itself, using the registry's own tree exclusions, and skips when the
-  # narrowing leaves nothing to judge.
-  EXCLUDED_RE="$("$PY" "$HARNESS" --get excluded-parts | tr ' ' '|')"
+  # that set itself (EXCLUDED_RE above) and skips when nothing is left to judge.
   mapfile -t STAGED_TYPED_FILES < <(
     printf '%s\n' "$STAGED_ALL" \
       | grep -E "$TYPE_SCOPE" \
@@ -352,7 +354,34 @@ if [ -n "$STAGED_ALL" ]; then
 fi
 
 # ---------------------------------------------------------------------------
-# 5d8. BLOCKING INSTRUCTION-REFERENCE GATE (HNS073)
+# 5d8. BLOCKING DEVICE-TRANSFER GATE (HNS056-HNS060, HNS088)
+# A GPU-to-CPU transfer inside a loop, or an accumulate-then-copy pattern, is the
+# classic stall: the work is correct and the run is several times slower. The gate
+# reads staged blobs, infers the device each operand sits on, and blocks the three
+# shapes that cost measured throughput (loop transfer, mixed-device operation,
+# redundant synchronization).
+CHECK_TRANSFERS="$REPO/framework/gates/transfers/check_device_transfers.py"
+if [ -n "$STAGED_ALL" ]; then
+  mapfile -t STAGED_TRANSFER_FILES < <(
+    printf '%s\n' "$STAGED_ALL" \
+      | grep -E "$TYPE_SCOPE" \
+      | grep -vE "/($EXCLUDED_RE)/" || true
+  )
+  if [ "${#STAGED_TRANSFER_FILES[@]}" -gt 0 ]; then
+    if [ ! -f "$CHECK_TRANSFERS" ]; then
+      echo "[pre-commit] FAILED: device-transfer gate missing at $CHECK_TRANSFERS (fail-closed)." >&2
+      exit 1
+    fi
+    if ! "$PY" "$CHECK_TRANSFERS" --mode staged --staged --strict "${STAGED_TRANSFER_FILES[@]}"; then
+      echo "[pre-commit] FAILED: the device-transfer gate blocked this commit (see above)." >&2
+      echo "[pre-commit] keep the tensor device-resident, or move the copy out of the loop." >&2
+      exit 1
+    fi
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 5d9. BLOCKING INSTRUCTION-REFERENCE GATE (HNS073)
 # An instruction artifact is how a future agent learns the tree; a path it names
 # that no tracked tree provides is a stale instruction, and the agent will
 # follow it. The gate resolves every backticked file path against `git ls-files`
@@ -387,26 +416,48 @@ fi
 # broke), and a selection that collects nothing (pytest exits 5), because a marker
 # whose carrier was deleted would otherwise report success by being asleep.
 if [ -n "$STAGED_ALL" ]; then
-  # `set -e` would abort on the assignment itself, so the status is captured in
-  # the conditional and read in the else branch.
-  if PINNED_OUT="$("$PY" -m pytest -m pinned -q -p no:cacheprovider "$REPO/framework/tests" "$REPO/$("$PY" "$HARNESS" --get test-root)" 2>&1)"; then
-    PINNED_RC=0
+  PINNED_ROOTS=()
+  if [ -d "$REPO/framework/tests" ]; then
+    PINNED_ROOTS+=("$REPO/framework/tests")
+  fi
+  TEST_ROOT_PATH="$REPO/$("$PY" "$HARNESS" --get test-root)"
+  if [ -d "$TEST_ROOT_PATH" ]; then
+    PINNED_ROOTS+=("$TEST_ROOT_PATH")
+  fi
+  if [ "${#PINNED_ROOTS[@]}" -eq 0 ]; then
+    # A checkout that carries no test tree at all cannot run the battery; saying
+    # so is the only honest option, and it is visible in the commit output.
+    echo "[pre-commit] NOTE: no test tree in this checkout; pinned battery skipped." >&2
   else
-    PINNED_RC=$?
+    # `set -e` would abort on the assignment itself, so the status is captured in
+    # the conditional and read in the else branch.
+    if PINNED_OUT="$("$PY" -m pytest -m pinned -q -p no:cacheprovider "${PINNED_ROOTS[@]}" 2>&1)"; then
+      PINNED_RC=0
+    else
+      PINNED_RC=$?
+    fi
+    if [ "$PINNED_RC" -eq 5 ]; then
+      # Nothing collected is only a defect when the tree *declares* a pinned
+      # case: then some module carries the marker but pytest cannot see it
+      # (renamed, excluded, or the file stopped parsing). With no declaration at
+      # all there is simply nothing to pin yet -- a fresh project, or a fixture
+      # checkout -- and the battery says so instead of pretending it ran.
+      PINNED_DECLARED="$({ grep -rlc 'pytest\.mark\.pinned' --include='*.py' \
+        "${PINNED_ROOTS[@]}" 2>/dev/null || true; } | wc -l)"
+      if [ "$PINNED_DECLARED" -gt 0 ]; then
+        echo "[pre-commit] FAILED: $PINNED_DECLARED test file(s) declare a pinned case," >&2
+        echo "[pre-commit] but pytest collected none: the carrier is unreadable or uncollected." >&2
+        exit 1
+      fi
+      echo "[pre-commit] NOTE: no pinned acceptance case is declared; battery skipped." >&2
+    elif [ "$PINNED_RC" -ne 0 ]; then
+      printf '%s\n' "$PINNED_OUT" | tail -n 25
+      echo "[pre-commit] FAILED: pinned acceptance tests failed (recorded numbers/floors/wiring above)." >&2
+      echo "[pre-commit] re-census the recorded number the failing case pins, or fix the regression it caught." >&2
+      exit 1
+    fi
+    echo "[pre-commit] ${PINNED_OUT##*$'\n'}"
   fi
-  if [ "$PINNED_RC" -eq 5 ]; then
-    echo "[pre-commit] FAILED: no pinned acceptance test was collected." >&2
-    echo "[pre-commit] a marker with no carrier cannot pin anything; restore the test" >&2
-    echo "[pre-commit] (or drop the marker in the same commit that drops the fact)." >&2
-    exit 1
-  fi
-  if [ "$PINNED_RC" -ne 0 ]; then
-    printf '%s\n' "$PINNED_OUT" | tail -n 25
-    echo "[pre-commit] FAILED: pinned acceptance tests failed (recorded numbers/floors/wiring above)." >&2
-    echo "[pre-commit] re-census the recorded number the failing case pins, or fix the regression it caught." >&2
-    exit 1
-  fi
-  echo "[pre-commit] ${PINNED_OUT##*$'\n'}"
 fi
 
 # ---------------------------------------------------------------------------

@@ -4,24 +4,27 @@ Thumbnail: Finding dataclass and fail-closed target loaders for distortion analy
 
 Invariants & Expected State:
     Finding objects are immutable dataclasses with compiler-style formatting.
-    Target predicates identify production Python sources and skip test trees.
+    The target predicate and the staged reader come from framework.gates.static,
+    so the distortion and device-transfer gates cannot disagree about which file
+    belongs to the population or how a staged blob is read.
+    _read_staged binds this module's REPO, because a caller that redirects REPO
+    (a scratch-checkout test) must redirect the git call with it.
     HNS045 vocabulary constants default to empty or generic, project-neutral hints.
     _load_source fails closed with HNS010 on missing or unreadable staged files.
 """
 
 from __future__ import annotations
 
-import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
 from framework import harness
 from framework.gates.antipattern.targets import _relative_path
+from framework.gates.static.sources import is_target_python, read_staged
 
 REPO = Path(__file__).resolve().parents[3]
 PRODUCTION_ROOTS = set(harness.STATIC_ROOTS)
 CHECKED_SUFFIXES = {".py"}
-_EXCLUDED_PARTS = {"tests", "third_party", ".git", ".venv", "venv", "__pycache__"}
 
 # HNS045 vocabulary: empty exemption set plus generic member/estimate name hints.
 # A project opts its own per-member API in by assigning POOLING_EXEMPT_CALLS and
@@ -45,36 +48,9 @@ class Finding:
         return f"{self.path}:{self.line}: {self.code} {self.message}"
 
 
-def _is_production_path(path: str) -> bool:
-    """Return True if path starts with one of the configured production roots."""
-    parts = Path(path).parts
-    return bool(parts) and parts[0] in PRODUCTION_ROOTS
-
-
-def is_target_python(path: str) -> bool:
-    """Return True if path points to a scoped production Python module."""
-    rel = _relative_path(path)
-    p = Path(rel)
-    if p.suffix.lower() not in CHECKED_SUFFIXES or p.name == "__init__.py":
-        return False
-    if not _is_production_path(rel):
-        return False
-    return not any(part in _EXCLUDED_PARTS for part in p.parts)
-
-
 def _read_staged(path: str) -> str:
-    """Read blob content from Git index for path, raising RuntimeError on error."""
-    rel = _relative_path(path)
-    result = subprocess.run(
-        ["git", "show", f":{rel}"],
-        cwd=REPO,
-        capture_output=True,
-        check=False,
-    )
-    if result.returncode != 0:
-        err = result.stderr.decode(errors="replace").strip()
-        raise RuntimeError(f"cannot read staged file {path}: {err}")
-    return result.stdout.decode("utf-8")
+    """Read ``path`` from this module's repository (a caller may redirect REPO)."""
+    return read_staged(path, repo=REPO)
 
 
 def _checked_directory(directory: Path) -> list[str]:

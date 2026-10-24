@@ -31,12 +31,11 @@ import subprocess
 import sys
 from pathlib import Path
 
-REPO = Path(__file__).resolve().parents[2]
-if str(REPO) not in sys.path:
-    sys.path.insert(0, str(REPO))
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from framework import harness
 
+REPO = harness.REPO
 DVC = Path(harness.dvc_bin())
 
 
