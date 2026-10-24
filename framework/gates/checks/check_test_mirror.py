@@ -220,11 +220,15 @@ def _count_oracles(source: str) -> tuple[int, int, int]:
 
 
 def _read_mirror_source(mirror: str) -> str | None:
-    """Return the on-disk text of ``mirror``, or None when absent."""
+    """Return the on-disk text of ``mirror``, or None when absent or unreadable."""
+
     target = REPO / mirror
     if not target.is_file():
         return None
-    return target.read_text(encoding="utf-8")
+    try:
+        return target.read_text(encoding="utf-8")
+    except (OSError, UnicodeDecodeError):
+        return None
 
 
 def _assertion_findings(rel: str, mirrors: Sequence[str]) -> list[Finding]:

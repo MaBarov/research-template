@@ -290,6 +290,18 @@ def test_evaluate_exempts_fixture_mirrors(tmp_path, monkeypatch) -> None:
     assert gate.evaluate(["research/a/x_fixtures.py"], {}, _disk_exists(root)) == []
 
 
+def test_unreadable_mirror_is_not_graded(tmp_path, monkeypatch) -> None:
+    """A mirror that is not valid UTF-8 is treated as unreadable, not crashed on."""
+
+    root = _fake_repo(tmp_path, monkeypatch)
+    _touch(root, "research/a.py")
+    mirror = root / "tests/research/tests_a.py"
+    mirror.parent.mkdir(parents=True, exist_ok=True)
+    mirror.write_bytes(b"def test_a():\n    assert \xff\xfe\n")
+
+    assert gate.evaluate(["research/a.py"], {}, _disk_exists(root)) == []
+
+
 def test_cli_blocks_an_assertion_free_mirror(tmp_path, monkeypatch, capsys) -> None:
     root = _fake_repo(tmp_path, monkeypatch)
     _touch(root, "research/a.py")
