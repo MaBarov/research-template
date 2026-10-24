@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Reference-transaction guard — ACTIVE via core.hooksPath = framework/hooks.
+# Git fires this hook for every ref movement, and its parent process is the
+# invoking git command; framework/gates/freshness/ref_guard.py decides whether
+# the move may land (a value already reachable from a live tip, or — for a
+# brand-new commit — an armed marker the pre-commit battery wrote for this same
+# git process). The hook path is resolved through the script itself so a
+# scratch repository can symlink it. stdin carries the "<old> <new> <ref>"
+# lines and is passed straight through to the guard, which reads it.
+set -euo pipefail
+R="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
+exec python "$R/../gates/freshness/ref_guard.py" --state "${1:-prepared}"

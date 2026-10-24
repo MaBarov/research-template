@@ -30,6 +30,7 @@ COVERAGE_SCOPE="$(harness coverage-scope)"
 TEST_SCOPE="$(harness test-scope)"
 DISTORTION_SCOPE="$(harness static-scope)"
 TYPE_SCOPE="$(harness static-scope)"
+GATE_STATE="$(harness gate-state-dir)"
 INDEX_SCOPE="$(harness index-scope)"
 
 # ---------------------------------------------------------------------------
@@ -343,6 +344,32 @@ if [ -n "$STAGED_ALL" ]; then
 fi
 
 # ---------------------------------------------------------------------------
+# 5d8. BLOCKING INSTRUCTION-REFERENCE GATE (HNS073)
+# An instruction artifact is how a future agent learns the tree; a path it names
+# that no tracked tree provides is a stale instruction, and the agent will
+# follow it. The gate resolves every backticked file path against `git ls-files`
+# and fails closed on a dead or placeholder reference. Only instruction
+# artifacts are graded (the repository's AGENTS.md and its mirrors); everything
+# else stays silent.
+CHECK_INSTRUCTIONS="$REPO/framework/gates/instructions/check_instruction_refs.py"
+if [ -n "$STAGED_ALL" ]; then
+  mapfile -t STAGED_INSTRUCTION_FILES < <(
+    printf '%s\n' "$STAGED_ALL" | grep -E '^(AGENTS\.md|CLAUDE\.md|\.agents/AGENTS\.md)$' || true
+  )
+  if [ "${#STAGED_INSTRUCTION_FILES[@]}" -gt 0 ]; then
+    if [ ! -f "$CHECK_INSTRUCTIONS" ]; then
+      echo "[pre-commit] FAILED: instruction-reference gate missing at $CHECK_INSTRUCTIONS (fail-closed)." >&2
+      exit 1
+    fi
+    if ! "$PY" "$CHECK_INSTRUCTIONS" --strict --staged "${STAGED_INSTRUCTION_FILES[@]}"; then
+      echo "[pre-commit] FAILED: an instruction artifact names a path no tracked tree provides." >&2
+      echo "[pre-commit] fix the reference (or teach the gate its bucket) and re-stage." >&2
+      exit 1
+    fi
+  fi
+fi
+
+# ---------------------------------------------------------------------------
 # 5e. Codebase architectural index (INDEX.md): auto-maintained, not nagged.
 # The index is generated from the working tree, so a commit that touches an
 # indexed root refreshes it here and re-stages it — the same auto-fix posture as
@@ -397,6 +424,27 @@ if [ -f "$INDEX_GEN" ] && printf '%s\n' "$STAGED_ALL" | grep -qE "$INDEX_SCOPE";
     else
       echo "[pre-commit] WARN: index refresh failed (generator error) — index left untouched" >&2
     fi
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 6. ARM THE REF-PROVENANCE MARKER
+# ---------------------------------------------------------------------------
+# framework/hooks/reference-transaction allows a brand-new commit only when this
+# battery armed a marker binding the invoking git PID to the tree it wrote.
+# Written last, after every check passed and the index stopped changing (ruff
+# and the INDEX.md refresh above re-stage files), so the recorded tree is
+# exactly the one `git commit` is about to create; `git write-tree` honours
+# GIT_INDEX_FILE, so a private-index commit is armed for its own tree. Arming is
+# skipped silently when write-tree fails or PPID is not numeric — the guard then
+# refuses the move rather than letting an unprovenanced tree through.
+if [[ "$PPID" =~ ^[0-9]+$ ]]; then
+  COMMON="$(git rev-parse --git-common-dir 2>/dev/null || true)"
+  TREE="$(git write-tree 2>/dev/null || true)"
+  STARTTIME="$(awk '{print $22}' "/proc/$PPID/stat" 2>/dev/null || true)"
+  if [ -n "$COMMON" ] && [ -n "$TREE" ] && [ -n "$STARTTIME" ]; then
+    mkdir -p "$COMMON/$GATE_STATE/armed"
+    printf '%s %s %s\n' "$TREE" "$(date +%s)" "$STARTTIME" > "$COMMON/$GATE_STATE/armed/$PPID"
   fi
 fi
 

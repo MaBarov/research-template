@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Merge-commit battery — ACTIVE via core.hooksPath = framework/hooks.
+# git 2.34 runs no pre-commit hook when `git merge` creates a commit, so the
+# reference-transaction guard would refuse the merge for want of an armed
+# marker. Forwarding to pre-commit closes that pre-existing ungated-merge hole.
+set -euo pipefail
+exec "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")/pre-commit"

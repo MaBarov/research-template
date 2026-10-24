@@ -348,11 +348,11 @@
   * [`main(argv: list[str] | None) -> int`](framework/gates/freshness/check_index_freshness.py#L147-L163)
     * *Contract*: Run the gate; return the process exit code.
 
-- [`framework/gates/freshness/ref_guard.py`](framework/gates/freshness/ref_guard.py) (363 lines)
+- [`framework/gates/freshness/ref_guard.py`](framework/gates/freshness/ref_guard.py) (361 lines)
   * *Module Purpose*: Block ref moves that would bypass the pre-commit gate battery.
-  * [`class TransLine`](framework/gates/freshness/ref_guard.py#L71-L76)
+  * [`class TransLine`](framework/gates/freshness/ref_guard.py#L69-L74)
     * *Contract*: One ``<old> <new> <ref>`` line of a reference transaction.
-  * [`main(argv: Sequence[str] | None) -> int`](framework/gates/freshness/ref_guard.py#L347-L359)
+  * [`main(argv: Sequence[str] | None) -> int`](framework/gates/freshness/ref_guard.py#L345-L357)
     * *Contract*: Judge a prepared transaction; allow non-prepared states and fail closed.
 
 - [`framework/gates/freshness/test_index_freshness.py`](framework/gates/freshness/test_index_freshness.py) (137 lines)
@@ -376,20 +376,20 @@
 
 ## Package `framework/gates/instructions` — *Fail-closed reference check for agent instruction artifacts.*
 
-- [`framework/gates/instructions/check_instruction_refs.py`](framework/gates/instructions/check_instruction_refs.py) (489 lines)
+- [`framework/gates/instructions/check_instruction_refs.py`](framework/gates/instructions/check_instruction_refs.py) (499 lines)
   * *Module Purpose*: Fail-closed reference check for agent instruction artifacts (HNS073).
-  * [`class Finding`](framework/gates/instructions/check_instruction_refs.py#L124-L133)
+  * [`class Finding`](framework/gates/instructions/check_instruction_refs.py#L122-L131)
     * *Contract*: One stale file reference in an instruction artifact.
-    * [`Finding.format(self) -> str`](framework/gates/instructions/check_instruction_refs.py#L132-L133)
-  * [`class Root`](framework/gates/instructions/check_instruction_refs.py#L137-L145)
+    * [`Finding.format(self) -> str`](framework/gates/instructions/check_instruction_refs.py#L130-L131)
+  * [`class Root`](framework/gates/instructions/check_instruction_refs.py#L135-L143)
     * *Contract*: One tracked tree a reference may resolve in.
-  * [`class Census`](framework/gates/instructions/check_instruction_refs.py#L149-L153)
+  * [`class Census`](framework/gates/instructions/check_instruction_refs.py#L147-L151)
     * *Contract*: Bucket counts plus the findings for one graded artifact.
-  * [`census(path: str, text: str, roots: Sequence[Root], allow_placeholder: bool) -> Census`](framework/gates/instructions/check_instruction_refs.py#L308-L328)
+  * [`census(path: str, text: str, roots: Sequence[Root], allow_placeholder: bool) -> Census`](framework/gates/instructions/check_instruction_refs.py#L306-L326)
     * *Contract*: Classify every token of ``text``; counts are per occurrence.
-  * [`grade(path: str, text: str, tracked: list[str]) -> list[Finding]`](framework/gates/instructions/check_instruction_refs.py#L331-L341)
+  * [`grade(path: str, text: str, tracked: list[str]) -> list[Finding]`](framework/gates/instructions/check_instruction_refs.py#L329-L339)
     * *Contract*: Return HNS073 findings for ``text`` against one flat tracked list.
-  * [`main(argv: Sequence[str] | None) -> int`](framework/gates/instructions/check_instruction_refs.py#L456-L485)
+  * [`main(argv: Sequence[str] | None) -> int`](framework/gates/instructions/check_instruction_refs.py#L466-L495)
     * *Contract*: Grade the named instruction artifacts; 0 clean, 1 findings, 2 error.
 
 ## Package `framework/gates/limits`
@@ -1221,7 +1221,7 @@
 
 ## Package `framework/tests/gates/instructions` — *Tests for instruction reference validation.*
 
-- [`framework/tests/gates/instructions/test_instruction_refs.py`](framework/tests/gates/instructions/test_instruction_refs.py) (276 lines)
+- [`framework/tests/gates/instructions/test_instruction_refs.py`](framework/tests/gates/instructions/test_instruction_refs.py) (275 lines)
   * *Module Purpose*: Tests for the instruction-reference gate (HNS073).
   * [`test_an_exact_tracked_path_resolves() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L30-L33)
   * [`test_a_path_with_anchor_resolves() -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L36-L39)
@@ -1248,15 +1248,15 @@
     * *Contract*: A basename that lives at another path fails and names the target.
   * [`test_placeholder_fails_unless_allowed(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L185-L196)
     * *Contract*: Example-shaped paths fail by default and are counted under the flag.
-  * [`test_corpus_omp_enumerates_rules_and_skills(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L199-L220)
-    * *Contract*: --corpus omp grades the harness rules, skills and AGENTS.md.
-  * [`test_bare_filename_is_counted_under_roots(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L223-L237)
+  * [`test_corpus_root_enumerates_rules_and_skills(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L199-L219)
+    * *Contract*: --corpus-root grades that tree's rules, skills and AGENTS.md.
+  * [`test_bare_filename_is_counted_under_roots(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L222-L236)
     * *Contract*: A bare filename is ambiguous across roots: counted, never failed.
-  * [`test_output_path_is_counted_not_failed(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L240-L254)
+  * [`test_output_path_is_counted_not_failed(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L239-L253)
     * *Contract*: A path under a directory no root tracks (a produced artifact) passes.
-  * [`test_files_outside_corpus_stay_silent(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L257-L266)
+  * [`test_files_outside_corpus_stay_silent(tmp_path: Path, monkeypatch, capsys) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L256-L265)
     * *Contract*: A file outside the declared corpus is skipped without findings.
-  * [`test_missing_manifest_is_environment_error(tmp_path: Path, monkeypatch) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L269-L276)
+  * [`test_missing_manifest_is_environment_error(tmp_path: Path, monkeypatch) -> None`](framework/tests/gates/instructions/test_instruction_refs.py#L268-L275)
     * *Contract*: --manifest with a nonexistent file exits 2 with an error message.
 
 ## Package `framework/tests/gates/params` — *Tests for the parameter registry gates.*

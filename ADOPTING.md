@@ -127,6 +127,8 @@ Every code below is printed by the gate named beside it; the code prefix is
 | `mutation/check_mutation.py` | mutation findings | Do the tests kill the mutants of this exact content, scored against this exact test surface? |
 | `check_documentation.py` | doc-chain findings | Is there a manifest, metrics file and DVC/MLflow run behind the number? |
 | `check_sbatch_contract.sh` + `sbatch_gate.sh` | contract findings | Can this job be mapped back to a commit, and does it refuse a dirty tree? |
+| `instructions/check_instruction_refs.py` | HNS073 | Does every file path the instruction artifacts name exist in a tracked tree? |
+| `freshness/ref_guard.py` (+ hook `reference-transaction`) | GUARD001 | Did this ref move carry a tree this battery armed, or is it a ref bypass of the gates? |
 
 ## 4. Rules that are not negotiable
 
