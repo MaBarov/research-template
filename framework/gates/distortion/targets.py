@@ -19,7 +19,7 @@ from framework import harness
 from framework.gates.antipattern.targets import _relative_path
 
 REPO = Path(__file__).resolve().parents[3]
-PRODUCTION_ROOTS = set(harness.DISTORTION_ROOTS)
+PRODUCTION_ROOTS = set(harness.STATIC_ROOTS)
 CHECKED_SUFFIXES = {".py"}
 _EXCLUDED_PARTS = {"tests", "third_party", ".git", ".venv", "venv", "__pycache__"}
 

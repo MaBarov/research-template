@@ -68,3 +68,53 @@ def test_dvc_bin_prefers_the_venv_binary(tmp_path, monkeypatch) -> None:
 
     monkeypatch.setenv(harness.env("DVC_BIN"), "/opt/dvc")
     assert harness.dvc_bin() == "/opt/dvc"
+
+
+def test_engine_bin_prefers_env_then_venv_then_path(tmp_path, monkeypatch) -> None:
+    monkeypatch.delenv(harness.env("MYPY_BIN"), raising=False)
+    monkeypatch.setenv(harness.env("VENV"), str(tmp_path))
+    monkeypatch.setenv("PATH", str(tmp_path / "empty"))
+    assert harness.engine_bin("mypy") == "mypy"
+
+    binary = tmp_path / "bin" / "mypy"
+    binary.parent.mkdir()
+    binary.write_text("#!/bin/sh\n", encoding="utf-8")
+    assert harness.engine_bin("mypy") == str(binary)
+
+    monkeypatch.setenv(harness.env("MYPY_BIN"), "/opt/mypy")
+    assert harness.engine_bin("mypy") == "/opt/mypy"
+
+
+def test_static_scope_covers_the_static_roots() -> None:
+    regex = harness.KEYS["static-scope"]()
+
+    assert regex == r"^(research|framework|scripts|experiments)/.*\.py$"
+    assert harness.STATIC_ROOTS == ("research", "framework", "scripts", "experiments")
+
+
+def test_gate_state_and_cache_dirs_are_slug_scoped(monkeypatch) -> None:
+    assert harness.KEYS["gate-state-dir"] == f"{harness.SLUG}-gate"
+    assert harness.KEYS["cache-dir"] == "cache"
+    assert "tests" in harness.EXCLUDED_PARTS
+
+
+def test_keys_key_lists_every_key() -> None:
+    names = harness.KEYS["keys"]()
+
+    assert "static-scope" in names
+    assert "mypy-bin" in names
+    assert "keys" in names
+
+
+def test_bare_invocation_prints_every_key(capsys) -> None:
+    assert harness.main([]) == 0
+
+    printed = capsys.readouterr().out
+    for key in harness.KEYS:
+        assert f"{key}: " in printed
+
+
+def test_superseded_distortion_scope_key_is_unknown(capsys) -> None:
+    assert harness.main(["--get", "distortion-scope"]) == 2
+
+    assert "unknown harness key" in capsys.readouterr().err

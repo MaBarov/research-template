@@ -3,55 +3,57 @@
 > [!NOTE]
 > Sub-index for the `framework` package hierarchy. Use the line ranges below to load specific sections directly into context.
 
-**Repository Statistics**: 65 modules | 14 classes | 464 public functions.
+**Repository Statistics**: 65 modules | 14 classes | 471 public functions.
 
 ## Table of Contents
 
-- [`framework`](#package-framework) (lines 33–55) — *Repository gate framework (hooks + checkers).*
-- [`framework/gates`](#package-frameworkgates) (lines 56–83) — *Blocking and advisory repository gates.*
-- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 84–113) — *Internals of the production anti-pattern gate.*
-- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 114–186) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
-- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 187–244) — *Internals of the per-file coverage and loop-iteration gate.*
-- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 245–291) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
-- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 292–323)
-- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 324–381)
-- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 382–450) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
-- [`framework/gates/params`](#package-frameworkgatesparams) (lines 451–491) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
-- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 492–496) — *Pure AST and text primitives of the parameter-drift matchers.*
-- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 497–533) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
-- [`framework/indexing`](#package-frameworkindexing) (lines 534–585) — *AST-based repository mapping and Table-of-Contents indexing.*
-- [`framework/tests`](#package-frameworktests) (lines 586–716)
-- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 717–727) — *Tests for the coverage gate and its probe plugin.*
-- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 728–754) — *Test package for the framework distortion gate.*
-- [`framework/tests/gates`](#package-frameworktestsgates) (lines 755–865) — *Package.*
-- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 866–924) — *Tests for the parameter registry gates.*
-- [`framework/tests/harness`](#package-frameworktestsharness) (lines 925–934) — *Harness registry tests: project identity and the interpreter floor.*
-- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 935–983) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework`](#package-framework) (lines 33–57) — *Repository gate framework (hooks + checkers).*
+- [`framework/gates`](#package-frameworkgates) (lines 58–85) — *Blocking and advisory repository gates.*
+- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 86–115) — *Internals of the production anti-pattern gate.*
+- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 116–188) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
+- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 189–246) — *Internals of the per-file coverage and loop-iteration gate.*
+- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 247–293) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
+- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 294–325)
+- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 326–383)
+- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 384–452) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
+- [`framework/gates/params`](#package-frameworkgatesparams) (lines 453–493) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
+- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 494–498) — *Pure AST and text primitives of the parameter-drift matchers.*
+- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 499–535) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
+- [`framework/indexing`](#package-frameworkindexing) (lines 536–587) — *AST-based repository mapping and Table-of-Contents indexing.*
+- [`framework/tests`](#package-frameworktests) (lines 588–718)
+- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 719–729) — *Tests for the coverage gate and its probe plugin.*
+- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 730–756) — *Test package for the framework distortion gate.*
+- [`framework/tests/gates`](#package-frameworktestsgates) (lines 757–867) — *Package.*
+- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 868–926) — *Tests for the parameter registry gates.*
+- [`framework/tests/harness`](#package-frameworktestsharness) (lines 927–942) — *Harness registry tests: project identity and the interpreter floor.*
+- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 943–991) — *Tests for framework.indexing Table-of-Contents subsystem.*
 
 ---
 
 ## Package `framework` — *Repository gate framework (hooks + checkers).*
 
-- [`framework/harness.py`](framework/harness.py) (243 lines)
+- [`framework/harness.py`](framework/harness.py) (298 lines)
   * *Module Purpose*: Single registry for the project identity, path roots and interpreter the harness uses.
-  * [`env(name: str) -> str`](framework/harness.py#L84-L87)
+  * [`env(name: str) -> str`](framework/harness.py#L114-L117)
     * *Contract*: Return the canonical env-var spelling of a harness parameter.
-  * [`env_regex() -> str`](framework/harness.py#L90-L93)
+  * [`env_regex() -> str`](framework/harness.py#L120-L123)
     * *Contract*: Return the ERE that matches every canonical env var of this project.
-  * [`venv() -> str`](framework/harness.py#L96-L105)
+  * [`venv() -> str`](framework/harness.py#L126-L135)
     * *Contract*: Return the interpreter directory: override, per-cluster, or the checkout venv.
-  * [`python() -> str`](framework/harness.py#L132-L150)
+  * [`python() -> str`](framework/harness.py#L162-L180)
     * *Contract*: Return the project interpreter: env override, venv binary, else this one.
-  * [`deploy_root() -> str`](framework/harness.py#L153-L156)
+  * [`deploy_root() -> str`](framework/harness.py#L183-L186)
     * *Contract*: Return the checkout the jobs import: env override, else this repository.
-  * [`mlflow_uri() -> str`](framework/harness.py#L159-L162)
+  * [`mlflow_uri() -> str`](framework/harness.py#L189-L192)
     * *Contract*: Return the MLflow tracking URI: env override, else this checkout's mlruns dir.
-  * [`dvc_bin() -> str`](framework/harness.py#L165-L172)
+  * [`dvc_bin() -> str`](framework/harness.py#L195-L202)
     * *Contract*: Return the DVC executable: env override, the venv binary, else ``dvc`` on PATH.
-  * [`scope_regex(roots: tuple[str, ...], suffix: str) -> str`](framework/harness.py#L175-L179)
+  * [`engine_bin(name: str) -> str`](framework/harness.py#L205-L214)
+    * *Contract*: Return an external checker: env override, the venv binary, else ``name`` on PATH.
+  * [`scope_regex(roots: tuple[str, ...], suffix: str) -> str`](framework/harness.py#L217-L221)
     * *Contract*: Return an ERE anchoring ``roots`` (plus optional per-root suffix) at the start.
-  * [`main(argv: list[str]) -> int`](framework/harness.py#L223-L239)
-    * *Contract*: Print one key (``--get``) or the hook assignments (``--shell``).
+  * [`main(argv: list[str]) -> int`](framework/harness.py#L274-L294)
+    * *Contract*: Print every key, one key (``--get``), or the hook assignments (``--shell``).
 
 ## Package `framework/gates` — *Blocking and advisory repository gates.*
 
@@ -924,13 +926,19 @@
 
 ## Package `framework/tests/harness` — *Harness registry tests: project identity and the interpreter floor.*
 
-- [`framework/tests/harness/test_harness.py`](framework/tests/harness/test_harness.py) (70 lines)
+- [`framework/tests/harness/test_harness.py`](framework/tests/harness/test_harness.py) (120 lines)
   * *Module Purpose*: Tests for the harness registry: project identity and the interpreter floor.
   * [`test_python_refuses_an_interpreter_below_the_floor(tmp_path, monkeypatch) -> None`](framework/tests/harness/test_harness.py#L30-L39)
   * [`test_python_accepts_an_interpreter_at_the_floor(tmp_path, monkeypatch) -> None`](framework/tests/harness/test_harness.py#L42-L46)
   * [`test_floor_matches_the_packaging_floor() -> None`](framework/tests/harness/test_harness.py#L49-L52)
   * [`test_floor_is_exposed_as_a_key() -> None`](framework/tests/harness/test_harness.py#L55-L56)
   * [`test_dvc_bin_prefers_the_venv_binary(tmp_path, monkeypatch) -> None`](framework/tests/harness/test_harness.py#L59-L70)
+  * [`test_engine_bin_prefers_env_then_venv_then_path(tmp_path, monkeypatch) -> None`](framework/tests/harness/test_harness.py#L73-L85)
+  * [`test_static_scope_covers_the_static_roots() -> None`](framework/tests/harness/test_harness.py#L88-L92)
+  * [`test_gate_state_and_cache_dirs_are_slug_scoped(monkeypatch) -> None`](framework/tests/harness/test_harness.py#L95-L98)
+  * [`test_keys_key_lists_every_key() -> None`](framework/tests/harness/test_harness.py#L101-L106)
+  * [`test_bare_invocation_prints_every_key(capsys) -> None`](framework/tests/harness/test_harness.py#L109-L114)
+  * [`test_superseded_distortion_scope_key_is_unknown(capsys) -> None`](framework/tests/harness/test_harness.py#L117-L120)
 
 ## Package `framework/tests/indexing` — *Tests for framework.indexing Table-of-Contents subsystem.*
 

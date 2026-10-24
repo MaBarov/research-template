@@ -27,7 +27,7 @@ PY="$(harness python)" || {
 }
 MIRROR_SCOPE="$(harness mirror-scope)"
 COVERAGE_SCOPE="$(harness coverage-scope)"
-DISTORTION_SCOPE="$(harness distortion-scope)"
+DISTORTION_SCOPE="$(harness static-scope)"
 INDEX_SCOPE="$(harness index-scope)"
 
 # ---------------------------------------------------------------------------

@@ -10,19 +10,24 @@ Invariants & Expected State:
     - Stdlib-only and import-side-effect free, so the gates can import it under a
       bare interpreter; tool paths may be overridden by the caller through env
       vars, but no policy decision here changes with the environment.
-    - ``python framework/harness.py --get KEY`` prints one value for shell hooks and
-      ``--shell`` prints the hook assignments; unknown keys exit 2.
+    - ``python framework/harness.py`` prints every key; ``--get KEY`` prints one
+      value for shell hooks and ``--shell`` prints the hook assignments; unknown
+      keys exit 2.
+    - ``engine_bin`` resolves an external checker the same way ``dvc_bin`` resolves
+      DVC (env override, checkout venv, PATH), so a gate never hardcodes a host path.
 
-Keys: slug, env-prefix, code-prefix, python, python-floor, dvc-bin, venv,
-deploy-root, source-roots, test-root, mirror-root, params-module, registry-path,
-resolve-path, smoke-dir, slurm-dir, queue-clusters, default-cluster,
-mirror-scope, coverage-scope, distortion-scope, index-scope, production-scope,
-run-manifest-schema, run-metrics-schema, canary-receipt-schema, env-regex.
+Keys: keys, slug, env-prefix, code-prefix, python, python-floor, dvc-bin, venv,
+deploy-root, source-roots, static-roots, static-scope, excluded-parts, cache-dir,
+gate-state-dir, mypy-bin, pyright-bin, test-root, mirror-root, params-module,
+registry-path, resolve-path, smoke-dir, slurm-dir, queue-clusters, default-cluster,
+mirror-scope, coverage-scope, index-scope, production-scope, run-manifest-schema,
+run-metrics-schema, canary-receipt-schema, env-regex.
 """
 
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -60,7 +65,25 @@ PRODUCTION_ROOTS = (SLUG, "scripts", "slurm")
 CONSUMING_ROOTS = (SLUG, "experiments", "framework", "scripts", "slurm")
 INDEX_ROOTS = (SLUG, "framework", "experiments", "scripts")
 LIMITS_ROOTS = (SLUG, "experiments", "framework", "scripts", "tests")
-DISTORTION_ROOTS = (SLUG, "framework", "scripts", "experiments")
+
+# Trees the static-analysis gates (distortion, device transfers, memory, type
+# checking) read, and the path parts none of them judges: test support, vendored
+# or cache trees and run outputs are outside every static population.
+STATIC_ROOTS = (SLUG, "framework", "scripts", "experiments")
+EXCLUDED_PARTS = frozenset(
+    {
+        "tests",
+        "third_party",
+        "cache",
+        "mutants",
+        "__pycache__",
+        ".venv",
+        "venv",
+        "results",
+        "models",
+        ".git",
+    }
+)
 
 # --- canonical paths inside the checkout ------------------------------------
 PARAMS_MODULE = f"{SLUG}.params"
@@ -79,6 +102,13 @@ CLUSTER_VENVS: dict[str, str] = {}
 VENV_DIR = ".venv"
 MLRUNS_DIR = "mlruns"
 RESULTS_DIR = "results"
+
+# --- gate scratch state -----------------------------------------------------
+# ``CACHE_DIR`` holds tool caches (mypy, shadow trees); ``GATE_STATE_DIR`` names
+# the directory a hook keeps under the git common dir (armed ref markers, audit
+# log), so no gate writes to a path the project does not own.
+CACHE_DIR = "cache"
+GATE_STATE_DIR = f"{SLUG}-gate"
 
 
 def env(name: str) -> str:
@@ -172,6 +202,18 @@ def dvc_bin() -> str:
     return str(candidate) if candidate.is_file() else "dvc"
 
 
+def engine_bin(name: str) -> str:
+    """Return an external checker: env override, the venv binary, else ``name`` on PATH."""
+
+    override = os.environ.get(env(f"{name.upper()}_BIN"))
+    if override:
+        return override
+    candidate = Path(venv()) / "bin" / name
+    if candidate.is_file():
+        return str(candidate)
+    return shutil.which(name) or name
+
+
 def scope_regex(roots: tuple[str, ...], suffix: str = "") -> str:
     """Return an ERE anchoring ``roots`` (plus optional per-root suffix) at the start."""
 
@@ -180,18 +222,26 @@ def scope_regex(roots: tuple[str, ...], suffix: str = "") -> str:
 
 
 KEYS: dict[str, object] = {
+    "keys": lambda: tuple(KEYS),
     "slug": SLUG,
     "env-prefix": ENV_PREFIX,
     "code-prefix": CODE_PREFIX,
     "python": python,
     "python-floor": PYTHON_FLOOR,
     "dvc-bin": dvc_bin,
+    "mypy-bin": lambda: engine_bin("mypy"),
+    "pyright-bin": lambda: engine_bin("pyright"),
     "run-manifest-schema": RUN_MANIFEST_SCHEMA,
     "run-metrics-schema": RUN_METRICS_SCHEMA,
     "canary-receipt-schema": CANARY_RECEIPT_SCHEMA,
     "venv": venv,
     "deploy-root": deploy_root,
     "source-roots": SOURCE_ROOTS,
+    "static-roots": STATIC_ROOTS,
+    "static-scope": lambda: scope_regex(STATIC_ROOTS, r".*\.py$"),
+    "excluded-parts": EXCLUDED_PARTS,
+    "cache-dir": CACHE_DIR,
+    "gate-state-dir": GATE_STATE_DIR,
     "test-root": TEST_ROOT,
     "mirror-root": MIRROR_ROOT,
     "params-module": PARAMS_MODULE,
@@ -203,7 +253,6 @@ KEYS: dict[str, object] = {
     "default-cluster": QUEUE_CLUSTERS[0],
     "mirror-scope": lambda: scope_regex((*SOURCE_ROOTS, MIRROR_ROOT)),
     "coverage-scope": lambda: scope_regex(SOURCE_ROOTS, r".*\.py$"),
-    "distortion-scope": lambda: scope_regex(DISTORTION_ROOTS, r".*\.py$"),
     "index-scope": lambda: scope_regex(INDEX_ROOTS),
     "production-scope": lambda: scope_regex(PRODUCTION_ROOTS),
     "env-regex": env_regex,
@@ -215,14 +264,20 @@ def _values(key: str) -> list[str]:
     if raw is None:
         raise KeyError(key)
     value = raw() if callable(raw) else raw
+    if isinstance(value, frozenset):
+        return sorted(value)
     if isinstance(value, tuple):
         return list(value)
     return [str(value)]
 
 
 def main(argv: list[str]) -> int:
-    """Print one key (``--get``) or the hook assignments (``--shell``)."""
+    """Print every key, one key (``--get``), or the hook assignments (``--shell``)."""
 
+    if not argv:
+        for key in KEYS:
+            print(f"{key}: {' '.join(_values(key))}")
+        return 0
     if len(argv) == 2 and argv[0] == "--get":
         try:
             print(" ".join(_values(argv[1])))
