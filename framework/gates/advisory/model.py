@@ -8,7 +8,9 @@ Invariants & Expected State:
     shape (path, line, code, message, evidence).
     A staged read comes from the Git index, so an unstaged working-tree edit can
     never change a staged verdict; an unreadable source is a fail-closed HNS010.
-    Emission prints one line per finding and returns the exit code: advisory
+    Emission prints one line per finding plus one census line naming the scanned
+    population and the finding/code counts, so a clean run over many modules is
+    distinguishable from a run that scanned none; the exit code is advisory
     unless the caller passes strict, with --report always writing the full list.
     The CLI options live here once, so a new advisory gate supplies an analyzer
     and a label and nothing else.
@@ -85,12 +87,23 @@ def write_report(report_path: Path, findings: Sequence[Finding]) -> None:
     report_path.write_text(json.dumps(data, indent=2), encoding="utf-8")
 
 
-def emit(findings: Sequence[Finding], strict: bool, label: str) -> int:
-    """Print every finding plus a summary line and return the exit code."""
+def emit(
+    findings: Sequence[Finding], strict: bool, label: str, checked: int | None = None
+) -> int:
+    """Print every finding plus one census line and return the exit code.
+
+    ``checked`` is the population size: naming it makes a clean run on 300
+    modules distinguishable from a run that scanned none.
+    """
     if findings:
         print("\n".join(f"[{label}] {finding.format()}" for finding in findings))
         counts = sorted({finding.code for finding in findings})
-        print(f"[{label}] {len(findings)} finding(s) across {len(counts)} code(s)")
+        census = f"{len(findings)} finding(s) across {len(counts)} code(s)"
+    else:
+        census = "0 finding(s)"
+    if checked is not None:
+        census = f"checked {checked} module(s), {census}"
+    print(f"[{label}] {census}")
     if findings and strict:
         print(f"[{label}] STRICT FAIL: {len(findings)} finding(s)")
         return 1
@@ -126,7 +139,8 @@ def run(
     """Parse arguments, scan the requested population, report, and return the code."""
     args = build_parser(description).parse_args(argv)
     staged = args.staged or (args.mode == "staged" and not args.files)
-    findings = scan(files_to_check(args.files), staged, analyze)
+    targets = files_to_check(args.files)
+    findings = scan(targets, staged, analyze)
     if args.report:
         write_report(args.report, findings)
-    return emit(findings, args.strict, label)
+    return emit(findings, args.strict, label, checked=len(targets))

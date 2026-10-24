@@ -3,7 +3,7 @@
 > [!NOTE]
 > Master architectural directory. Sub-indices are maintained for major subtrees. Use the sub-index links and line ranges below to load target sections into context.
 
-**Repository Statistics**: 137 modules | 55 classes | 969 public functions.
+**Repository Statistics**: 137 modules | 55 classes | 970 public functions.
 
 ## Master Table of Contents
 
@@ -11,7 +11,7 @@
 
 - [`experiments/example_plan`](experiments/INDEX.md#L14-L22) (lines 14–22 in `experiments/INDEX.md`)
 
-### [`framework/INDEX.md`](framework/INDEX.md) — 118 modules | 889 symbols
+### [`framework/INDEX.md`](framework/INDEX.md) — 118 modules | 890 symbols
 
 - [`framework`](framework/INDEX.md#L57-L81) (lines 57–81 in `framework/INDEX.md`) — *Repository gate framework (hooks + checkers).*
 - [`framework/gates`](framework/INDEX.md#L82-L109) (lines 82–109 in `framework/INDEX.md`) — *Blocking and advisory repository gates.*
@@ -40,7 +40,7 @@
 - [`framework/gates/typecheck`](framework/INDEX.md#L1030-L1108) (lines 1030–1108 in `framework/INDEX.md`) — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
 - [`framework/indexing`](framework/INDEX.md#L1109-L1160) (lines 1109–1160 in `framework/INDEX.md`) — *AST-based repository mapping and Table-of-Contents indexing.*
 - [`framework/tests`](framework/INDEX.md#L1161-L1332) (lines 1161–1332 in `framework/INDEX.md`)
-- [`framework/tests/abstract_cost`](framework/INDEX.md#L1333-L1354) (lines 1333–1354 in `framework/INDEX.md`) — *Tests for the advisory abstract-cost gate package.*
+- [`framework/tests/abstract_cost`](framework/INDEX.md#L1333-L1354) (lines 1333–1354 in `framework/INDEX.md`) — *Advisory abstract-cost gate test package.*
 - [`framework/tests/antipattern`](framework/INDEX.md#L1355-L1442) (lines 1355–1442 in `framework/INDEX.md`) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
 - [`framework/tests/coverage_gate`](framework/INDEX.md#L1443-L1453) (lines 1443–1453 in `framework/INDEX.md`) — *Tests for the coverage gate and its probe plugin.*
 - [`framework/tests/distortion`](framework/INDEX.md#L1454-L1480) (lines 1454–1480 in `framework/INDEX.md`) — *Test package for the framework distortion gate.*
@@ -51,12 +51,12 @@
 - [`framework/tests/gates/ratchet`](framework/INDEX.md#L1746-L1768) (lines 1746–1768 in `framework/INDEX.md`) — *Ratchet gates: tables that may only shrink.*
 - [`framework/tests/harness`](framework/INDEX.md#L1769-L1785) (lines 1769–1785 in `framework/INDEX.md`) — *Harness registry tests: project identity and the interpreter floor.*
 - [`framework/tests/hook_hygiene`](framework/INDEX.md#L1786-L1794) (lines 1786–1794 in `framework/INDEX.md`) — *Tests for the hook/test-process boundary.*
-- [`framework/tests/hotpath`](framework/INDEX.md#L1795-L1812) (lines 1795–1812 in `framework/INDEX.md`) — *Tests for the advisory hot-path gate package.*
-- [`framework/tests/indexing`](framework/INDEX.md#L1813-L1861) (lines 1813–1861 in `framework/INDEX.md`) — *Tests for framework.indexing Table-of-Contents subsystem.*
-- [`framework/tests/memory`](framework/INDEX.md#L1862-L1949) (lines 1862–1949 in `framework/INDEX.md`) — *Tests for the accelerator memory bottleneck static analysis gate.*
-- [`framework/tests/transfers`](framework/INDEX.md#L1950-L2039) (lines 1950–2039 in `framework/INDEX.md`) — *Test package for device transfer bottleneck gate.*
-- [`framework/tests/transfers/provenance`](framework/INDEX.md#L2040-L2057) (lines 2040–2057 in `framework/INDEX.md`) — *Test package for device provenance inference and mixing detection.*
-- [`framework/tests/typecheck`](framework/INDEX.md#L2058-L2108) (lines 2058–2108 in `framework/INDEX.md`) — *Tests for the static-type gate.*
+- [`framework/tests/hotpath`](framework/INDEX.md#L1795-L1814) (lines 1795–1814 in `framework/INDEX.md`) — *Advisory hot-path gate test package.*
+- [`framework/tests/indexing`](framework/INDEX.md#L1815-L1863) (lines 1815–1863 in `framework/INDEX.md`) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework/tests/memory`](framework/INDEX.md#L1864-L1951) (lines 1864–1951 in `framework/INDEX.md`) — *Tests for the accelerator memory bottleneck static analysis gate.*
+- [`framework/tests/transfers`](framework/INDEX.md#L1952-L2041) (lines 1952–2041 in `framework/INDEX.md`) — *Test package for device transfer bottleneck gate.*
+- [`framework/tests/transfers/provenance`](framework/INDEX.md#L2042-L2059) (lines 2042–2059 in `framework/INDEX.md`) — *Test package for device provenance inference and mixing detection.*
+- [`framework/tests/typecheck`](framework/INDEX.md#L2060-L2110) (lines 2060–2110 in `framework/INDEX.md`) — *Tests for the static-type gate.*
 
 ### [`research/INDEX.md`](research/INDEX.md) — 3 modules | 13 symbols
 

@@ -3,7 +3,7 @@
 > [!NOTE]
 > Sub-index for the `framework` package hierarchy. Use the line ranges below to load specific sections directly into context.
 
-**Repository Statistics**: 118 modules | 35 classes | 854 public functions.
+**Repository Statistics**: 118 modules | 35 classes | 855 public functions.
 
 ## Table of Contents
 
@@ -34,7 +34,7 @@
 - [`framework/gates/typecheck`](#package-frameworkgatestypecheck) (lines 1030–1108) — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
 - [`framework/indexing`](#package-frameworkindexing) (lines 1109–1160) — *AST-based repository mapping and Table-of-Contents indexing.*
 - [`framework/tests`](#package-frameworktests) (lines 1161–1332)
-- [`framework/tests/abstract_cost`](#package-frameworktestsabstract-cost) (lines 1333–1354) — *Tests for the advisory abstract-cost gate package.*
+- [`framework/tests/abstract_cost`](#package-frameworktestsabstract-cost) (lines 1333–1354) — *Advisory abstract-cost gate test package.*
 - [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 1355–1442) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
 - [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 1443–1453) — *Tests for the coverage gate and its probe plugin.*
 - [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 1454–1480) — *Test package for the framework distortion gate.*
@@ -45,12 +45,12 @@
 - [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1746–1768) — *Ratchet gates: tables that may only shrink.*
 - [`framework/tests/harness`](#package-frameworktestsharness) (lines 1769–1785) — *Harness registry tests: project identity and the interpreter floor.*
 - [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1786–1794) — *Tests for the hook/test-process boundary.*
-- [`framework/tests/hotpath`](#package-frameworktestshotpath) (lines 1795–1812) — *Tests for the advisory hot-path gate package.*
-- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1813–1861) — *Tests for framework.indexing Table-of-Contents subsystem.*
-- [`framework/tests/memory`](#package-frameworktestsmemory) (lines 1862–1949) — *Tests for the accelerator memory bottleneck static analysis gate.*
-- [`framework/tests/transfers`](#package-frameworkteststransfers) (lines 1950–2039) — *Test package for device transfer bottleneck gate.*
-- [`framework/tests/transfers/provenance`](#package-frameworkteststransfersprovenance) (lines 2040–2057) — *Test package for device provenance inference and mixing detection.*
-- [`framework/tests/typecheck`](#package-frameworkteststypecheck) (lines 2058–2108) — *Tests for the static-type gate.*
+- [`framework/tests/hotpath`](#package-frameworktestshotpath) (lines 1795–1814) — *Advisory hot-path gate test package.*
+- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1815–1863) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework/tests/memory`](#package-frameworktestsmemory) (lines 1864–1951) — *Tests for the accelerator memory bottleneck static analysis gate.*
+- [`framework/tests/transfers`](#package-frameworkteststransfers) (lines 1952–2041) — *Test package for device transfer bottleneck gate.*
+- [`framework/tests/transfers/provenance`](#package-frameworkteststransfersprovenance) (lines 2042–2059) — *Test package for device provenance inference and mixing detection.*
+- [`framework/tests/typecheck`](#package-frameworkteststypecheck) (lines 2060–2110) — *Tests for the static-type gate.*
 
 ---
 
@@ -179,27 +179,27 @@
 
 ## Package `framework/gates/advisory` — *Advisory static gates shared model and runner package.*
 
-- [`framework/gates/advisory/model.py`](framework/gates/advisory/model.py) (134 lines)
+- [`framework/gates/advisory/model.py`](framework/gates/advisory/model.py) (146 lines)
   * *Module Purpose*: Shared plumbing for the advisory static gates.
-  * [`class Finding`](framework/gates/advisory/model.py#L30-L52)
+  * [`class Finding`](framework/gates/advisory/model.py#L32-L54)
     * *Contract*: One static finding: file, line, code, message and its evidence class.
-    * [`Finding.format(self) -> str`](framework/gates/advisory/model.py#L39-L42)
+    * [`Finding.format(self) -> str`](framework/gates/advisory/model.py#L41-L44)
       * *Contract*: Format the finding as a compiler-style diagnostic line.
-    * [`Finding.as_dict(self) -> dict[str, object]`](framework/gates/advisory/model.py#L44-L52)
+    * [`Finding.as_dict(self) -> dict[str, object]`](framework/gates/advisory/model.py#L46-L54)
       * *Contract*: Return the JSON-serializable form used by --report.
-  * [`files_to_check(paths: Sequence[str]) -> list[str]`](framework/gates/advisory/model.py#L55-L57)
+  * [`files_to_check(paths: Sequence[str]) -> list[str]`](framework/gates/advisory/model.py#L57-L59)
     * *Contract*: Resolve CLI paths into the production-root Python modules to scan.
-  * [`load_source(path: str, staged: bool) -> tuple[str | None, Finding | None]`](framework/gates/advisory/model.py#L60-L65)
+  * [`load_source(path: str, staged: bool) -> tuple[str | None, Finding | None]`](framework/gates/advisory/model.py#L62-L67)
     * *Contract*: Load one source from the Git index or disk, converting the error finding.
-  * [`scan(paths: Iterable[str], staged: bool, analyze: Callable[[str, str], list[Finding]]) -> list[Finding]`](framework/gates/advisory/model.py#L68-L79)
+  * [`scan(paths: Iterable[str], staged: bool, analyze: Callable[[str, str], list[Finding]]) -> list[Finding]`](framework/gates/advisory/model.py#L70-L81)
     * *Contract*: Analyze every path with the gate's own analyzer, collecting findings.
-  * [`write_report(report_path: Path, findings: Sequence[Finding]) -> None`](framework/gates/advisory/model.py#L82-L85)
+  * [`write_report(report_path: Path, findings: Sequence[Finding]) -> None`](framework/gates/advisory/model.py#L84-L87)
     * *Contract*: Serialize findings to a JSON report.
-  * [`emit(findings: Sequence[Finding], strict: bool, label: str) -> int`](framework/gates/advisory/model.py#L88-L99)
-    * *Contract*: Print every finding plus a summary line and return the exit code.
-  * [`build_parser(description: str) -> argparse.ArgumentParser`](framework/gates/advisory/model.py#L113-L119)
+  * [`emit(findings: Sequence[Finding], strict: bool, label: str, checked: int | None) -> int`](framework/gates/advisory/model.py#L90-L110)
+    * *Contract*: Print every finding plus one census line and return the exit code.
+  * [`build_parser(description: str) -> argparse.ArgumentParser`](framework/gates/advisory/model.py#L124-L130)
     * *Contract*: Build the argument parser every advisory gate shares.
-  * [`run(argv: list[str] | None, analyze: Callable[[str, str], list[Finding]], label: str, description: str) -> int`](framework/gates/advisory/model.py#L122-L134)
+  * [`run(argv: list[str] | None, analyze: Callable[[str, str], list[Finding]], label: str, description: str) -> int`](framework/gates/advisory/model.py#L133-L146)
     * *Contract*: Parse arguments, scan the requested population, report, and return the code.
 
 ## Package `framework/gates/antipattern` — *Internals of the production anti-pattern gate.*
@@ -1330,7 +1330,7 @@
   * [`test_oracle_cli_reads_the_staged_blob(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L368-L385)
     * *Contract*: --staged decides from the Git index, not the working tree.
 
-## Package `framework/tests/abstract_cost` — *Tests for the advisory abstract-cost gate package.*
+## Package `framework/tests/abstract_cost` — *Advisory abstract-cost gate test package.*
 
 - [`framework/tests/abstract_cost/abstract_cases_fixture.py`](framework/tests/abstract_cost/abstract_cases_fixture.py) (322 lines)
   * *Module Purpose*: Benchmark evaluation dataset for the advisory abstract-cost gate.
@@ -1586,29 +1586,29 @@
   * [`test_a_non_mode_string_default_is_not_a_dispatch_key() -> None`](framework/tests/gates/test_antipattern_expansion.py#L398-L406)
     * *Contract*: A path or message default is not a mode, even beside a mode table.
 
-- [`framework/tests/gates/test_check_contamination.py`](framework/tests/gates/test_check_contamination.py) (186 lines)
+- [`framework/tests/gates/test_check_contamination.py`](framework/tests/gates/test_check_contamination.py) (188 lines)
   * *Module Purpose*: Behavioral tests for framework/gates/checks/check_contamination.py (guardrail #2).
-  * [`run_gate(bank: dict, strict: bool, markers: str) -> subprocess.CompletedProcess`](framework/tests/gates/test_check_contamination.py#L16-L34)
-  * [`clean_bank() -> dict`](framework/tests/gates/test_check_contamination.py#L37-L41)
-  * [`test_clean_bank_passes() -> None`](framework/tests/gates/test_check_contamination.py#L44-L47)
-  * [`test_exact_overlap_detected() -> None`](framework/tests/gates/test_check_contamination.py#L50-L55)
-  * [`test_lookalike_detected() -> None`](framework/tests/gates/test_check_contamination.py#L58-L64)
-  * [`test_single_token_share_not_lookalike() -> None`](framework/tests/gates/test_check_contamination.py#L67-L73)
+  * [`run_gate(bank: dict, strict: bool, markers: str) -> subprocess.CompletedProcess`](framework/tests/gates/test_check_contamination.py#L17-L36)
+  * [`clean_bank() -> dict`](framework/tests/gates/test_check_contamination.py#L39-L43)
+  * [`test_clean_bank_passes() -> None`](framework/tests/gates/test_check_contamination.py#L46-L49)
+  * [`test_exact_overlap_detected() -> None`](framework/tests/gates/test_check_contamination.py#L52-L57)
+  * [`test_lookalike_detected() -> None`](framework/tests/gates/test_check_contamination.py#L60-L66)
+  * [`test_single_token_share_not_lookalike() -> None`](framework/tests/gates/test_check_contamination.py#L69-L75)
     * *Contract*: Regression for the min-normalization bug: one shared token must not flag.
-  * [`test_marker_in_safe_bank_detected() -> None`](framework/tests/gates/test_check_contamination.py#L76-L81)
-  * [`test_marker_without_the_flag_is_not_contamination() -> None`](framework/tests/gates/test_check_contamination.py#L84-L90)
+  * [`test_marker_in_safe_bank_detected() -> None`](framework/tests/gates/test_check_contamination.py#L78-L83)
+  * [`test_marker_without_the_flag_is_not_contamination() -> None`](framework/tests/gates/test_check_contamination.py#L86-L92)
     * *Contract*: The marker vocabulary is the caller's: none supplied means none applied.
-  * [`test_low_n_flagged() -> None`](framework/tests/gates/test_check_contamination.py#L93-L100)
-  * [`test_missing_bank_errors() -> None`](framework/tests/gates/test_check_contamination.py#L103-L113)
-  * [`pair_bank() -> dict`](framework/tests/gates/test_check_contamination.py#L116-L126)
+  * [`test_low_n_flagged() -> None`](framework/tests/gates/test_check_contamination.py#L95-L102)
+  * [`test_missing_bank_errors() -> None`](framework/tests/gates/test_check_contamination.py#L105-L115)
+  * [`pair_bank() -> dict`](framework/tests/gates/test_check_contamination.py#L118-L128)
     * *Contract*: A certified concept/guide pair bank: pairs plus the criterion it was selected under.
-  * [`test_pair_bank_certified_passes() -> None`](framework/tests/gates/test_check_contamination.py#L129-L137)
+  * [`test_pair_bank_certified_passes() -> None`](framework/tests/gates/test_check_contamination.py#L131-L139)
     * *Contract*: C1-C4 read concept/safe lists a pair bank does not have.
-  * [`test_pair_bank_with_an_honest_false_flag_passes() -> None`](framework/tests/gates/test_check_contamination.py#L140-L153)
+  * [`test_pair_bank_with_an_honest_false_flag_passes() -> None`](framework/tests/gates/test_check_contamination.py#L142-L155)
     * *Contract*: An honest diagnostic reading, not a claim, is not refused.
-  * [`test_pair_bank_over_its_threshold_flagged() -> None`](framework/tests/gates/test_check_contamination.py#L156-L162)
-  * [`test_pair_bank_claiming_certification_without_its_numbers_flagged() -> None`](framework/tests/gates/test_check_contamination.py#L165-L172)
-  * [`test_bank_with_both_layouts_is_graded_by_concept_checks() -> None`](framework/tests/gates/test_check_contamination.py#L175-L186)
+  * [`test_pair_bank_over_its_threshold_flagged() -> None`](framework/tests/gates/test_check_contamination.py#L158-L164)
+  * [`test_pair_bank_claiming_certification_without_its_numbers_flagged() -> None`](framework/tests/gates/test_check_contamination.py#L167-L174)
+  * [`test_bank_with_both_layouts_is_graded_by_concept_checks() -> None`](framework/tests/gates/test_check_contamination.py#L177-L188)
     * *Contract*: The pair branch must not become a way past C1-C4.
 
 - [`framework/tests/gates/test_check_duplication.py`](framework/tests/gates/test_check_duplication.py) (283 lines)
@@ -1792,23 +1792,25 @@
   * [`run_git(repo: Path, *args, check: bool) -> subprocess.CompletedProcess[str]`](framework/tests/hook_hygiene/git_env_fixture.py#L26-L37)
     * *Contract*: Run one git command in `repo` with repository selectors removed.
 
-## Package `framework/tests/hotpath` — *Tests for the advisory hot-path gate package.*
+## Package `framework/tests/hotpath` — *Advisory hot-path gate test package.*
 
 - [`framework/tests/hotpath/hotpath_cases_fixture.py`](framework/tests/hotpath/hotpath_cases_fixture.py) (291 lines)
   * *Module Purpose*: Benchmark evaluation dataset for the advisory hot-path gate.
 
-- [`framework/tests/hotpath/test_hotpath.py`](framework/tests/hotpath/test_hotpath.py) (65 lines)
+- [`framework/tests/hotpath/test_hotpath.py`](framework/tests/hotpath/test_hotpath.py) (74 lines)
   * *Module Purpose*: Benchmark regression suite for the advisory hot-path gate.
-  * [`test_case_matches_expected_codes(case: TransferBenchmarkCase) -> None`](framework/tests/hotpath/test_hotpath.py#L34-L36)
+  * [`test_case_matches_expected_codes(case: TransferBenchmarkCase) -> None`](framework/tests/hotpath/test_hotpath.py#L35-L37)
     * *Contract*: Detected codes equal ground truth; a catalogued miss stays undetected.
-  * [`test_supported_set_precision_and_recall() -> None`](framework/tests/hotpath/test_hotpath.py#L39-L42)
+  * [`test_supported_set_precision_and_recall() -> None`](framework/tests/hotpath/test_hotpath.py#L40-L43)
     * *Contract*: Over the supported set every rule is exact on its labeled cases.
-  * [`test_all_cases_recall_exposes_the_open_gaps() -> None`](framework/tests/hotpath/test_hotpath.py#L45-L50)
+  * [`test_all_cases_recall_exposes_the_open_gaps() -> None`](framework/tests/hotpath/test_hotpath.py#L46-L51)
     * *Contract*: Counting the catalogued misses, recall drops to the measured floor.
-  * [`test_every_rule_has_supported_positive_cases() -> None`](framework/tests/hotpath/test_hotpath.py#L53-L57)
+  * [`test_every_rule_has_supported_positive_cases() -> None`](framework/tests/hotpath/test_hotpath.py#L54-L58)
     * *Contract*: All six codes are exercised, so no rule can rot into dead code.
-  * [`test_known_misses_are_the_documented_gap() -> None`](framework/tests/hotpath/test_hotpath.py#L60-L65)
+  * [`test_known_misses_are_the_documented_gap() -> None`](framework/tests/hotpath/test_hotpath.py#L61-L66)
     * *Contract*: Every open gap is catalogued, so no 1.0 end-to-end recall claim survives.
+  * [`test_clean_run_still_prints_a_census(capsys: pytest.CaptureFixture[str]) -> None`](framework/tests/hotpath/test_hotpath.py#L69-L74)
+    * *Contract*: The shared advisory runner names its population even with no finding.
 
 ## Package `framework/tests/indexing` — *Tests for framework.indexing Table-of-Contents subsystem.*
 

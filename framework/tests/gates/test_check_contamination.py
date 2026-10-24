@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
@@ -16,12 +17,15 @@ SCRIPT = REPO / "framework" / "gates" / "checks" / "check_contamination.py"
 def run_gate(
     bank: dict, strict: bool = False, markers: str = ""
 ) -> subprocess.CompletedProcess:
-    p = Path(REPO) / "tmp_contamination_bank.json"
-    p.write_text(json.dumps(bank))
     extra = (["--strict"] if strict else []) + (
         ["--markers", markers] if markers else []
     )
-    try:
+    # The bank lives in a real temporary directory, never in the checkout: a
+    # fixed name inside the repository races a quota spike and can leave residue
+    # behind when the write itself fails.
+    with tempfile.TemporaryDirectory() as tmp:
+        p = Path(tmp) / "bank.json"
+        p.write_text(json.dumps(bank), encoding="utf-8")
         return subprocess.run(
             [PY, str(SCRIPT), str(p)] + extra,
             capture_output=True,
@@ -30,8 +34,6 @@ def run_gate(
             timeout=120,
             check=False,
         )
-    finally:
-        p.unlink(missing_ok=True)
 
 
 def clean_bank() -> dict:
