@@ -67,11 +67,18 @@ Codes and their safe replacements::
     HNS035 dirty-run override in a shell script   delete the knob; refuse instead
     HNS036 conditional dirty-tree refusal         make the refusal unconditional
     HNS037 mode default outside its dispatch      match the default explicitly
+    HNS066 unversioned tooling or piped execution  pin the version or drop the pipe
+    HNS067 positional LLM response parsing       filter by block type or guard empty
+    HNS069 guard-and-go deletion avoidance        delete the removed code
+    HNS072 unbounded loop without exit           add a break/return/raise bound
+    HNS081 unquoted interpolation into shell     quote values or pass an argv list
+    HNS082 broad handler swallowing failure      log/re-raise or return a failure
 """
 
 from __future__ import annotations
 
 import argparse
+import ast
 import sys
 from pathlib import Path
 
@@ -79,9 +86,34 @@ _ENTRY_REPO = Path(__file__).resolve().parents[2]
 if str(_ENTRY_REPO) not in sys.path:
     sys.path.insert(0, str(_ENTRY_REPO))
 
+import framework.gates.antipattern.execution.checks
+import framework.gates.antipattern.fallthrough_checks
+import framework.gates.antipattern.liveness.checks
 import framework.gates.antipattern.python_visitor
 import framework.gates.antipattern.shell_checks
 import framework.gates.antipattern.targets
+
+
+def _python_findings(
+    source: str, path: str
+) -> list[framework.gates.antipattern.targets.Finding]:
+    """Return visitor findings plus the HNS067/069/072/081/082 tree checks."""
+
+    findings = framework.gates.antipattern.python_visitor.analyze_python(source, path)
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        return findings
+    fallthrough = framework.gates.antipattern.fallthrough_checks
+    execution = framework.gates.antipattern.execution.checks
+    return (
+        findings
+        + fallthrough.check_positional_parsing(tree, path)
+        + fallthrough.check_deletion_avoidance(tree, path)
+        + framework.gates.antipattern.liveness.checks.check_loop_termination(tree, path)
+        + execution.check_shell_injection(tree, path)
+        + execution.check_silent_exception_swallowing(tree, path)
+    )
 
 
 def analyze_source(
@@ -89,7 +121,7 @@ def analyze_source(
 ) -> list[framework.gates.antipattern.targets.Finding]:
     suffix = Path(path).suffix.lower()
     if suffix == ".py":
-        return framework.gates.antipattern.python_visitor.analyze_python(source, path)
+        return _python_findings(source, path)
     if suffix in framework.gates.antipattern.targets.SHELL_SUFFIXES:
         return framework.gates.antipattern.shell_checks.analyze_shell(source, path)
     return []

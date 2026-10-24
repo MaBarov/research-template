@@ -89,6 +89,54 @@ _QUOTED_LITERAL = re.compile(r"'[^']*'|\"[^\"$]*\"")
 
 _FAIL_FAST_FLAGS = {"e": "errexit (-e)", "u": "nounset (-u)"}
 
+# HNS066: a tool invoked through ``npx`` or installed with ``pip`` must pin an
+# explicit version, and a script downloaded with ``curl`` or ``wget`` must never
+# be piped into a shell or an interpreter (``python``/``perl``/``ruby``).
+_NPX_INVOCATION = re.compile(r"\bnpx\s+(?:-[^\s|;&]+\s+)*([^\s|;&]+)")
+_PIPED_SHELL = re.compile(
+    r"\b(?:curl|wget)\s+[^\n|;&]+\|\s*"
+    r"(?:(?:ba|z)?sh|python[0-9.]*|perl|ruby)\b",
+    re.IGNORECASE,
+)
+_PIP_INSTALL = re.compile(r"\bpip[0-9.]*\s+install\b([^;&|\n]*)", re.IGNORECASE)
+
+# A tool name inside a quoted string literal is data, not an invocation, so the
+# literal is ignored when the line is a message rather than a command.  A
+# ``sh -c``/``bash -c`` payload *is* a command and is always read verbatim.
+_PROSE_COMMAND = re.compile(r"^\s*(?:echo|printf|git\s+commit)\b")
+_SHELL_C_INVOCATION = re.compile(r"\b(?:ba|z)?sh\s+-c\b")
+
+_PIP_PINNED = re.compile(
+    r"[=<>~@]|://|^[.~/]|\.(?:whl|tar\.gz|zip|tgz)$", re.IGNORECASE
+)
+# ``pip install`` flags that consume the following token as their value.
+_PIP_VALUE_FLAGS = {
+    "-r",
+    "--requirement",
+    "-e",
+    "--editable",
+    "-c",
+    "--constraint",
+    "-t",
+    "--target",
+    "-i",
+    "--index-url",
+    "--extra-index-url",
+    "-f",
+    "--find-links",
+    "-m",
+    "--python",
+    "-d",
+    "--dest",
+}
+_UNVERSIONED_TOOLING = (
+    "HNS066",
+    (
+        "unversioned tooling or piped shell/interpreter execution; pin version "
+        "explicitly or avoid piping a download into a shell or interpreter"
+    ),
+)
+
 
 def _shell_code_lines(source: str) -> Iterator[tuple[int, str]]:
     for line_number, line in enumerate(source.splitlines(), start=1):
@@ -255,10 +303,83 @@ def _swallowed_line_findings(line: str) -> list[tuple[str, str]]:
     return []
 
 
+def _unversioned_tool(token: str) -> bool:
+    """Return whether ``token`` names a tool with no explicit version pin."""
+    if token.startswith("-"):
+        return False
+    return "@" not in token[1:]
+
+
+def _unpinned_pip_package(arguments: str) -> bool:
+    """Return whether the ``pip install`` arguments name an unpinned package."""
+    skip_next = False
+    for raw in arguments.split():
+        token = raw.strip("\"'").rstrip(";|&")
+        if not token:
+            break
+        if skip_next:
+            skip_next = False
+            continue
+        if token.startswith("-"):
+            flag, separator, _inline = token.partition("=")
+            skip_next = not separator and flag in _PIP_VALUE_FLAGS
+            continue
+        return not _PIP_PINNED.search(token)
+    return False
+
+
+def _blank_literals(line: str) -> str:
+    """Return ``line`` with every quoted literal blanked in place."""
+    return _QUOTED_LITERAL.sub(lambda match: " " * len(match.group()), line)
+
+
+def _quoted_prose(line: str, start: int) -> bool:
+    """Return whether offset ``start`` in ``line`` is quoted prose, not a command."""
+    if _SHELL_C_INVOCATION.search(line):
+        return False
+    return any(
+        literal.start() <= start < literal.end()
+        for literal in _QUOTED_LITERAL.finditer(line)
+    )
+
+
+def _tooling_scan_text(line: str) -> str:
+    """Return the text HNS066 matches ``npx``/``pip`` invocations against."""
+    if _SHELL_C_INVOCATION.search(line) or not _PROSE_COMMAND.match(line):
+        return line
+    return _blank_literals(line)
+
+
+def _unversioned_tooling_findings(line: str) -> list[tuple[str, str]]:
+    """Return the unversioned-tooling or piped-download finding of one shell line.
+
+    The piped-download trigger is ``curl``/``wget`` piped into a shell or an
+    interpreter (``sh``/``python``/``perl``/``ruby``); the rest of HNS066 reads
+    ``npx`` and ``pip install`` invocations in the same line.
+    """
+
+    if _PIPED_SHELL.search(line):
+        return [_UNVERSIONED_TOOLING]
+    text = _tooling_scan_text(line)
+    for match in _NPX_INVOCATION.finditer(text):
+        if _unversioned_tool(match.group(1)) and not _quoted_prose(line, match.start()):
+            return [_UNVERSIONED_TOOLING]
+    for match in _PIP_INSTALL.finditer(text):
+        if _unpinned_pip_package(match.group(1)) and not _quoted_prose(
+            line, match.start()
+        ):
+            return [_UNVERSIONED_TOOLING]
+    return []
+
+
 def _shell_line_findings(line: str) -> list[tuple[str, str]]:
     """Return the ``(code, message)`` findings of one shell line, in order."""
 
-    return [*_provenance_line_findings(line), *_swallowed_line_findings(line)]
+    return [
+        *_provenance_line_findings(line),
+        *_swallowed_line_findings(line),
+        *_unversioned_tooling_findings(line),
+    ]
 
 
 def _report_line_hygiene(

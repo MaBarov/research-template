@@ -3,30 +3,33 @@
 > [!NOTE]
 > Sub-index for the `framework` package hierarchy. Use the line ranges below to load specific sections directly into context.
 
-**Repository Statistics**: 65 modules | 14 classes | 471 public functions.
+**Repository Statistics**: 71 modules | 14 classes | 529 public functions.
 
 ## Table of Contents
 
-- [`framework`](#package-framework) (lines 33–57) — *Repository gate framework (hooks + checkers).*
-- [`framework/gates`](#package-frameworkgates) (lines 58–85) — *Blocking and advisory repository gates.*
-- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 86–115) — *Internals of the production anti-pattern gate.*
-- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 116–188) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
-- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 189–246) — *Internals of the per-file coverage and loop-iteration gate.*
-- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 247–293) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
-- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 294–325)
-- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 326–383)
-- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 384–452) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
-- [`framework/gates/params`](#package-frameworkgatesparams) (lines 453–493) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
-- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 494–498) — *Pure AST and text primitives of the parameter-drift matchers.*
-- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 499–535) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
-- [`framework/indexing`](#package-frameworkindexing) (lines 536–587) — *AST-based repository mapping and Table-of-Contents indexing.*
-- [`framework/tests`](#package-frameworktests) (lines 588–718)
-- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 719–729) — *Tests for the coverage gate and its probe plugin.*
-- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 730–756) — *Test package for the framework distortion gate.*
-- [`framework/tests/gates`](#package-frameworktestsgates) (lines 757–867) — *Package.*
-- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 868–926) — *Tests for the parameter registry gates.*
-- [`framework/tests/harness`](#package-frameworktestsharness) (lines 927–942) — *Harness registry tests: project identity and the interpreter floor.*
-- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 943–991) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework`](#package-framework) (lines 36–60) — *Repository gate framework (hooks + checkers).*
+- [`framework/gates`](#package-frameworkgates) (lines 61–88) — *Blocking and advisory repository gates.*
+- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 89–122) — *Internals of the production anti-pattern gate.*
+- [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 123–131) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
+- [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 132–138) — *Liveness checks for the production anti-pattern gate (HNS072).*
+- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 139–211) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
+- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 212–269) — *Internals of the per-file coverage and loop-iteration gate.*
+- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 270–316) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
+- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 317–348)
+- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 349–406)
+- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 407–475) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
+- [`framework/gates/params`](#package-frameworkgatesparams) (lines 476–516) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
+- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 517–521) — *Pure AST and text primitives of the parameter-drift matchers.*
+- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 522–558) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
+- [`framework/indexing`](#package-frameworkindexing) (lines 559–610) — *AST-based repository mapping and Table-of-Contents indexing.*
+- [`framework/tests`](#package-frameworktests) (lines 611–741)
+- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 742–829) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
+- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 830–840) — *Tests for the coverage gate and its probe plugin.*
+- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 841–867) — *Test package for the framework distortion gate.*
+- [`framework/tests/gates`](#package-frameworktestsgates) (lines 868–978) — *Package.*
+- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 979–1037) — *Tests for the parameter registry gates.*
+- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1038–1053) — *Harness registry tests: project identity and the interpreter floor.*
+- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1054–1102) — *Tests for framework.indexing Table-of-Contents subsystem.*
 
 ---
 
@@ -57,10 +60,10 @@
 
 ## Package `framework/gates` — *Blocking and advisory repository gates.*
 
-- [`framework/gates/check_antipatterns.py`](framework/gates/check_antipatterns.py) (148 lines)
+- [`framework/gates/check_antipatterns.py`](framework/gates/check_antipatterns.py) (180 lines)
   * *Module Purpose*: Fail-closed static checks for high-risk production anti-patterns.
-  * [`analyze_source(source: str, path: str) -> list[framework.gates.antipattern.targets.Finding]`](framework/gates/check_antipatterns.py#L87-L95)
-  * [`main(argv: list[str] | None) -> int`](framework/gates/check_antipatterns.py#L131-L144)
+  * [`analyze_source(source: str, path: str) -> list[framework.gates.antipattern.targets.Finding]`](framework/gates/check_antipatterns.py#L119-L127)
+  * [`main(argv: list[str] | None) -> int`](framework/gates/check_antipatterns.py#L163-L176)
 
 - [`framework/gates/check_coverage.py`](framework/gates/check_coverage.py) (222 lines)
   * *Module Purpose*: Per-file statement and loop-iteration coverage gate for the production tree.
@@ -85,14 +88,18 @@
 
 ## Package `framework/gates/antipattern` — *Internals of the production anti-pattern gate.*
 
-- [`framework/gates/antipattern/fallthrough_checks.py`](framework/gates/antipattern/fallthrough_checks.py) (443 lines)
-  * *Module Purpose*: Predicates for a log-only handler that lets a placeholder reach the caller.
-  * [`placeholder_fallthrough(handler: ast.ExceptHandler, function: ast.AST) -> str | None`](framework/gates/antipattern/fallthrough_checks.py#L200-L213)
+- [`framework/gates/antipattern/fallthrough_checks.py`](framework/gates/antipattern/fallthrough_checks.py) (591 lines)
+  * *Module Purpose*: Predicates for handler, dispatcher, response and dead-guard shapes.
+  * [`placeholder_fallthrough(handler: ast.ExceptHandler, function: ast.AST) -> str | None`](framework/gates/antipattern/fallthrough_checks.py#L216-L229)
     * *Contract*: Return the placeholder a log-only handler lets reach the caller.
-  * [`optional_input_neutralized(function: ast.AST) -> tuple[ast.If, str] | None`](framework/gates/antipattern/fallthrough_checks.py#L305-L320)
+  * [`optional_input_neutralized(function: ast.AST) -> tuple[ast.If, str] | None`](framework/gates/antipattern/fallthrough_checks.py#L321-L336)
     * *Contract*: Return the branch and input whose absence becomes a valid-but-empty value.
-  * [`dispatch_fallthrough(tree: ast.Module) -> list[tuple[ast.AST, str]]`](framework/gates/antipattern/fallthrough_checks.py#L427-L443)
+  * [`dispatch_fallthrough(tree: ast.Module) -> list[tuple[ast.AST, str]]`](framework/gates/antipattern/fallthrough_checks.py#L443-L459)
     * *Contract*: Return mode defaults the module's own enumerated dispatch never matches.
+  * [`check_positional_parsing(tree: ast.AST, path: str) -> list[framework.gates.antipattern.targets.Finding]`](framework/gates/antipattern/fallthrough_checks.py#L549-L562)
+    * *Contract*: Return findings for naive ``[0]`` indexing into an LLM response object.
+  * [`check_deletion_avoidance(tree: ast.AST, path: str) -> list[framework.gates.antipattern.targets.Finding]`](framework/gates/antipattern/fallthrough_checks.py#L578-L591)
+    * *Contract*: Return findings for dead ``if``/``while`` guards left around removed code.
 
 - [`framework/gates/antipattern/python_checks.py`](framework/gates/antipattern/python_checks.py) (592 lines)
   * *Module Purpose*: Python-AST analysis helpers and their pattern constants.
@@ -102,9 +109,9 @@
   * [`analyze_python(source: str, path: str) -> list[framework.gates.antipattern.targets.Finding]`](framework/gates/antipattern/python_visitor.py#L579-L600)
     * *Contract*: Return findings for one Python source string.
 
-- [`framework/gates/antipattern/shell_checks.py`](framework/gates/antipattern/shell_checks.py) (325 lines)
+- [`framework/gates/antipattern/shell_checks.py`](framework/gates/antipattern/shell_checks.py) (446 lines)
   * *Module Purpose*: Shell/slurm anti-pattern analysis and its pattern constants.
-  * [`analyze_shell(source: str, path: str) -> list[framework.gates.antipattern.targets.Finding]`](framework/gates/antipattern/shell_checks.py#L297-L325)
+  * [`analyze_shell(source: str, path: str) -> list[framework.gates.antipattern.targets.Finding]`](framework/gates/antipattern/shell_checks.py#L418-L446)
     * *Contract*: Return findings for shell/slurm provenance and hygiene problems.
 
 - [`framework/gates/antipattern/targets.py`](framework/gates/antipattern/targets.py) (111 lines)
@@ -112,6 +119,22 @@
   * [`class Finding`](framework/gates/antipattern/targets.py#L32-L41)
     * *Contract*: One source-level anti-pattern finding.
     * [`Finding.format(self) -> str`](framework/gates/antipattern/targets.py#L40-L41)
+
+## Package `framework/gates/antipattern/execution` — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
+
+- [`framework/gates/antipattern/execution/checks.py`](framework/gates/antipattern/execution/checks.py) (201 lines)
+  * *Module Purpose*: Execution-sink anti-patterns for the production gate (HNS081, HNS082).
+  * [`check_shell_injection(tree: ast.AST, path: str) -> list[Finding]`](framework/gates/antipattern/execution/checks.py#L120-L129)
+    * *Contract*: Return findings for a shell sink fed an unquoted interpolated command.
+  * [`check_silent_exception_swallowing(tree: ast.AST, path: str) -> list[Finding]`](framework/gates/antipattern/execution/checks.py#L191-L201)
+    * *Contract*: Return findings for a broad handler that silently suppresses failure.
+
+## Package `framework/gates/antipattern/liveness` — *Liveness checks for the production anti-pattern gate (HNS072).*
+
+- [`framework/gates/antipattern/liveness/checks.py`](framework/gates/antipattern/liveness/checks.py) (77 lines)
+  * *Module Purpose*: HNS072: a constant-true loop whose body cannot reach an exit.
+  * [`check_loop_termination(tree: ast.AST, path: str) -> list[Finding]`](framework/gates/antipattern/liveness/checks.py#L69-L77)
+    * *Contract*: Return one HNS072 finding per constant-true loop with no exit.
 
 ## Package `framework/gates/checks` — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
 
@@ -715,6 +738,94 @@
   * [`test_cli_missing_alias_table_is_an_environment_error(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L137-L142)
   * [`test_cli_staged_ignores_non_source_paths(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L145-L148)
   * [`test_cli_json_report_lists_findings(tmp_path, monkeypatch) -> None`](framework/tests/test_test_mirror_gate.py#L151-L158)
+
+## Package `framework/tests/antipattern` — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
+
+- [`framework/tests/antipattern/test_execution.py`](framework/tests/antipattern/test_execution.py) (110 lines)
+  * *Module Purpose*: Paired acceptance tests for the HNS081/HNS082 execution-sink rules.
+  * [`test_fstring_interpolation_into_shell_fires() -> None`](framework/tests/antipattern/test_execution.py#L32-L35)
+    * *Contract*: An unquoted f-string command handed to ``shell=True`` is injection.
+  * [`test_concatenated_command_into_os_system_fires() -> None`](framework/tests/antipattern/test_execution.py#L38-L41)
+    * *Contract*: A ``+``-concatenated variable command into ``os.system`` is injection.
+  * [`test_mod_formatted_command_fires() -> None`](framework/tests/antipattern/test_execution.py#L44-L47)
+    * *Contract*: A ``%``-formatted command into ``os.system`` is injection.
+  * [`test_shlex_quoted_fstring_is_clean() -> None`](framework/tests/antipattern/test_execution.py#L50-L56)
+    * *Contract*: Quoting the formatted value removes the injection surface.
+  * [`test_argv_list_is_clean() -> None`](framework/tests/antipattern/test_execution.py#L59-L62)
+    * *Contract*: An argv list never reaches a shell.
+  * [`test_constant_command_is_clean() -> None`](framework/tests/antipattern/test_execution.py#L65-L68)
+    * *Contract*: A constant command string carries no interpolated data.
+  * [`test_broad_except_pass_fires() -> None`](framework/tests/antipattern/test_execution.py#L71-L77)
+    * *Contract*: A broad handler whose only body is ``pass`` swallows the failure.
+  * [`test_bare_except_return_none_fires() -> None`](framework/tests/antipattern/test_execution.py#L80-L83)
+    * *Contract*: A bare handler returning ``None`` masks the crash.
+  * [`test_narrow_exception_is_clean() -> None`](framework/tests/antipattern/test_execution.py#L86-L92)
+    * *Contract*: Catching the absence family is a deliberate choice, not a swallow.
+  * [`test_logged_handler_is_clean() -> None`](framework/tests/antipattern/test_execution.py#L95-L102)
+    * *Contract*: A handler that records the failure and returns is never silent.
+  * [`test_test_file_is_clean() -> None`](framework/tests/antipattern/test_execution.py#L105-L110)
+    * *Contract*: The rule is scoped out of test modules.
+
+- [`framework/tests/antipattern/test_fallthrough.py`](framework/tests/antipattern/test_fallthrough.py) (114 lines)
+  * *Module Purpose*: Paired acceptance tests for the HNS067 and HNS069 fallthrough rules.
+  * [`test_choices_index_zero_flagged() -> None`](framework/tests/antipattern/test_fallthrough.py#L31-L33)
+  * [`test_content_index_zero_flagged() -> None`](framework/tests/antipattern/test_fallthrough.py#L36-L38)
+  * [`test_dict_choices_index_zero_flagged() -> None`](framework/tests/antipattern/test_fallthrough.py#L41-L43)
+  * [`test_generic_index_zero_clean() -> None`](framework/tests/antipattern/test_fallthrough.py#L46-L48)
+  * [`test_iteration_over_choices_clean() -> None`](framework/tests/antipattern/test_fallthrough.py#L51-L55)
+  * [`test_blocks_parts_index_zero_flagged() -> None`](framework/tests/antipattern/test_fallthrough.py#L58-L60)
+  * [`test_dict_get_choices_index_zero_flagged() -> None`](framework/tests/antipattern/test_fallthrough.py#L63-L65)
+  * [`test_self_path_parts_clean() -> None`](framework/tests/antipattern/test_fallthrough.py#L68-L70)
+  * [`test_path_constructor_parts_clean() -> None`](framework/tests/antipattern/test_fallthrough.py#L73-L79)
+  * [`test_getattr_choices_index_zero_flagged() -> None`](framework/tests/antipattern/test_fallthrough.py#L82-L84)
+  * [`test_getattr_content_index_zero_flagged() -> None`](framework/tests/antipattern/test_fallthrough.py#L87-L89)
+  * [`test_getattr_other_index_zero_clean() -> None`](framework/tests/antipattern/test_fallthrough.py#L92-L94)
+  * [`test_hns069_flags_if_false() -> None`](framework/tests/antipattern/test_fallthrough.py#L97-L99)
+  * [`test_hns069_flags_if_zero() -> None`](framework/tests/antipattern/test_fallthrough.py#L102-L104)
+  * [`test_hns069_flags_while_false() -> None`](framework/tests/antipattern/test_fallthrough.py#L107-L109)
+  * [`test_hns069_accepts_normal_branching() -> None`](framework/tests/antipattern/test_fallthrough.py#L112-L114)
+
+- [`framework/tests/antipattern/test_liveness.py`](framework/tests/antipattern/test_liveness.py) (77 lines)
+  * *Module Purpose*: Paired acceptance tests for the HNS072 unbounded-loop rule.
+  * [`test_constant_true_loop_without_exit_fires() -> None`](framework/tests/antipattern/test_liveness.py#L26-L28)
+    * *Contract*: A constant-true body with no exit is an unbounded loop.
+  * [`test_integer_one_loop_without_exit_fires() -> None`](framework/tests/antipattern/test_liveness.py#L31-L33)
+    * *Contract*: ``while 1`` is the same shape as ``while True``.
+  * [`test_nested_loop_break_does_not_excuse() -> None`](framework/tests/antipattern/test_liveness.py#L36-L38)
+    * *Contract*: A break inside a nested for leaves the outer candidate running.
+  * [`test_nested_function_return_does_not_excuse() -> None`](framework/tests/antipattern/test_liveness.py#L41-L44)
+    * *Contract*: A return inside a nested function runs in a different frame.
+  * [`test_break_inside_try_is_clean() -> None`](framework/tests/antipattern/test_liveness.py#L47-L52)
+    * *Contract*: A break inside the candidate's own try/except terminates it.
+  * [`test_break_terminates() -> None`](framework/tests/antipattern/test_liveness.py#L55-L57)
+    * *Contract*: A direct break is an exit.
+  * [`test_return_terminates() -> None`](framework/tests/antipattern/test_liveness.py#L60-L62)
+    * *Contract*: A return in the candidate's own frame is an exit.
+  * [`test_raise_terminates() -> None`](framework/tests/antipattern/test_liveness.py#L65-L67)
+    * *Contract*: A raise in the candidate body is an exit.
+  * [`test_sys_exit_terminates() -> None`](framework/tests/antipattern/test_liveness.py#L70-L72)
+    * *Contract*: An explicit sys.exit call is an exit.
+  * [`test_condition_bound_loop_stays_silent() -> None`](framework/tests/antipattern/test_liveness.py#L75-L77)
+    * *Contract*: A comparison test is never a candidate.
+
+- [`framework/tests/antipattern/test_shell.py`](framework/tests/antipattern/test_shell.py) (106 lines)
+  * *Module Purpose*: Paired acceptance tests for the HNS066 tooling-hygiene rule.
+  * [`test_unversioned_npx_flagged() -> None`](framework/tests/antipattern/test_shell.py#L44-L45)
+  * [`test_versioned_npx_clean() -> None`](framework/tests/antipattern/test_shell.py#L48-L49)
+  * [`test_curl_pipe_shell_flagged() -> None`](framework/tests/antipattern/test_shell.py#L52-L53)
+  * [`test_wget_pipe_shell_flagged() -> None`](framework/tests/antipattern/test_shell.py#L56-L57)
+  * [`test_curl_pipe_python_flagged() -> None`](framework/tests/antipattern/test_shell.py#L60-L61)
+  * [`test_wget_pipe_perl_flagged() -> None`](framework/tests/antipattern/test_shell.py#L64-L65)
+  * [`test_curl_pipe_ruby_flagged() -> None`](framework/tests/antipattern/test_shell.py#L68-L69)
+  * [`test_piped_python_literal_is_clean() -> None`](framework/tests/antipattern/test_shell.py#L72-L73)
+  * [`test_echoed_prose_is_not_an_invocation() -> None`](framework/tests/antipattern/test_shell.py#L76-L77)
+  * [`test_printfed_prose_is_not_an_invocation() -> None`](framework/tests/antipattern/test_shell.py#L80-L81)
+  * [`test_commit_message_prose_is_not_an_invocation() -> None`](framework/tests/antipattern/test_shell.py#L84-L85)
+  * [`test_shell_c_payload_is_an_invocation() -> None`](framework/tests/antipattern/test_shell.py#L88-L89)
+  * [`test_unpinned_pip_install_flagged() -> None`](framework/tests/antipattern/test_shell.py#L92-L93)
+  * [`test_pinned_pip_install_clean() -> None`](framework/tests/antipattern/test_shell.py#L96-L98)
+  * [`test_quoted_pip_argument_still_scanned() -> None`](framework/tests/antipattern/test_shell.py#L101-L102)
+  * [`test_clean_sbatch_template_clean() -> None`](framework/tests/antipattern/test_shell.py#L105-L106)
 
 ## Package `framework/tests/coverage_gate` — *Tests for the coverage gate and its probe plugin.*
 

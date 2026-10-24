@@ -1,6 +1,6 @@
-"""Predicates for a log-only handler that lets a placeholder reach the caller.
+"""Predicates for handler, dispatcher, response and dead-guard shapes.
 
-Thumbnail: Detects a handler that only logs, leaving a pre-set placeholder as the result.
+Thumbnail: Detects log-only handlers, unmatched dispatch defaults, positional response reads and dead guards.
 
 Invariants & Expected State:
     ``placeholder_fallthrough`` names the placeholder only when the handler body
@@ -42,6 +42,21 @@ Invariants & Expected State:
     One enumerated set is required before a name is judged, so a single ``==``
     special case beside a general branch stays silent, and a module that merely
     forwards the value, without a comparison of its own, is out of scope.
+
+    ``check_positional_parsing`` names a subscript that reads element ``0`` of
+    a response-shaped container -- an attribute named ``choices``/``content``/
+    ``parts``, a ``getattr`` lookup of one, or a mapping subscript/lookup keyed
+    by ``choices``/``content``.  Position stops identifying a block once a
+    thinking or tool block can precede the answer, and an empty choice list has
+    no element ``0``: the shape silently returns the wrong block or raises.
+    Path receivers (``Path("a/b").parts[0]``, ``self.path.parts[0]``) are path
+    segments, not response parts, and stay silent, as do ordinary sequences.
+
+    ``check_deletion_avoidance`` names an ``if``/``while`` whose test is a
+    never-true constant (``False``, ``None``, ``0``).  That is the guard-and-go
+    shape: removed code kept alive behind a branch that cannot run, instead of
+    being deleted.  A negated or runtime test (``if not x:``, ``if 0 == count:``)
+    is ordinary branching and stays silent.
 """
 
 from __future__ import annotations
@@ -51,6 +66,7 @@ import re
 from itertools import pairwise
 
 import framework.gates.antipattern.python_checks
+import framework.gates.antipattern.targets
 
 _LOG_METHODS = {
     "warn",
@@ -440,4 +456,136 @@ def dispatch_fallthrough(tree: ast.Module) -> list[tuple[ast.AST, str]]:
         if name not in handled or default in handled[name]:
             continue
         findings.append((node, _dispatch_message(name, default, handled[name])))
+    return findings
+
+
+# LLM response containers whose element 0 is not necessarily the answer: a
+# thinking/tool block can precede it, and an empty response has no element 0.
+_POSITIONAL_ATTRS = frozenset({"choices", "content", "parts"})
+_POSITIONAL_KEYS = frozenset({"choices", "content"})
+
+_POSITIONAL_MESSAGE = (
+    "positional response indexing on LLM structure (e.g. choices[0]/content[0]); "
+    "guard length or filter by block type"
+)
+
+
+_PATH_TERMS = ("path", "file", "dir", "rel", "cand", "location")
+
+
+def _subscript_string_key(node: ast.AST) -> str | None:
+    """Return the constant string key ``node`` subscripts by, or ``None``."""
+
+    if isinstance(node, ast.Subscript) and isinstance(node.slice, ast.Constant):
+        value = node.slice.value
+        if isinstance(value, str):
+            return value
+    return None
+
+
+def _path_like(node: ast.AST) -> bool:
+    """Return whether ``node`` names a filesystem path receiver."""
+    if isinstance(node, ast.Name):
+        return any(term in node.id.lower() for term in _PATH_TERMS)
+    if isinstance(node, ast.Attribute):
+        return any(term in node.attr.lower() for term in _PATH_TERMS)
+    if isinstance(node, ast.Call):
+        return _path_like(node.func)
+    return False
+
+
+def _is_path_receiver(node: ast.Attribute) -> bool:
+    """Return whether ``node`` appears to access filesystem path segments."""
+    return _path_like(node.value)
+
+
+def _get_string_key(node: ast.AST) -> str | None:
+    """Return the constant key a ``.get(key, ...)`` call looks up, or ``None``."""
+
+    if not (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)):
+        return None
+    if node.func.attr != "get" or not node.args:
+        return None
+    key = node.args[0]
+    if isinstance(key, ast.Constant) and isinstance(key.value, str):
+        return key.value
+    return None
+
+
+def _getattr_string_key(node: ast.AST) -> str | None:
+    """Return the attribute name a ``getattr(obj, "attr")`` call looks up."""
+    if not (isinstance(node, ast.Call) and isinstance(node.func, ast.Name)):
+        return None
+    if node.func.id != "getattr" or len(node.args) < 2:
+        return None
+    key = node.args[1]
+    if isinstance(key, ast.Constant) and isinstance(key.value, str):
+        return key.value
+    return None
+
+
+def _response_container(node: ast.AST) -> bool:
+    """Return whether ``node`` reads an LLM response container."""
+    if isinstance(node, ast.Attribute):
+        if node.attr == "parts" and _is_path_receiver(node):
+            return False
+        return node.attr in _POSITIONAL_ATTRS
+    return (
+        _getattr_string_key(node) in _POSITIONAL_ATTRS
+        or _subscript_string_key(node) in _POSITIONAL_KEYS
+        or _get_string_key(node) in _POSITIONAL_KEYS
+    )
+
+
+def _positional_response_index(node: ast.Subscript) -> bool:
+    """Return whether ``node`` indexes element ``0`` of a response container."""
+
+    index = node.slice
+    if not (isinstance(index, ast.Constant) and index.value == 0):
+        return False
+    return _response_container(node.value)
+
+
+def check_positional_parsing(
+    tree: ast.AST, path: str
+) -> list[framework.gates.antipattern.targets.Finding]:
+    """Return findings for naive ``[0]`` indexing into an LLM response object."""
+
+    findings: list[framework.gates.antipattern.targets.Finding] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Subscript) and _positional_response_index(node):
+            findings.append(
+                framework.gates.antipattern.targets.Finding(
+                    path, node.lineno, "HNS067", _POSITIONAL_MESSAGE
+                )
+            )
+    return findings
+
+
+_DEAD_GUARD_MESSAGE = (
+    "dead guard-and-go branch ('if False:'); delete the removed code instead "
+    "of guarding it (arXiv:2607.28887)"
+)
+
+
+def _dead_guard_test(test: ast.AST) -> bool:
+    """Return whether ``test`` is the never-true constant of a dead guard."""
+    if not isinstance(test, ast.Constant):
+        return False
+    return test.value is False or test.value is None or test.value == 0
+
+
+def check_deletion_avoidance(
+    tree: ast.AST, path: str
+) -> list[framework.gates.antipattern.targets.Finding]:
+    """Return findings for dead ``if``/``while`` guards left around removed code."""
+
+    findings: list[framework.gates.antipattern.targets.Finding] = []
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.If, ast.While)) and _dead_guard_test(node.test):
+            findings.append(
+                framework.gates.antipattern.targets.Finding(
+                    path, node.lineno, "HNS069", _DEAD_GUARD_MESSAGE
+                )
+            )
     return findings
