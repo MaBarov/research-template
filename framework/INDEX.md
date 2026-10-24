@@ -3,47 +3,54 @@
 > [!NOTE]
 > Sub-index for the `framework` package hierarchy. Use the line ranges below to load specific sections directly into context.
 
-**Repository Statistics**: 99 modules | 28 classes | 760 public functions.
+**Repository Statistics**: 118 modules | 35 classes | 854 public functions.
 
 ## Table of Contents
 
-- [`framework`](#package-framework) (lines 50–74) — *Repository gate framework (hooks + checkers).*
-- [`framework/gates`](#package-frameworkgates) (lines 75–102) — *Blocking and advisory repository gates.*
-- [`framework/gates/advisory`](#package-frameworkgatesadvisory) (lines 103–127) — *Advisory static gates shared model and runner package.*
-- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 128–161) — *Internals of the production anti-pattern gate.*
-- [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 162–170) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
-- [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 171–177) — *Liveness checks for the production anti-pattern gate (HNS072).*
-- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 178–262) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
-- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 263–322) — *Internals of the per-file coverage and loop-iteration gate.*
-- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 323–367) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
-- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 368–406) — *Freshness and ref-provenance gates.*
-- [`framework/gates/instructions`](#package-frameworkgatesinstructions) (lines 407–424) — *Fail-closed reference check for agent instruction artifacts.*
-- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 425–482)
-- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 483–588) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
-- [`framework/gates/params`](#package-frameworkgatesparams) (lines 589–629) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
-- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 630–634) — *Pure AST and text primitives of the parameter-drift matchers.*
-- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 635–671) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
-- [`framework/gates/static`](#package-frameworkgatesstatic) (lines 672–684) — *Shared plumbing for the static-analysis gates.*
-- [`framework/gates/transfers`](#package-frameworkgatestransfers) (lines 685–771) — *Device transfer bottleneck detection package.*
-- [`framework/gates/transfers/provenance`](#package-frameworkgatestransfersprovenance) (lines 772–787) — *Device provenance inference for the host-device transfer gate.*
-- [`framework/gates/traversal`](#package-frameworkgatestraversal) (lines 788–798) — *Shared AST traversal helpers for the gate visitors.*
-- [`framework/gates/typecheck`](#package-frameworkgatestypecheck) (lines 799–877) — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
-- [`framework/indexing`](#package-frameworkindexing) (lines 878–929) — *AST-based repository mapping and Table-of-Contents indexing.*
-- [`framework/tests`](#package-frameworktests) (lines 930–1101)
-- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 1102–1189) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
-- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 1190–1200) — *Tests for the coverage gate and its probe plugin.*
-- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 1201–1227) — *Test package for the framework distortion gate.*
-- [`framework/tests/freshness`](#package-frameworktestsfreshness) (lines 1228–1280) — *Tests for freshness and ref guard gates.*
-- [`framework/tests/gates`](#package-frameworktestsgates) (lines 1281–1393) — *Package.*
-- [`framework/tests/gates/instructions`](#package-frameworktestsgatesinstructions) (lines 1394–1433) — *Tests for instruction reference validation.*
-- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1434–1492) — *Tests for the parameter registry gates.*
-- [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1493–1515) — *Ratchet gates: tables that may only shrink.*
-- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1516–1532) — *Harness registry tests: project identity and the interpreter floor.*
-- [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1533–1541) — *Tests for the hook/test-process boundary.*
-- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1542–1590) — *Tests for framework.indexing Table-of-Contents subsystem.*
-- [`framework/tests/transfers`](#package-frameworkteststransfers) (lines 1591–1680) — *Test package for device transfer bottleneck gate.*
-- [`framework/tests/transfers/provenance`](#package-frameworkteststransfersprovenance) (lines 1681–1698) — *Test package for device provenance inference and mixing detection.*
-- [`framework/tests/typecheck`](#package-frameworkteststypecheck) (lines 1699–1749) — *Tests for the static-type gate.*
+- [`framework`](#package-framework) (lines 57–81) — *Repository gate framework (hooks + checkers).*
+- [`framework/gates`](#package-frameworkgates) (lines 82–109) — *Blocking and advisory repository gates.*
+- [`framework/gates/abstract_cost`](#package-frameworkgatesabstract-cost) (lines 110–179) — *Advisory abstract-cost gate package.*
+- [`framework/gates/advisory`](#package-frameworkgatesadvisory) (lines 180–204) — *Advisory static gates shared model and runner package.*
+- [`framework/gates/antipattern`](#package-frameworkgatesantipattern) (lines 205–238) — *Internals of the production anti-pattern gate.*
+- [`framework/gates/antipattern/execution`](#package-frameworkgatesantipatternexecution) (lines 239–247) — *Execution-sink anti-patterns for the production gate (HNS081, HNS082).*
+- [`framework/gates/antipattern/liveness`](#package-frameworkgatesantipatternliveness) (lines 248–254) — *Liveness checks for the production anti-pattern gate (HNS072).*
+- [`framework/gates/checks`](#package-frameworkgateschecks) (lines 255–339) — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
+- [`framework/gates/coverage`](#package-frameworkgatescoverage) (lines 340–399) — *Internals of the per-file coverage and loop-iteration gate.*
+- [`framework/gates/distortion`](#package-frameworkgatesdistortion) (lines 400–444) — *Surrogate distortion gate package for detecting HNS044, HNS045, and HNS046.*
+- [`framework/gates/freshness`](#package-frameworkgatesfreshness) (lines 445–483) — *Freshness and ref-provenance gates.*
+- [`framework/gates/hotpath`](#package-frameworkgateshotpath) (lines 484–551) — *Advisory GPU/CPU hot-path detection package.*
+- [`framework/gates/instructions`](#package-frameworkgatesinstructions) (lines 552–569) — *Fail-closed reference check for agent instruction artifacts.*
+- [`framework/gates/limits`](#package-frameworkgateslimits) (lines 570–627)
+- [`framework/gates/memory`](#package-frameworkgatesmemory) (lines 628–673) — *Accelerator memory bottleneck detection package.*
+- [`framework/gates/memory/rules`](#package-frameworkgatesmemoryrules) (lines 674–713) — *Memory bottleneck rule surface: scope predicates and the HNS083-HNS086 checks.*
+- [`framework/gates/mutation`](#package-frameworkgatesmutation) (lines 714–819) — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
+- [`framework/gates/params`](#package-frameworkgatesparams) (lines 820–860) — *Parameter-drift gate package: registry matchers, CLI and their fixtures.*
+- [`framework/gates/params/primitives`](#package-frameworkgatesparamsprimitives) (lines 861–865) — *Pure AST and text primitives of the parameter-drift matchers.*
+- [`framework/gates/provenance`](#package-frameworkgatesprovenance) (lines 866–902) — *Run-provenance gates: GPU canary, run manifest, replay verification, MLflow log.*
+- [`framework/gates/static`](#package-frameworkgatesstatic) (lines 903–915) — *Shared plumbing for the static-analysis gates.*
+- [`framework/gates/transfers`](#package-frameworkgatestransfers) (lines 916–1002) — *Device transfer bottleneck detection package.*
+- [`framework/gates/transfers/provenance`](#package-frameworkgatestransfersprovenance) (lines 1003–1018) — *Device provenance inference for the host-device transfer gate.*
+- [`framework/gates/traversal`](#package-frameworkgatestraversal) (lines 1019–1029) — *Shared AST traversal helpers for the gate visitors.*
+- [`framework/gates/typecheck`](#package-frameworkgatestypecheck) (lines 1030–1108) — *Static-type gate: staged mypy enforcement with an advisory pyright census.*
+- [`framework/indexing`](#package-frameworkindexing) (lines 1109–1160) — *AST-based repository mapping and Table-of-Contents indexing.*
+- [`framework/tests`](#package-frameworktests) (lines 1161–1332)
+- [`framework/tests/abstract_cost`](#package-frameworktestsabstract-cost) (lines 1333–1354) — *Tests for the advisory abstract-cost gate package.*
+- [`framework/tests/antipattern`](#package-frameworktestsantipattern) (lines 1355–1442) — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
+- [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 1443–1453) — *Tests for the coverage gate and its probe plugin.*
+- [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 1454–1480) — *Test package for the framework distortion gate.*
+- [`framework/tests/freshness`](#package-frameworktestsfreshness) (lines 1481–1533) — *Tests for freshness and ref guard gates.*
+- [`framework/tests/gates`](#package-frameworktestsgates) (lines 1534–1646) — *Package.*
+- [`framework/tests/gates/instructions`](#package-frameworktestsgatesinstructions) (lines 1647–1686) — *Tests for instruction reference validation.*
+- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1687–1745) — *Tests for the parameter registry gates.*
+- [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1746–1768) — *Ratchet gates: tables that may only shrink.*
+- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1769–1785) — *Harness registry tests: project identity and the interpreter floor.*
+- [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1786–1794) — *Tests for the hook/test-process boundary.*
+- [`framework/tests/hotpath`](#package-frameworktestshotpath) (lines 1795–1812) — *Tests for the advisory hot-path gate package.*
+- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1813–1861) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework/tests/memory`](#package-frameworktestsmemory) (lines 1862–1949) — *Tests for the accelerator memory bottleneck static analysis gate.*
+- [`framework/tests/transfers`](#package-frameworkteststransfers) (lines 1950–2039) — *Test package for device transfer bottleneck gate.*
+- [`framework/tests/transfers/provenance`](#package-frameworkteststransfersprovenance) (lines 2040–2057) — *Test package for device provenance inference and mixing detection.*
+- [`framework/tests/typecheck`](#package-frameworkteststypecheck) (lines 2058–2108) — *Tests for the static-type gate.*
 
 ---
 
@@ -100,9 +107,79 @@
   * [`module_needs_test(rel: str, text: str) -> bool`](framework/gates/check_structure.py#L98-L104)
   * [`main() -> int`](framework/gates/check_structure.py#L166-L185)
 
+## Package `framework/gates/abstract_cost` — *Advisory abstract-cost gate package.*
+
+- [`framework/gates/abstract_cost/check_abstract_cost.py`](framework/gates/abstract_cost/check_abstract_cost.py) (33 lines)
+  * *Module Purpose*: Advisory abstract-cost checker: HNS095-HNS099 over staged or tree sources.
+  * [`main(argv: list[str] | None) -> int`](framework/gates/abstract_cost/check_abstract_cost.py#L27-L29)
+    * *Contract*: CLI entry point executing the abstract-cost audit.
+
+- [`framework/gates/abstract_cost/patterns.py`](framework/gates/abstract_cost/patterns.py) (375 lines)
+  * *Module Purpose*: Abstract cost-class rules for the advisory gate.
+  * [`class LoopScope`](framework/gates/abstract_cost/patterns.py#L127-L131)
+    * *Contract*: Names a loop body rebinds; an expression touching them is varying.
+  * [`class Retention`](framework/gates/abstract_cost/patterns.py#L135-L140)
+    * *Contract*: One retained-bank finding site: append line, subject, materializing consumer.
+  * [`names_in(node: ast.AST) -> frozenset[str]`](framework/gates/abstract_cost/patterns.py#L143-L147)
+    * *Contract*: Return every simple name read or written by one expression.
+  * [`self_attrs_in(node: ast.AST) -> frozenset[str]`](framework/gates/abstract_cost/patterns.py#L150-L158)
+    * *Contract*: Return every ``self.<attr>`` touched by one expression.
+  * [`is_invariant(node: ast.AST, scopes: Sequence[LoopScope]) -> bool`](framework/gates/abstract_cost/patterns.py#L161-L165)
+    * *Contract*: True when no enclosing loop rebinds anything the expression reads.
+  * [`has_random_operand(node: ast.AST) -> bool`](framework/gates/abstract_cost/patterns.py#L168-L175)
+    * *Contract*: True when the expression draws from an RNG, so hoisting changes semantics.
+  * [`classify_heavy(call: ast.Call) -> tuple[str, str] | None`](framework/gates/abstract_cost/patterns.py#L178-L182)
+    * *Contract*: Classify one call as a factorization or derivation, with its operation.
+  * [`matrix_operand(call: ast.Call) -> ast.AST | None`](framework/gates/abstract_cost/patterns.py#L194-L200)
+    * *Contract*: Return the matrix a factorization consumes: first argument, else receiver.
+  * [`derivation_operands(call: ast.Call) -> list[ast.expr]`](framework/gates/abstract_cost/patterns.py#L203-L213)
+    * *Contract*: Return every input of a derivation: arguments plus the receiver.
+  * [`host_sync_target(call: ast.Call) -> ast.AST | None`](framework/gates/abstract_cost/patterns.py#L216-L223)
+    * *Contract*: Return the expression a blocking host read consumes, if this is one.
+  * [`is_tensor_sync_target(node: ast.AST) -> bool`](framework/gates/abstract_cost/patterns.py#L226-L232)
+    * *Contract*: A call target is a tensor read; metadata and RNG calls are not.
+  * [`pipeline_call_name(call: ast.Call) -> str | None`](framework/gates/abstract_cost/patterns.py#L235-L244)
+    * *Contract*: Return the model/pipeline name a call invokes, if it invokes one.
+  * [`own_calls(body: Sequence[ast.stmt]) -> list[ast.Call]`](framework/gates/abstract_cost/patterns.py#L247-L259)
+    * *Contract*: Return calls in one function body without descending into nested scopes.
+  * [`function_definitions(body: Sequence[ast.stmt]) -> list[ast.FunctionDef | ast.AsyncFunctionDef]`](framework/gates/abstract_cost/patterns.py#L262-L272)
+    * *Contract*: Return functions defined in a body, descending into class bodies only.
+  * [`helper_heavy_params(function: ast.FunctionDef | ast.AsyncFunctionDef) -> dict[int, str]`](framework/gates/abstract_cost/patterns.py#L275-L301)
+    * *Contract*: Map a parameter index to the heavy class the helper applies to it.
+  * [`class_retentions(class_node: ast.ClassDef) -> list[Retention]`](framework/gates/abstract_cost/patterns.py#L322-L344)
+    * *Contract*: Retention where a capture callback banks ``self.<attr>`` and a method cats it.
+
+- [`framework/gates/abstract_cost/visitor.py`](framework/gates/abstract_cost/visitor.py) (309 lines)
+  * *Module Purpose*: AST visitor for the advisory abstract-cost gate.
+  * [`class AbstractCostVisitor(ast.NodeVisitor)`](framework/gates/abstract_cost/visitor.py#L51-L274)
+    * *Contract*: AST visitor collecting abstract cost-class findings from loop scopes.
+    * [`AbstractCostVisitor.__init__(self, path: str) -> None`](framework/gates/abstract_cost/visitor.py#L54-L61)
+    * [`AbstractCostVisitor.visit_Module(self, node: ast.Module) -> None`](framework/gates/abstract_cost/visitor.py#L63-L69)
+      * *Contract*: Summarise module-local helpers before walking the bodies.
+    * [`AbstractCostVisitor.visit_ClassDef(self, node: ast.ClassDef) -> None`](framework/gates/abstract_cost/visitor.py#L71-L81)
+      * *Contract*: Report a retained bank that another method materializes.
+    * [`AbstractCostVisitor.visit_FunctionDef(self, node: ast.FunctionDef) -> None`](framework/gates/abstract_cost/visitor.py#L83-L85)
+      * *Contract*: Enter one function frame for the duration of its body.
+    * [`AbstractCostVisitor.visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None`](framework/gates/abstract_cost/visitor.py#L87-L89)
+      * *Contract*: Enter one async function frame for the duration of its body.
+    * [`AbstractCostVisitor.visit_For(self, node: ast.For) -> None`](framework/gates/abstract_cost/visitor.py#L111-L116)
+      * *Contract*: The iterable runs once; the body repeats under its bound names.
+    * [`AbstractCostVisitor.visit_AsyncFor(self, node: ast.AsyncFor) -> None`](framework/gates/abstract_cost/visitor.py#L118-L123)
+      * *Contract*: An async for-loop repeats its body exactly like a for-loop.
+    * [`AbstractCostVisitor.visit_While(self, node: ast.While) -> None`](framework/gates/abstract_cost/visitor.py#L125-L127)
+      * *Contract*: A while test and body both repeat; nothing in them is invariant.
+    * [`AbstractCostVisitor.visit_Call(self, node: ast.Call) -> None`](framework/gates/abstract_cost/visitor.py#L164-L168)
+      * *Contract*: Classify one call against the abstract cost classes.
+    * [`AbstractCostVisitor.visit_If(self, node: ast.If) -> None`](framework/gates/abstract_cost/visitor.py#L233-L240)
+      * *Contract*: Conditional bodies may run once; track the depth for sync findings.
+    * [`AbstractCostVisitor.visit_IfExp(self, node: ast.IfExp) -> None`](framework/gates/abstract_cost/visitor.py#L242-L248)
+      * *Contract*: A conditional expression is a conditional context too.
+  * [`analyze_abstract_cost(source: str, path: str) -> list[Finding]`](framework/gates/abstract_cost/visitor.py#L300-L309)
+    * *Contract*: Parse Python source and collect abstract cost-class findings.
+
 ## Package `framework/gates/advisory` — *Advisory static gates shared model and runner package.*
 
-- [`framework/gates/advisory/model.py`](framework/gates/advisory/model.py) (132 lines)
+- [`framework/gates/advisory/model.py`](framework/gates/advisory/model.py) (134 lines)
   * *Module Purpose*: Shared plumbing for the advisory static gates.
   * [`class Finding`](framework/gates/advisory/model.py#L30-L52)
     * *Contract*: One static finding: file, line, code, message and its evidence class.
@@ -118,11 +195,11 @@
     * *Contract*: Analyze every path with the gate's own analyzer, collecting findings.
   * [`write_report(report_path: Path, findings: Sequence[Finding]) -> None`](framework/gates/advisory/model.py#L82-L85)
     * *Contract*: Serialize findings to a JSON report.
-  * [`emit(findings: Sequence[Finding], strict: bool, label: str) -> int`](framework/gates/advisory/model.py#L88-L97)
+  * [`emit(findings: Sequence[Finding], strict: bool, label: str) -> int`](framework/gates/advisory/model.py#L88-L99)
     * *Contract*: Print every finding plus a summary line and return the exit code.
-  * [`build_parser(description: str) -> argparse.ArgumentParser`](framework/gates/advisory/model.py#L111-L117)
+  * [`build_parser(description: str) -> argparse.ArgumentParser`](framework/gates/advisory/model.py#L113-L119)
     * *Contract*: Build the argument parser every advisory gate shares.
-  * [`run(argv: list[str] | None, analyze: Callable[[str, str], list[Finding]], label: str, description: str) -> int`](framework/gates/advisory/model.py#L120-L132)
+  * [`run(argv: list[str] | None, analyze: Callable[[str, str], list[Finding]], label: str, description: str) -> int`](framework/gates/advisory/model.py#L122-L134)
     * *Contract*: Parse arguments, scan the requested population, report, and return the code.
 
 ## Package `framework/gates/antipattern` — *Internals of the production anti-pattern gate.*
@@ -404,6 +481,74 @@
   * [`test_json_report_lists_every_finding(repo: Path, tmp_path: Path) -> None`](framework/gates/freshness/test_index_freshness.py#L126-L137)
     * *Contract*: The JSON report carries the same findings the text output prints.
 
+## Package `framework/gates/hotpath` — *Advisory GPU/CPU hot-path detection package.*
+
+- [`framework/gates/hotpath/check_hotpath.py`](framework/gates/hotpath/check_hotpath.py) (33 lines)
+  * *Module Purpose*: Advisory hot-path checker: HNS089-HNS094 over staged or tree sources.
+  * [`main(argv: list[str] | None) -> int`](framework/gates/hotpath/check_hotpath.py#L27-L29)
+    * *Contract*: CLI entry point executing the hot-path audit.
+
+- [`framework/gates/hotpath/evidence.py`](framework/gates/hotpath/evidence.py) (271 lines)
+  * *Module Purpose*: Rule evidence for the advisory hot-path gate: codes, messages and predicates.
+  * [`is_factory_call(node: ast.AST) -> bool`](framework/gates/hotpath/evidence.py#L118-L125)
+    * *Contract*: Return True for a ``torch.<factory>`` call, a tensor source with no device.
+  * [`has_device_keyword(node: ast.Call) -> bool`](framework/gates/hotpath/evidence.py#L128-L130)
+    * *Contract*: Return True when a factory call already names its device.
+  * [`is_tensor_expression(node: ast.AST) -> bool`](framework/gates/hotpath/evidence.py#L133-L141)
+    * *Contract*: Return True when the expression provably produces a tensor.
+  * [`is_tensor_annotation(node: ast.AST | None) -> bool`](framework/gates/hotpath/evidence.py#L144-L153)
+    * *Contract*: Return True only for a scalar ``Tensor`` annotation, not a container of them.
+  * [`is_device_move(node: ast.Call) -> bool`](framework/gates/hotpath/evidence.py#L156-L160)
+    * *Contract*: Return True for a ``.to(device)``/``.cuda()`` that allocates elsewhere first.
+  * [`synchronizes(node: ast.Call) -> bool`](framework/gates/hotpath/evidence.py#L163-L167)
+    * *Contract*: Return True for a call that reads a value back from the device.
+  * [`synchronizes_on_tensor(node: ast.Call, tensor_names: frozenset[str]) -> bool`](framework/gates/hotpath/evidence.py#L170-L189)
+    * *Contract*: Return True for a cast that reads a tensor value back to the host.
+  * [`is_anomaly_enabled(node: ast.Call) -> bool`](framework/gates/hotpath/evidence.py#L192-L209)
+    * *Contract*: Return True for ``torch.autograd.set_detect_anomaly(True)``.
+  * [`is_loader_call(node: ast.AST) -> bool`](framework/gates/hotpath/evidence.py#L212-L219)
+    * *Contract*: Return True for a ``DataLoader(...)`` construction.
+  * [`loader_gaps(node: ast.Call) -> list[str]`](framework/gates/hotpath/evidence.py#L222-L232)
+    * *Contract*: Return the loader settings that leave the CPU pipeline synchronous.
+  * [`hot_function_names(body: Sequence[ast.stmt]) -> frozenset[str]`](framework/gates/hotpath/evidence.py#L235-L241)
+    * *Contract*: Return the module-local functions and methods whose own body steps.
+
+- [`framework/gates/hotpath/visitor.py`](framework/gates/hotpath/visitor.py) (305 lines)
+  * *Module Purpose*: AST visitor for the advisory hot-path gate.
+  * [`class HotpathVisitor(ast.NodeVisitor)`](framework/gates/hotpath/visitor.py#L51-L293)
+    * *Contract*: AST visitor collecting GPU/CPU hot-path findings from local proofs.
+    * [`HotpathVisitor.__init__(self, path: str) -> None`](framework/gates/hotpath/visitor.py#L54-L62)
+    * [`HotpathVisitor.visit_Module(self, node: ast.Module) -> None`](framework/gates/hotpath/visitor.py#L64-L67)
+      * *Contract*: Pre-scan the module's training-step functions before walking bodies.
+    * [`HotpathVisitor.visit_FunctionDef(self, node: ast.FunctionDef) -> None`](framework/gates/hotpath/visitor.py#L69-L71)
+      * *Contract*: Enter one function with its hot context and tensor-annotated arguments.
+    * [`HotpathVisitor.visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None`](framework/gates/hotpath/visitor.py#L73-L75)
+      * *Contract*: Enter one async function with its hot context and annotations.
+    * [`HotpathVisitor.visit_For(self, node: ast.For) -> None`](framework/gates/hotpath/visitor.py#L130-L135)
+      * *Contract*: The iterable runs once; the body repeats with the target names bound.
+    * [`HotpathVisitor.visit_AsyncFor(self, node: ast.AsyncFor) -> None`](framework/gates/hotpath/visitor.py#L137-L142)
+      * *Contract*: An async for-loop repeats its body exactly like a for-loop.
+    * [`HotpathVisitor.visit_While(self, node: ast.While) -> None`](framework/gates/hotpath/visitor.py#L144-L148)
+      * *Contract*: A while body repeats; its names cannot be proven from the test alone.
+    * [`HotpathVisitor.visit_ListComp(self, node: ast.ListComp) -> None`](framework/gates/hotpath/visitor.py#L167-L169)
+      * *Contract*: A list comprehension repeats its element expression.
+    * [`HotpathVisitor.visit_SetComp(self, node: ast.SetComp) -> None`](framework/gates/hotpath/visitor.py#L171-L173)
+      * *Contract*: A set comprehension repeats its element expression.
+    * [`HotpathVisitor.visit_GeneratorExp(self, node: ast.GeneratorExp) -> None`](framework/gates/hotpath/visitor.py#L175-L177)
+      * *Contract*: A generator expression repeats its element expression.
+    * [`HotpathVisitor.visit_DictComp(self, node: ast.DictComp) -> None`](framework/gates/hotpath/visitor.py#L179-L181)
+      * *Contract*: A dict comprehension repeats its key and value expressions.
+    * [`HotpathVisitor.visit_Assign(self, node: ast.Assign) -> None`](framework/gates/hotpath/visitor.py#L194-L205)
+      * *Contract*: Track names bound to a provably tensor-valued expression.
+    * [`HotpathVisitor.visit_AnnAssign(self, node: ast.AnnAssign) -> None`](framework/gates/hotpath/visitor.py#L207-L220)
+      * *Contract*: An annotated assignment binds a tensor exactly like a plain one.
+    * [`HotpathVisitor.visit_Call(self, node: ast.Call) -> None`](framework/gates/hotpath/visitor.py#L222-L233)
+      * *Contract*: Evaluate one call against the hot-path rules, then descend.
+    * [`HotpathVisitor.visit_Subscript(self, node: ast.Subscript) -> None`](framework/gates/hotpath/visitor.py#L264-L277)
+      * *Contract*: Per-element indexing of a proven tensor inside a loop.
+  * [`analyze_hotpath(source: str, path: str) -> list[Finding]`](framework/gates/hotpath/visitor.py#L296-L305)
+    * *Contract*: Parse Python source and collect all hot-path findings.
+
 ## Package `framework/gates/instructions` — *Fail-closed reference check for agent instruction artifacts.*
 
 - [`framework/gates/instructions/check_instruction_refs.py`](framework/gates/instructions/check_instruction_refs.py) (499 lines)
@@ -479,6 +624,92 @@
   * [`test_mode_all_reports_and_strict_decides(repo: Path, capsys: pytest.CaptureFixture) -> None`](framework/gates/limits/test_limits.py#L181-L190)
   * [`test_hook_wiring_is_blocking_before_the_advisory_section() -> None`](framework/gates/limits/test_limits.py#L193-L201)
   * [`test_gate_obeys_its_own_limits() -> None`](framework/gates/limits/test_limits.py#L204-L207)
+
+## Package `framework/gates/memory` — *Accelerator memory bottleneck detection package.*
+
+- [`framework/gates/memory/check_memory_bottlenecks.py`](framework/gates/memory/check_memory_bottlenecks.py) (93 lines)
+  * *Module Purpose*: CLI entry point for the accelerator memory bottleneck gate.
+  * [`main(argv: list[str] | None) -> int`](framework/gates/memory/check_memory_bottlenecks.py#L75-L89)
+    * *Contract*: Parse arguments, audit the selected sources, and return the exit status.
+
+- [`framework/gates/memory/targets.py`](framework/gates/memory/targets.py) (48 lines)
+  * *Module Purpose*: Shared loader facade for the accelerator memory bottleneck gate.
+
+- [`framework/gates/memory/visitor.py`](framework/gates/memory/visitor.py) (314 lines)
+  * *Module Purpose*: AST visitor for traversing module trees and detecting memory bottlenecks.
+  * [`class MemoryBottleneckVisitor(RepeatedLoopVisitor)`](framework/gates/memory/visitor.py#L58-L302)
+    * *Contract*: AST visitor collecting in-loop tensor retention and allocation findings.
+    * [`MemoryBottleneckVisitor.__init__(self, path: str) -> None`](framework/gates/memory/visitor.py#L61-L67)
+    * [`MemoryBottleneckVisitor.in_loop(self) -> bool`](framework/gates/memory/visitor.py#L70-L72)
+      * *Contract*: Return True when the current node sits inside a loop or comprehension.
+    * [`MemoryBottleneckVisitor.escaping_ids(self) -> frozenset[int]`](framework/gates/memory/visitor.py#L75-L77)
+      * *Contract*: Return the call nodes whose results leave the enclosing loop.
+    * [`MemoryBottleneckVisitor.escaping_names(self) -> frozenset[str]`](framework/gates/memory/visitor.py#L80-L82)
+      * *Contract*: Return the names whose values leave the enclosing loop.
+    * [`MemoryBottleneckVisitor.visit_FunctionDef(self, node: ast.FunctionDef) -> None`](framework/gates/memory/visitor.py#L95-L97)
+      * *Contract*: Rebuild the evidence frame for each function body.
+    * [`MemoryBottleneckVisitor.visit_AsyncFunctionDef(self, node: ast.AsyncFunctionDef) -> None`](framework/gates/memory/visitor.py#L99-L101)
+      * *Contract*: Rebuild the evidence frame for each async function body.
+    * [`MemoryBottleneckVisitor.visit_While(self, node: ast.While) -> None`](framework/gates/memory/visitor.py#L136-L144)
+      * *Contract*: A while-loop test re-evaluates every iteration, so it stays in-loop.
+    * [`MemoryBottleneckVisitor.visit_ListComp(self, node: ast.ListComp) -> None`](framework/gates/memory/visitor.py#L157-L158)
+    * [`MemoryBottleneckVisitor.visit_SetComp(self, node: ast.SetComp) -> None`](framework/gates/memory/visitor.py#L160-L161)
+    * [`MemoryBottleneckVisitor.visit_GeneratorExp(self, node: ast.GeneratorExp) -> None`](framework/gates/memory/visitor.py#L163-L164)
+    * [`MemoryBottleneckVisitor.visit_DictComp(self, node: ast.DictComp) -> None`](framework/gates/memory/visitor.py#L166-L167)
+    * [`MemoryBottleneckVisitor.visit_With(self, node: ast.With) -> None`](framework/gates/memory/visitor.py#L185-L187)
+      * *Contract*: A no-grad or inference-mode block cannot retain an autograd graph.
+    * [`MemoryBottleneckVisitor.visit_AsyncWith(self, node: ast.AsyncWith) -> None`](framework/gates/memory/visitor.py#L189-L191)
+      * *Contract*: An async context manager enters the same no-grad state.
+    * [`MemoryBottleneckVisitor.visit_Assign(self, node: ast.Assign) -> None`](framework/gates/memory/visitor.py#L200-L203)
+      * *Contract*: Evaluate an assignment for retention, growth, escape and binding.
+    * [`MemoryBottleneckVisitor.visit_AnnAssign(self, node: ast.AnnAssign) -> None`](framework/gates/memory/visitor.py#L205-L210)
+      * *Contract*: An annotated assignment binds values and can prove a non-tensor type.
+    * [`MemoryBottleneckVisitor.visit_AugAssign(self, node: ast.AugAssign) -> None`](framework/gates/memory/visitor.py#L212-L217)
+      * *Contract*: Evaluate an augmented assignment for compounded graph accumulation.
+    * [`MemoryBottleneckVisitor.visit_Call(self, node: ast.Call) -> None`](framework/gates/memory/visitor.py#L283-L286)
+      * *Contract*: Evaluate call expression against the retention and allocation rules.
+  * [`analyze_memory(source: str, path: str) -> list[Finding]`](framework/gates/memory/visitor.py#L305-L314)
+    * *Contract*: Parse Python source and collect all memory bottleneck findings.
+
+## Package `framework/gates/memory/rules` — *Memory bottleneck rule surface: scope predicates and the HNS083-HNS086 checks.*
+
+- [`framework/gates/memory/rules/checks.py`](framework/gates/memory/rules/checks.py) (255 lines)
+  * *Module Purpose*: In-loop memory bottleneck checks and their literal-shape helpers.
+  * [`check_collection_retention(node: ast.Call, in_loop: bool, scope: Scope) -> tuple[str, str] | None`](framework/gates/memory/rules/checks.py#L51-L79)
+    * *Contract*: Return HNS083 for an in-loop collection method storing an un-detached tensor.
+  * [`check_subscript_store(value: ast.AST, container: ast.AST, in_loop: bool, scope: Scope) -> tuple[str, str] | None`](framework/gates/memory/rules/checks.py#L82-L101)
+    * *Contract*: Return HNS083 for an in-loop ``mapping[key] = <un-detached tensor>``.
+  * [`check_accumulation(node: ast.AugAssign, in_loop: bool, scope: Scope) -> tuple[str, str] | None`](framework/gates/memory/rules/checks.py#L104-L125)
+    * *Contract*: Return HNS085 for an in-loop augmented accumulation of an un-detached tensor.
+  * [`check_dynamic_growth(value: ast.AST, in_loop: bool, target_names: frozenset[str]) -> tuple[str, str] | None`](framework/gates/memory/rules/checks.py#L128-L151)
+    * *Contract*: Return HNS084 for an in-loop ``torch.cat``/``torch.stack`` that grows its target.
+  * [`check_buffer_allocation(node: ast.Call, in_loop: bool, escaping_ids: frozenset[int], exempt_ids: frozenset[int]) -> tuple[str, str] | None`](framework/gates/memory/rules/checks.py#L229-L255)
+    * *Contract*: Return HNS086 for an in-loop invariant-shape ``torch.zeros/ones/empty/full``.
+
+- [`framework/gates/memory/rules/evidence.py`](framework/gates/memory/rules/evidence.py) (400 lines)
+  * *Module Purpose*: Tensor evidence, scope state and AST predicates for the memory bottleneck rules.
+  * [`class Scope`](framework/gates/memory/rules/evidence.py#L207-L223)
+    * *Contract*: The per-function evidence the retention rules are allowed to use.
+  * [`is_torch_call(node: ast.Call) -> bool`](framework/gates/memory/rules/evidence.py#L284-L288)
+    * *Contract*: Return True when a call is invoked through a tensor namespace.
+  * [`is_factory_call(node: ast.Call) -> bool`](framework/gates/memory/rules/evidence.py#L291-L306)
+    * *Contract*: Return True for a call that builds a module, optimizer or loader.
+  * [`is_graph_call(node: ast.Call) -> bool`](framework/gates/memory/rules/evidence.py#L309-L313)
+    * *Contract*: Return True for a tensor-producing call that can attach an autograd graph.
+  * [`classify_binding(node: ast.AST, scope: Scope) -> str`](framework/gates/memory/rules/evidence.py#L316-L332)
+    * *Contract*: Classify an assignment value as ``tensor``, ``callable`` or ``none``.
+  * [`has_tensor_evidence(node: ast.AST, scope: Scope) -> bool`](framework/gates/memory/rules/evidence.py#L335-L346)
+    * *Contract*: Return True when an expression carries a graph-carrying tensor proof.
+  * [`is_released(node: ast.AST) -> bool`](framework/gates/memory/rules/evidence.py#L363-L365)
+    * *Contract*: Return True when an expression is wrapped in a graph-releasing call.
+  * [`is_scalarized(node: ast.AST) -> bool`](framework/gates/memory/rules/evidence.py#L368-L370)
+    * *Contract*: Return True when an expression is wrapped in a scalarizing call.
+  * [`is_scalar_annotation(node: ast.AST) -> bool`](framework/gates/memory/rules/evidence.py#L373-L388)
+    * *Contract*: Return True when a type annotation proves the value is not a tensor.
+  * [`is_nograd_context(node: ast.AST) -> bool`](framework/gates/memory/rules/evidence.py#L391-L395)
+    * *Contract*: Return True for a ``torch.no_grad()`` or ``torch.inference_mode()`` context.
+  * [`starts_nograd(node: ast.AST) -> bool`](framework/gates/memory/rules/evidence.py#L398-L400)
+    * *Contract*: Return True when a function definition runs under a no-grad decorator.
 
 ## Package `framework/gates/mutation` — *Mutation-evidence gate: content-addressed mutmut verdicts for staged modules.*
 
@@ -1099,6 +1330,28 @@
   * [`test_oracle_cli_reads_the_staged_blob(tmp_path, monkeypatch, capsys) -> None`](framework/tests/test_test_mirror_gate.py#L368-L385)
     * *Contract*: --staged decides from the Git index, not the working tree.
 
+## Package `framework/tests/abstract_cost` — *Tests for the advisory abstract-cost gate package.*
+
+- [`framework/tests/abstract_cost/abstract_cases_fixture.py`](framework/tests/abstract_cost/abstract_cases_fixture.py) (322 lines)
+  * *Module Purpose*: Benchmark evaluation dataset for the advisory abstract-cost gate.
+
+- [`framework/tests/abstract_cost/test_abstract_cost.py`](framework/tests/abstract_cost/test_abstract_cost.py) (99 lines)
+  * *Module Purpose*: Benchmark regression suite for the advisory abstract-cost gate.
+  * [`test_case_matches_expected_codes(case: TransferBenchmarkCase) -> None`](framework/tests/abstract_cost/test_abstract_cost.py#L36-L38)
+    * *Contract*: Detected codes equal ground truth; a catalogued miss stays undetected.
+  * [`test_supported_set_precision_and_recall() -> None`](framework/tests/abstract_cost/test_abstract_cost.py#L41-L45)
+    * *Contract*: Over the supported set the gate is exact: every case lands on its side.
+  * [`test_all_cases_recall_exposes_the_open_gaps() -> None`](framework/tests/abstract_cost/test_abstract_cost.py#L48-L53)
+    * *Contract*: Counting the catalogued misses, recall drops to the measured floor.
+  * [`test_every_rule_keeps_its_supported_positives() -> None`](framework/tests/abstract_cost/test_abstract_cost.py#L56-L60)
+    * *Contract*: All five classes are exercised, so no rule can rot into dead code.
+  * [`test_known_misses_are_the_documented_gap() -> None`](framework/tests/abstract_cost/test_abstract_cost.py#L63-L69)
+    * *Contract*: Every open gap is catalogued, so no 1.0 end-to-end recall claim survives.
+  * [`test_findings_name_their_cost_class() -> None`](framework/tests/abstract_cost/test_abstract_cost.py#L72-L76)
+    * *Contract*: A finding's evidence names the abstract class, not just the call site.
+  * [`test_evidence_labels_are_the_documented_vocabulary() -> None`](framework/tests/abstract_cost/test_abstract_cost.py#L79-L99)
+    * *Contract*: Each code reports only the class name the gate documents for it.
+
 ## Package `framework/tests/antipattern` — *Anti-pattern extension tests (HNS066/067/069/072/081/082).*
 
 - [`framework/tests/antipattern/test_execution.py`](framework/tests/antipattern/test_execution.py) (110 lines)
@@ -1539,6 +1792,24 @@
   * [`run_git(repo: Path, *args, check: bool) -> subprocess.CompletedProcess[str]`](framework/tests/hook_hygiene/git_env_fixture.py#L26-L37)
     * *Contract*: Run one git command in `repo` with repository selectors removed.
 
+## Package `framework/tests/hotpath` — *Tests for the advisory hot-path gate package.*
+
+- [`framework/tests/hotpath/hotpath_cases_fixture.py`](framework/tests/hotpath/hotpath_cases_fixture.py) (291 lines)
+  * *Module Purpose*: Benchmark evaluation dataset for the advisory hot-path gate.
+
+- [`framework/tests/hotpath/test_hotpath.py`](framework/tests/hotpath/test_hotpath.py) (65 lines)
+  * *Module Purpose*: Benchmark regression suite for the advisory hot-path gate.
+  * [`test_case_matches_expected_codes(case: TransferBenchmarkCase) -> None`](framework/tests/hotpath/test_hotpath.py#L34-L36)
+    * *Contract*: Detected codes equal ground truth; a catalogued miss stays undetected.
+  * [`test_supported_set_precision_and_recall() -> None`](framework/tests/hotpath/test_hotpath.py#L39-L42)
+    * *Contract*: Over the supported set every rule is exact on its labeled cases.
+  * [`test_all_cases_recall_exposes_the_open_gaps() -> None`](framework/tests/hotpath/test_hotpath.py#L45-L50)
+    * *Contract*: Counting the catalogued misses, recall drops to the measured floor.
+  * [`test_every_rule_has_supported_positive_cases() -> None`](framework/tests/hotpath/test_hotpath.py#L53-L57)
+    * *Contract*: All six codes are exercised, so no rule can rot into dead code.
+  * [`test_known_misses_are_the_documented_gap() -> None`](framework/tests/hotpath/test_hotpath.py#L60-L65)
+    * *Contract*: Every open gap is catalogued, so no 1.0 end-to-end recall claim survives.
+
 ## Package `framework/tests/indexing` — *Tests for framework.indexing Table-of-Contents subsystem.*
 
 - [`framework/tests/indexing/test_formatter.py`](framework/tests/indexing/test_formatter.py) (85 lines)
@@ -1587,6 +1858,94 @@
     * *Contract*: Verify two-tier docstring parsing extracts thumbnail and structured sections.
   * [`test_two_tier_docstring_validation_errors() -> None`](framework/tests/indexing/test_scanner.py#L110-L126)
     * *Contract*: Verify validation errors are recorded for missing or invalid docstrings.
+
+## Package `framework/tests/memory` — *Tests for the accelerator memory bottleneck static analysis gate.*
+
+- [`framework/tests/memory/dataset_fixture.py`](framework/tests/memory/dataset_fixture.py) (306 lines)
+  * *Module Purpose*: Benchmark evaluation dataset for accelerator memory bottleneck detection.
+  * [`class MemoryBenchmarkCase`](framework/tests/memory/dataset_fixture.py#L22-L29)
+    * *Contract*: Single benchmark snippet with ground-truth expected gate codes.
+
+- [`framework/tests/memory/test_dataset.py`](framework/tests/memory/test_dataset.py) (99 lines)
+  * *Module Purpose*: Benchmark regression suite for the accelerator memory gate.
+  * [`test_dataset_case_matches_expected_codes(case: MemoryBenchmarkCase) -> None`](framework/tests/memory/test_dataset.py#L60-L65)
+    * *Contract*: Detected codes equal ground truth; known misses fail closed instead.
+  * [`test_dataset_covers_every_rule_and_negative_controls() -> None`](framework/tests/memory/test_dataset.py#L68-L73)
+    * *Contract*: The frozen dataset exercises all four codes and enough negative controls.
+  * [`test_dataset_precision_and_recall_are_perfect() -> None`](framework/tests/memory/test_dataset.py#L76-L81)
+    * *Contract*: Pooled confusion counts over supported cases assert the floor of 1.0.
+  * [`test_dataset_per_code_metrics_are_perfect() -> None`](framework/tests/memory/test_dataset.py#L84-L90)
+    * *Contract*: Per-code precision and recall over each of the four memory anti-patterns.
+  * [`test_dataset_tracks_known_misses_and_open_gap() -> None`](framework/tests/memory/test_dataset.py#L93-L99)
+    * *Contract*: Known misses are catalogued, so a 1.0 recall claim stays impossible.
+
+- [`framework/tests/memory/test_historical_cases.py`](framework/tests/memory/test_historical_cases.py) (121 lines)
+  * *Module Purpose*: Historical revision pins for the accelerator memory gate.
+  * [`test_probe_output_capture_revision_is_silent() -> None`](framework/tests/memory/test_historical_cases.py#L99-L103)
+    * *Contract*: The probe loop that binds _probe_output raises nothing.
+  * [`test_design_judge_fit_revision_is_silent() -> None`](framework/tests/memory/test_historical_cases.py#L106-L109)
+    * *Contract*: The design-judge trainer's in-loop stores and accumulations raise nothing.
+  * [`test_indexing_gate_revision_is_silent() -> None`](framework/tests/memory/test_historical_cases.py#L112-L115)
+    * *Contract*: The indexing gate's in-loop appends and accumulations raise nothing.
+  * [`test_statistics_gate_revision_is_silent() -> None`](framework/tests/memory/test_historical_cases.py#L118-L121)
+    * *Contract*: The statistics gate's finite-flag loop and accumulator raise nothing.
+
+- [`framework/tests/memory/test_memory_gate.py`](framework/tests/memory/test_memory_gate.py) (364 lines)
+  * *Module Purpose*: Unit tests for the accelerator memory bottleneck static analysis gate.
+  * [`test_hns083_flags_inline_transform_append() -> None`](framework/tests/memory/test_memory_gate.py#L35-L44)
+    * *Contract*: An in-loop append of an inline torch transform retains its graph.
+  * [`test_hns083_flags_callable_output_append() -> None`](framework/tests/memory/test_memory_gate.py#L47-L58)
+    * *Contract*: A tensor produced by a locally built module call is un-detached evidence.
+  * [`test_hns083_flags_subscript_store() -> None`](framework/tests/memory/test_memory_gate.py#L61-L64)
+    * *Contract*: An in-loop mapping store of a graph-carrying tensor outlives the iteration.
+  * [`test_hns083_flags_insert_and_set_add() -> None`](framework/tests/memory/test_memory_gate.py#L67-L78)
+    * *Contract*: ``insert`` and ``add`` are retention methods like ``append``.
+  * [`test_hns084_flags_self_referential_cat() -> None`](framework/tests/memory/test_memory_gate.py#L81-L90)
+    * *Contract*: A concatenation that folds its own target back in is provably growing.
+  * [`test_hns084_flags_self_referential_stack() -> None`](framework/tests/memory/test_memory_gate.py#L93-L96)
+    * *Contract*: A stack that reads its own target grows on every iteration too.
+  * [`test_hns085_flags_inline_tensor_accumulation() -> None`](framework/tests/memory/test_memory_gate.py#L99-L102)
+    * *Contract*: An augmented accumulation of an inline graph call compounds the graph.
+  * [`test_hns085_flags_callable_local_accumulation() -> None`](framework/tests/memory/test_memory_gate.py#L105-L115)
+    * *Contract*: Accumulating a local bound from a torch-built callable compounds the graph.
+  * [`test_hns086_flags_literal_allocation_in_loop() -> None`](framework/tests/memory/test_memory_gate.py#L118-L125)
+    * *Contract*: An invariant literal shape churns the allocator on every iteration.
+  * [`test_hns086_flags_literal_allocation_in_comprehension() -> None`](framework/tests/memory/test_memory_gate.py#L128-L131)
+    * *Contract*: A comprehension body repeats, so its invariant allocation is in-loop.
+  * [`test_hns083_exempts_scalar_annotation_and_string_store() -> None`](framework/tests/memory/test_memory_gate.py#L134-L144)
+    * *Contract*: A scalar annotation and a plain string store prove no tensor is retained.
+  * [`test_hns083_exempts_helper_output() -> None`](framework/tests/memory/test_memory_gate.py#L147-L155)
+    * *Contract*: A helper's output carries no local proof; the interprocedural gap stays silent.
+  * [`test_hns083_exempts_creation_ops_and_boolean_queries() -> None`](framework/tests/memory/test_memory_gate.py#L158-L166)
+    * *Contract*: Creation-op leaves and boolean queries cannot retain a backward graph.
+  * [`test_hns083_and_hns085_exempt_release_wrappers() -> None`](framework/tests/memory/test_memory_gate.py#L169-L177)
+    * *Contract*: detach/cpu/float wrappers are the documented safe forms.
+  * [`test_rules_exempt_nograd_contexts() -> None`](framework/tests/memory/test_memory_gate.py#L180-L203)
+    * *Contract*: No graph is built inside a no-grad block or under a no-grad decorator.
+  * [`test_rules_exempt_out_of_loop_statements() -> None`](framework/tests/memory/test_memory_gate.py#L206-L211)
+    * *Contract*: A store or allocation with no enclosing loop repeats nothing.
+  * [`test_hns084_exempts_post_loop_and_fresh_concatenation() -> None`](framework/tests/memory/test_memory_gate.py#L214-L226)
+    * *Contract*: A single post-loop join and a fixed-shape join are the documented fixes.
+  * [`test_hns086_exempts_hoisted_nonliteral_escaping_and_like() -> None`](framework/tests/memory/test_memory_gate.py#L229-L238)
+    * *Contract*: Only an invariant literal allocation that stays inside the loop is churn.
+  * [`test_hns086_exempts_zero_element_placeholder() -> None`](framework/tests/memory/test_memory_gate.py#L241-L248)
+    * *Contract*: A literal shape requesting no storage allocates nothing to churn.
+  * [`test_hns085_exempts_counters_and_scalar_proofs() -> None`](framework/tests/memory/test_memory_gate.py#L251-L259)
+    * *Contract*: Integer counters, annotated floats and fresh leaves are not accumulations.
+  * [`test_cli_returns_zero_on_findings_without_strict(tmp_path: Path) -> None`](framework/tests/memory/test_memory_gate.py#L262-L269)
+    * *Contract*: Without --strict the CLI reports findings but exits clean.
+  * [`test_cli_strict_returns_one_on_findings(tmp_path: Path) -> None`](framework/tests/memory/test_memory_gate.py#L272-L279)
+    * *Contract*: --strict turns any finding into a failing exit code.
+  * [`test_cli_report_json_carries_expected_fields(tmp_path: Path) -> None`](framework/tests/memory/test_memory_gate.py#L282-L296)
+    * *Contract*: The JSON report lists path, line, code, message and trigger per finding.
+  * [`test_cli_unreadable_staged_path_fails_closed(tmp_path: Path) -> None`](framework/tests/memory/test_memory_gate.py#L299-L313)
+    * *Contract*: An untracked staged path emits HNS010 and fails closed under --strict.
+  * [`test_cli_skips_paths_outside_the_gate_population() -> None`](framework/tests/memory/test_memory_gate.py#L316-L321)
+    * *Contract*: A repository test module is outside the population and is never scanned.
+  * [`test_cli_staged_reads_the_git_index(tmp_path: Path, monkeypatch) -> None`](framework/tests/memory/test_memory_gate.py#L324-L351)
+    * *Contract*: --staged reads the index blob, so a worktree edit cannot shift the verdict.
+  * [`test_hook_wiring_is_blocking() -> None`](framework/tests/memory/test_memory_gate.py#L355-L364)
+    * *Contract*: Pre-commit step 5d11 runs the gate strict, on the index, fail-closed.
 
 ## Package `framework/tests/transfers` — *Test package for device transfer bottleneck gate.*
 

@@ -461,6 +461,74 @@ if [ -n "$STAGED_ALL" ]; then
 fi
 
 # ---------------------------------------------------------------------------
+# 5d11. BLOCKING MEMORY-BOTTLENECK GATE (HNS083-HNS086)
+# A per-step allocation, a host↔device copy that could have been avoided, or an
+# accumulating tensor kept alive by a list is invisible in a unit test and
+# expensive in a benchmark: the run is correct and OOMs at scale. The gate grades
+# the staged blob's allocation and retention shapes and blocks the four classes.
+CHECK_MEMORY="$REPO/framework/gates/memory/check_memory_bottlenecks.py"
+if [ -n "$STAGED_ALL" ]; then
+  mapfile -t STAGED_MEMORY_FILES < <(
+    printf '%s\n' "$STAGED_ALL" \
+      | grep -E "$TYPE_SCOPE" \
+      | grep -vE "/($EXCLUDED_RE)/" || true
+  )
+  if [ "${#STAGED_MEMORY_FILES[@]}" -gt 0 ]; then
+    if [ ! -f "$CHECK_MEMORY" ]; then
+      echo "[pre-commit] FAILED: memory-bottleneck gate missing at $CHECK_MEMORY (fail-closed)." >&2
+      exit 1
+    fi
+    if ! "$PY" "$CHECK_MEMORY" --mode staged --staged --strict "${STAGED_MEMORY_FILES[@]}"; then
+      echo "[pre-commit] FAILED: the memory-bottleneck gate blocked this commit (see above)." >&2
+      echo "[pre-commit] hoist the allocation, keep the tensor resident, or bound the retention." >&2
+      exit 1
+    fi
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 5d12. ADVISORY HOT-PATH GATE (HNS089-HNS094)
+# CMA-calibrated advisory rules, never blocking here: they encode a notion of a
+# good hot path tied to the source project's labelled corpus. On this tree they
+# are a census -- print what fired and name the command, then continue.
+CHECK_HOTPATH="$REPO/framework/gates/hotpath/check_hotpath.py"
+if [ -f "$CHECK_HOTPATH" ] && [ -n "$STAGED_ALL" ]; then
+  mapfile -t STAGED_HOTPATH_FILES < <(
+    printf '%s\n' "$STAGED_ALL" \
+      | grep -E "$TYPE_SCOPE" \
+      | grep -vE "/($EXCLUDED_RE)/" || true
+  )
+  if [ "${#STAGED_HOTPATH_FILES[@]}" -gt 0 ]; then
+    HOTPATH_OUT="$("$PY" "$CHECK_HOTPATH" --mode staged --staged "${STAGED_HOTPATH_FILES[@]}" 2>&1 || true)"
+    printf '%s\n' "$HOTPATH_OUT" | tail -n 8
+    if printf '%s\n' "$HOTPATH_OUT" | grep -qE '^\[check_hotpath\] .*HNS'; then
+      echo "[pre-commit] WARN: advisory hot-path findings (never blocking) — full census: python framework/gates/hotpath/check_hotpath.py --mode all" >&2
+    fi
+  fi
+fi
+
+# ---------------------------------------------------------------------------
+# 5d13. ADVISORY ABSTRACT-COST GATE (HNS095-HNS099)
+# Same posture as 5d12: proxy-quality and abstract-cost shapes are a census, not
+# a veto, because their calibration is the source project's taste and not this
+# template's. A project that adopts them tightly lowers `--strict` in one place.
+CHECK_ABSTRACT="$REPO/framework/gates/abstract_cost/check_abstract_cost.py"
+if [ -f "$CHECK_ABSTRACT" ] && [ -n "$STAGED_ALL" ]; then
+  mapfile -t STAGED_ABSTRACT_FILES < <(
+    printf '%s\n' "$STAGED_ALL" \
+      | grep -E "$TYPE_SCOPE" \
+      | grep -vE "/($EXCLUDED_RE)/" || true
+  )
+  if [ "${#STAGED_ABSTRACT_FILES[@]}" -gt 0 ]; then
+    ABSTRACT_OUT="$("$PY" "$CHECK_ABSTRACT" --mode staged --staged "${STAGED_ABSTRACT_FILES[@]}" 2>&1 || true)"
+    printf '%s\n' "$ABSTRACT_OUT" | tail -n 8
+    if printf '%s\n' "$ABSTRACT_OUT" | grep -qE '^\[check_abstract_cost\] .*HNS'; then
+      echo "[pre-commit] WARN: advisory abstract-cost findings (never blocking) — full census: python framework/gates/abstract_cost/check_abstract_cost.py --mode all" >&2
+    fi
+  fi
+fi
+
+# ---------------------------------------------------------------------------
 # 5e. Codebase architectural index (INDEX.md): auto-maintained, not nagged.
 # The index is generated from the working tree, so a commit that touches an
 # indexed root refreshes it here and re-stages it — the same auto-fix posture as
