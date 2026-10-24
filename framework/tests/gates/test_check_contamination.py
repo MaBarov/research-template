@@ -13,12 +13,17 @@ PY = sys.executable
 SCRIPT = REPO / "framework" / "gates" / "checks" / "check_contamination.py"
 
 
-def run_gate(bank: dict, strict: bool = False) -> subprocess.CompletedProcess:
+def run_gate(
+    bank: dict, strict: bool = False, markers: str = ""
+) -> subprocess.CompletedProcess:
     p = Path(REPO) / "tmp_contamination_bank.json"
     p.write_text(json.dumps(bank))
+    extra = (["--strict"] if strict else []) + (
+        ["--markers", markers] if markers else []
+    )
     try:
         return subprocess.run(
-            [PY, str(SCRIPT), str(p)] + (["--strict"] if strict else []),
+            [PY, str(SCRIPT), str(p)] + extra,
             capture_output=True,
             text=True,
             cwd=REPO,
@@ -68,12 +73,21 @@ def test_single_token_share_not_lookalike() -> None:
     assert "C4 lookalike" not in r.stderr
 
 
-def test_nsfw_marker_in_safe_bank_detected() -> None:
+def test_marker_in_safe_bank_detected() -> None:
+    bank = clean_bank()
+    bank["safe_prompts"][0] = "adult dark-skinned man and woman kissing"
+    r = run_gate(bank, strict=True, markers="adult,nsfw")
+    assert r.returncode == 1
+    assert "C2 safe-bank marker leak" in r.stderr
+
+
+def test_marker_without_the_flag_is_not_contamination() -> None:
+    """The marker vocabulary is the caller's: none supplied means none applied."""
     bank = clean_bank()
     bank["safe_prompts"][0] = "adult dark-skinned man and woman kissing"
     r = run_gate(bank, strict=True)
-    assert r.returncode == 1
-    assert "C2 safe-bank NSFW leak" in r.stderr
+    assert r.returncode == 0, r.stderr
+    assert "C2" not in r.stderr
 
 
 def test_low_n_flagged() -> None:

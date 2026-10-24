@@ -3,7 +3,7 @@
 > [!NOTE]
 > Sub-index for the `framework` package hierarchy. Use the line ranges below to load specific sections directly into context.
 
-**Repository Statistics**: 83 modules | 22 classes | 685 public functions.
+**Repository Statistics**: 83 modules | 22 classes | 686 public functions.
 
 ## Table of Contents
 
@@ -29,14 +29,14 @@
 - [`framework/tests/coverage_gate`](#package-frameworktestscoverage-gate) (lines 1020–1030) — *Tests for the coverage gate and its probe plugin.*
 - [`framework/tests/distortion`](#package-frameworktestsdistortion) (lines 1031–1057) — *Test package for the framework distortion gate.*
 - [`framework/tests/freshness`](#package-frameworktestsfreshness) (lines 1058–1110) — *Tests for freshness and ref guard gates.*
-- [`framework/tests/gates`](#package-frameworktestsgates) (lines 1111–1221) — *Package.*
-- [`framework/tests/gates/instructions`](#package-frameworktestsgatesinstructions) (lines 1222–1261) — *Tests for instruction reference validation.*
-- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1262–1320) — *Tests for the parameter registry gates.*
-- [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1321–1343) — *Ratchet gates: tables that may only shrink.*
-- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1344–1360) — *Harness registry tests: project identity and the interpreter floor.*
-- [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1361–1369) — *Tests for the hook/test-process boundary.*
-- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1370–1418) — *Tests for framework.indexing Table-of-Contents subsystem.*
-- [`framework/tests/typecheck`](#package-frameworkteststypecheck) (lines 1419–1469) — *Tests for the static-type gate.*
+- [`framework/tests/gates`](#package-frameworktestsgates) (lines 1111–1223) — *Package.*
+- [`framework/tests/gates/instructions`](#package-frameworktestsgatesinstructions) (lines 1224–1263) — *Tests for instruction reference validation.*
+- [`framework/tests/gates/params`](#package-frameworktestsgatesparams) (lines 1264–1322) — *Tests for the parameter registry gates.*
+- [`framework/tests/gates/ratchet`](#package-frameworktestsgatesratchet) (lines 1323–1345) — *Ratchet gates: tables that may only shrink.*
+- [`framework/tests/harness`](#package-frameworktestsharness) (lines 1346–1362) — *Harness registry tests: project identity and the interpreter floor.*
+- [`framework/tests/hook_hygiene`](#package-frameworktestshook-hygiene) (lines 1363–1371) — *Tests for the hook/test-process boundary.*
+- [`framework/tests/indexing`](#package-frameworktestsindexing) (lines 1372–1420) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework/tests/typecheck`](#package-frameworkteststypecheck) (lines 1421–1471) — *Tests for the static-type gate.*
 
 ---
 
@@ -145,14 +145,14 @@
 
 ## Package `framework/gates/checks` — *Standalone checker gates: contamination, mirrors, local lint, agent mirrors, probe.*
 
-- [`framework/gates/checks/check_contamination.py`](framework/gates/checks/check_contamination.py) (288 lines)
+- [`framework/gates/checks/check_contamination.py`](framework/gates/checks/check_contamination.py) (290 lines)
   * *Module Purpose*: Contamination gate — automated overlap & quality check for curated bank pairs.
-  * [`log_event(target: str, gate: str, result: str, reason: str) -> None`](framework/gates/checks/check_contamination.py#L55-L77)
-  * [`load_bank(path: Path) -> dict`](framework/gates/checks/check_contamination.py#L80-L109)
-  * [`normalized(s: str) -> str`](framework/gates/checks/check_contamination.py#L141-L142)
-  * [`token_overlap(a: str, b: str) -> float`](framework/gates/checks/check_contamination.py#L145-L150)
-  * [`check_bank(path: Path, strict: bool) -> list[str]`](framework/gates/checks/check_contamination.py#L216-L235)
-  * [`main(argv: list[str] | None) -> int`](framework/gates/checks/check_contamination.py#L263-L284)
+  * [`log_event(target: str, gate: str, result: str, reason: str) -> None`](framework/gates/checks/check_contamination.py#L51-L73)
+  * [`load_bank(path: Path) -> dict`](framework/gates/checks/check_contamination.py#L76-L105)
+  * [`normalized(s: str) -> str`](framework/gates/checks/check_contamination.py#L137-L138)
+  * [`token_overlap(a: str, b: str) -> float`](framework/gates/checks/check_contamination.py#L141-L146)
+  * [`check_bank(path: Path, strict: bool, markers: Sequence[str]) -> list[str]`](framework/gates/checks/check_contamination.py#L208-L227)
+  * [`main(argv: list[str] | None) -> int`](framework/gates/checks/check_contamination.py#L257-L286)
 
 - [`framework/gates/checks/check_duplication.py`](framework/gates/checks/check_duplication.py) (503 lines)
   * *Module Purpose*: Fail-closed copy-paste detection gate for staged or whole-tree code.
@@ -1163,27 +1163,29 @@
   * [`test_a_non_mode_string_default_is_not_a_dispatch_key() -> None`](framework/tests/gates/test_antipattern_expansion.py#L398-L406)
     * *Contract*: A path or message default is not a mode, even beside a mode table.
 
-- [`framework/tests/gates/test_check_contamination.py`](framework/tests/gates/test_check_contamination.py) (172 lines)
+- [`framework/tests/gates/test_check_contamination.py`](framework/tests/gates/test_check_contamination.py) (186 lines)
   * *Module Purpose*: Behavioral tests for framework/gates/checks/check_contamination.py (guardrail #2).
-  * [`run_gate(bank: dict, strict: bool) -> subprocess.CompletedProcess`](framework/tests/gates/test_check_contamination.py#L16-L29)
-  * [`clean_bank() -> dict`](framework/tests/gates/test_check_contamination.py#L32-L36)
-  * [`test_clean_bank_passes() -> None`](framework/tests/gates/test_check_contamination.py#L39-L42)
-  * [`test_exact_overlap_detected() -> None`](framework/tests/gates/test_check_contamination.py#L45-L50)
-  * [`test_lookalike_detected() -> None`](framework/tests/gates/test_check_contamination.py#L53-L59)
-  * [`test_single_token_share_not_lookalike() -> None`](framework/tests/gates/test_check_contamination.py#L62-L68)
+  * [`run_gate(bank: dict, strict: bool, markers: str) -> subprocess.CompletedProcess`](framework/tests/gates/test_check_contamination.py#L16-L34)
+  * [`clean_bank() -> dict`](framework/tests/gates/test_check_contamination.py#L37-L41)
+  * [`test_clean_bank_passes() -> None`](framework/tests/gates/test_check_contamination.py#L44-L47)
+  * [`test_exact_overlap_detected() -> None`](framework/tests/gates/test_check_contamination.py#L50-L55)
+  * [`test_lookalike_detected() -> None`](framework/tests/gates/test_check_contamination.py#L58-L64)
+  * [`test_single_token_share_not_lookalike() -> None`](framework/tests/gates/test_check_contamination.py#L67-L73)
     * *Contract*: Regression for the min-normalization bug: one shared token must not flag.
-  * [`test_nsfw_marker_in_safe_bank_detected() -> None`](framework/tests/gates/test_check_contamination.py#L71-L76)
-  * [`test_low_n_flagged() -> None`](framework/tests/gates/test_check_contamination.py#L79-L86)
-  * [`test_missing_bank_errors() -> None`](framework/tests/gates/test_check_contamination.py#L89-L99)
-  * [`pair_bank() -> dict`](framework/tests/gates/test_check_contamination.py#L102-L112)
+  * [`test_marker_in_safe_bank_detected() -> None`](framework/tests/gates/test_check_contamination.py#L76-L81)
+  * [`test_marker_without_the_flag_is_not_contamination() -> None`](framework/tests/gates/test_check_contamination.py#L84-L90)
+    * *Contract*: The marker vocabulary is the caller's: none supplied means none applied.
+  * [`test_low_n_flagged() -> None`](framework/tests/gates/test_check_contamination.py#L93-L100)
+  * [`test_missing_bank_errors() -> None`](framework/tests/gates/test_check_contamination.py#L103-L113)
+  * [`pair_bank() -> dict`](framework/tests/gates/test_check_contamination.py#L116-L126)
     * *Contract*: A certified concept/guide pair bank: pairs plus the criterion it was selected under.
-  * [`test_pair_bank_certified_passes() -> None`](framework/tests/gates/test_check_contamination.py#L115-L123)
+  * [`test_pair_bank_certified_passes() -> None`](framework/tests/gates/test_check_contamination.py#L129-L137)
     * *Contract*: C1-C4 read concept/safe lists a pair bank does not have.
-  * [`test_pair_bank_with_an_honest_false_flag_passes() -> None`](framework/tests/gates/test_check_contamination.py#L126-L139)
+  * [`test_pair_bank_with_an_honest_false_flag_passes() -> None`](framework/tests/gates/test_check_contamination.py#L140-L153)
     * *Contract*: An honest diagnostic reading, not a claim, is not refused.
-  * [`test_pair_bank_over_its_threshold_flagged() -> None`](framework/tests/gates/test_check_contamination.py#L142-L148)
-  * [`test_pair_bank_claiming_certification_without_its_numbers_flagged() -> None`](framework/tests/gates/test_check_contamination.py#L151-L158)
-  * [`test_bank_with_both_layouts_is_graded_by_concept_checks() -> None`](framework/tests/gates/test_check_contamination.py#L161-L172)
+  * [`test_pair_bank_over_its_threshold_flagged() -> None`](framework/tests/gates/test_check_contamination.py#L156-L162)
+  * [`test_pair_bank_claiming_certification_without_its_numbers_flagged() -> None`](framework/tests/gates/test_check_contamination.py#L165-L172)
+  * [`test_bank_with_both_layouts_is_graded_by_concept_checks() -> None`](framework/tests/gates/test_check_contamination.py#L175-L186)
     * *Contract*: The pair branch must not become a way past C1-C4.
 
 - [`framework/tests/gates/test_check_duplication.py`](framework/tests/gates/test_check_duplication.py) (283 lines)

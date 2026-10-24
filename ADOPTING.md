@@ -89,11 +89,12 @@ Pick `<slug>`, `<PREFIX>` (upper-case) and `<CODE>` (2-4 upper-case letters), th
   keeps only `#SBATCH` directives and the provenance guard.
 * No model or dataset pins: `MODEL_SNAPSHOTS` and `BANNED_LITERALS` in the
   registry start empty; fill them so the parameter gate can defend them.
-* No domain vocabulary: the contamination gate's `NSFW_MARKERS` ships with one
-  domain's words as an illustration, and its bank keys (`concept`, `safe`) are
-  the vocabulary it assumes. It is not wired into the hook: call it against your
-  own bank files
-  (`python framework/gates/checks/check_contamination.py --strict BANK.json`).
+* No domain vocabulary: the contamination gate ships **no** marker words — the
+  vocabulary a safe-side prompt may not carry is the project's, supplied as
+  `--markers a,b,c` (or a registry row you wire it to), and its bank keys
+  (`concept`, `safe`) are the layout it assumes. It is not wired into the hook:
+  call it against your own bank files
+  (`python framework/gates/checks/check_contamination.py --strict --markers X,Y BANK.json`).
 * No default science: the distortion and contamination gates encode *classes* of
   surrogate artifact (post-quantization differencing, pooled-basis broadcast,
   un-errored ratios) rather than one paper's method. Extend them with your own

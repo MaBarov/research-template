@@ -6,15 +6,16 @@ already carries the factor the intervention was meant to preserve or remove, so
 the measurement reports the leak instead of the intervention's effect. Checks, in
 order:
   C1 exact/normalized duplicate overlap concept <-> safe
-  C2 safe-side rows carrying a banned source marker (NSFW_MARKERS, below)
+  C2 safe-side rows carrying a source marker word supplied by ``--markers``
   C3 low-n warning (n < 25 per cell => binomial significance unreliable)
   C4 near-duplicate guard: >X% token-overlap pairs flagged as LOOKALIKE
 Exit codes: 0 clean, 1 violations (--strict), 2 usage.
 Usage: python framework/gates/checks/check_contamination.py [--strict] BANK_JSON [...]
 Writes results/gate_log.jsonl event lines.
 
-The module is domain-neutral: NSFW_MARKERS and the bank layout keys are the
-only domain-specific knobs, and both are plain strings a caller can restate.
+The module is domain-neutral: the source-marker words (``--markers``, empty by
+default) and the bank layout keys are the only domain-specific knobs, and both
+are caller-supplied rather than shipped.
 
 Invariants & Expected State:
     - Read-Only Grading: Bank JSON files are read and graded in the order given;
@@ -36,18 +37,13 @@ import argparse
 import json
 import re
 import sys
+from collections.abc import Sequence
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 GATE_LOG = REPO / "results" / "gate_log.jsonl"
 TOKEN_RE = re.compile(r"[a-z0-9]+")
-NSFW_MARKERS = (
-    "i2p",
-    "nsfw",
-    "nudit",
-    "sexual",
-    "adult",
-)  # project-specific: edit for your domain
+MARKERS: tuple[str, ...] = ()  # caller-supplied source-marker words, see --markers
 LOOKALIKE_OVERLAP = 0.7  # token-overlap ratio that flags a near-duplicate
 PAIR_BANK_KEY = "selected_pairs"  # certified concept/guide pair banks
 
@@ -164,17 +160,13 @@ def _overlap_violation(concept_norm: dict, safe_norm: dict) -> list[str]:
     return violations
 
 
-def _marker_violations(bank: dict) -> list[str]:
+def _marker_violations(bank: dict, markers: Sequence[str] = MARKERS) -> list[str]:
     """C2 source marker contamination: only safe-side leaks are flagged."""
     violations: list[str] = []
-    for p in bank["concept"]:
-        low = p.lower()
-        if any(m in low for m in NSFW_MARKERS):
-            pass  # concept bank SHOULD contain NSFW-ish prompts; only flag safe-side leaks
     for p in bank["safe"]:
         low = p.lower()
-        if any(m in low for m in NSFW_MARKERS):
-            violations.append(f"C2 safe-bank NSFW leak: {p[:80]!r}")
+        if any(m in low for m in markers):
+            violations.append(f"C2 safe-bank marker leak: {p[:80]!r}")
     return violations
 
 
@@ -213,7 +205,7 @@ def _lookalike_violations(concept_list: list, safe_list: list) -> list[str]:
     return violations
 
 
-def check_bank(path: Path, strict: bool) -> list[str]:
+def check_bank(path: Path, strict: bool, markers: Sequence[str] = MARKERS) -> list[str]:
     bank = load_bank(path)
     if bank["layout"] == "pair":
         return _pair_bank_violations(bank["raw"])
@@ -224,7 +216,7 @@ def check_bank(path: Path, strict: bool) -> list[str]:
     violations: list[str] = _overlap_violation(concept_norm, safe_norm)
 
     # C2 source marker contamination
-    violations.extend(_marker_violations(bank))
+    violations.extend(_marker_violations(bank, markers))
 
     # C3 power floor
     violations.extend(_power_floor_violation(bank))
@@ -235,7 +227,9 @@ def check_bank(path: Path, strict: bool) -> list[str]:
     return violations
 
 
-def _check_one_bank(bank_arg: str, strict: bool, all_violations: list[str]) -> bool:
+def _check_one_bank(
+    bank_arg: str, strict: bool, all_violations: list[str], markers: Sequence[str]
+) -> bool:
     """Check one bank file into ``all_violations``; True when it is missing."""
     path = REPO / bank_arg if not Path(bank_arg).is_absolute() else Path(bank_arg)
     if not path.exists():
@@ -243,7 +237,7 @@ def _check_one_bank(bank_arg: str, strict: bool, all_violations: list[str]) -> b
         all_violations.append(f"missing bank {path}")
         return True
     try:
-        for v in check_bank(path, strict):
+        for v in check_bank(path, strict, markers):
             print(f"[contamination] {v}", file=sys.stderr)
             all_violations.append(v)
         clean = len(all_violations)
@@ -264,12 +258,20 @@ def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("banks", nargs="+", help="prompt bank JSON files")
     ap.add_argument("--strict", action="store_true", help="exit 1 on violations")
+    ap.add_argument(
+        "--markers",
+        default="",
+        help="comma-separated source words whose presence in the safe bank "
+        "contaminates it (C2); empty by default because the vocabulary is the "
+        "project's, not the harness's",
+    )
     args = ap.parse_args(argv)
+    markers = tuple(m.strip().lower() for m in args.markers.split(",") if m.strip())
 
     all_violations: list[str] = []
     missing = False
     for bank_arg in args.banks:
-        if _check_one_bank(bank_arg, args.strict, all_violations):
+        if _check_one_bank(bank_arg, args.strict, all_violations, markers):
             missing = True
 
     if missing:

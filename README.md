@@ -8,7 +8,7 @@ paper.
 
 [![template](https://img.shields.io/badge/GitHub-template_repository-2ea44f)](https://github.com/MaBarov/research-template)
 ![python](https://img.shields.io/badge/python-3.11%2B-blue)
-![status](https://img.shields.io/badge/gates-green%20%C2%B7%20334%20tests-success)
+![status](https://img.shields.io/badge/gates-green%20%C2%B7%20504%20tests-success)
 
 Marked as a GitHub template repository: **Use this template** (or the `git clone`
 below) starts a project with the harness already wired.
@@ -18,7 +18,12 @@ What you get:
 * **Commit gates** (`framework/hooks/pre-commit`, blocking): code-size limits,
 oracle-graded test mirrors, per-file coverage clearance, docstring contracts,
 duplication, a single parameter registry, mutation evidence, surrogate-distortion
-anti-patterns, an sbatch provenance contract, and index freshness.
+anti-patterns, static types over the staged blob, instruction references, an
+sbatch provenance contract, and index freshness.
+* **Ref gates** (`framework/hooks/reference-transaction`,
+`framework/hooks/pre-merge-commit`): a ref move lands only when the new commit's
+tree was armed by the battery that graded it, so `--no-verify`, a rewritten
+branch and an ungated merge are refused rather than discovered later.
 * **Nothing that can only shrink is allowed to grow**: the mirror-alias table
 (MIR003), the loop-waiver table (COV005) and the duplication baseline (CPD002)
 are ratchets — an addition is refused, a removal passes.
@@ -87,7 +92,7 @@ tables, `[tool.<slug>.contracts]`) and the ledgers the gates refresh themselves.
 ## Verifying the harness
 
 ```bash
-python -m pytest framework/tests tests -q          # 334 tests: gate contracts + example suite
+python -m pytest framework/tests tests -q          # 504 tests: gate contracts + example suite
 bash framework/hooks/pre-commit                    # the commit battery, on the staged tree
 bash framework/gates/sbatch_gate.sh slurm/template.sbatch --dry-run
 ```

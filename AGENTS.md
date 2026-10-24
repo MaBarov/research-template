@@ -29,9 +29,12 @@ Repository gates are active through `core.hooksPath = framework/hooks`:
 * `framework/hooks/pre-commit` — blocking. Ruff, production anti-patterns,
   the sbatch provenance contract, test mirrors, coverage clearance, code-size
   limits, docstring contracts, duplication, the parameter registry, mutation
-  evidence, surrogate-distortion anti-patterns, and index freshness.
+  evidence, surrogate-distortion anti-patterns, static types, instruction
+  references, and index freshness. Its last act is to arm the ref-provenance
+  marker the `reference-transaction` hook verifies.
 * `framework/hooks/pre-push` — advisory, never blocks: whole-tree findings a
-  staged check cannot see (dead code, secrets, ledger freshness, index drift).
+  staged check cannot see (dead code, secrets, ledger freshness, index drift,
+  the pyright census).
 * `INDEX.md` and its sub-indices — architectural Table of Contents mapping
   modules, signatures and contracts
   (`python -m framework.indexing.cli --output INDEX.md`). Consult them for
@@ -42,6 +45,8 @@ Whole-tree audits, run before claiming a clean tree:
 ```bash
 python framework/gates/limits/check_limits.py --mode all
 python framework/gates/check_coverage.py --mode all --strict
+python framework/gates/typecheck/check_types.py --mode all --engine mypy
+python framework/gates/instructions/check_instruction_refs.py --strict
 python -m framework.indexing.cli --output INDEX.md --check
 python scripts/setup/check_framework_wiring.py
 ```
@@ -230,3 +235,33 @@ computation artifacts:
 * The gate reads staged blobs from the Git index (`--staged`), enforces
   `--strict` exit 1 on any finding, and fails closed with `HNS010` on unreadable
   or missing staged sources. There is no bypass, allowlist, or skip flag.
+
+### Static types, instruction references and ref provenance (blocking)
+
+Three holes that surface only after the fact, closed at commit and at ref move:
+
+* `framework/gates/typecheck/check_types.py`, pre-commit step **5d7**: touching a
+  typed module means leaving it type-clean, so mypy runs over the staged blob
+  (`--shadow-file`) for every staged module under the static roots. A foreign
+  finding never blocks (`--follow-imports=silent`, filtered to the caller's
+  scope), an unreadable blob is never reported clean, and a missing mypy fails
+  closed under `--strict`. `--mode all` is the census; pyright is the advisory
+  second opinion on pre-push. Policy lives in `[tool.mypy]`/`[tool.pyright]` in
+  `pyproject.toml`, and both engines are dev extras.
+* `framework/gates/instructions/check_instruction_refs.py`, pre-commit step
+  **5d8**: every backticked file path an instruction artifact names must resolve
+  against `git ls-files`. `HNS073` buckets each unresolved token (`placeholder`,
+  `moved` with the sole match named, `output`, `dead`) and blocks on a dead or
+  placeholder reference. `--corpus-root DIR` extends one census over a second
+  tree's corpus (`DIR/rules/*.md`, `DIR/managed-skills/*/SKILL.md`,
+  `DIR/AGENTS.md`) beside this repository's `AGENTS.md`; the root is a parameter,
+  never a product path.
+* `framework/gates/freshness/ref_guard.py` is invoked by the
+  `framework/hooks/reference-transaction` hook for every ref move, and
+  `framework/hooks/pre-merge-commit` forwards to the battery because git creates
+  no pre-commit hook for a merge commit. A move is allowed only when the new
+  value is already reachable from a live tip, or when pre-commit step **6**
+  armed a marker binding the invoking git PID to the tree it wrote (tree, start
+  time, 600 s window, consumed on the match). Anything else is `GUARD001` and the
+  transaction aborts; every decision is appended to
+  `<common-dir>/research-gate/ref_audit.jsonl`.

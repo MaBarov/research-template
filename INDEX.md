@@ -3,7 +3,7 @@
 > [!NOTE]
 > Master architectural directory. Sub-indices are maintained for major subtrees. Use the sub-index links and line ranges below to load target sections into context.
 
-**Repository Statistics**: 102 modules | 42 classes | 800 public functions.
+**Repository Statistics**: 102 modules | 42 classes | 801 public functions.
 
 ## Master Table of Contents
 
@@ -11,7 +11,7 @@
 
 - [`experiments/example_plan`](experiments/INDEX.md#L14-L22) (lines 14–22 in `experiments/INDEX.md`)
 
-### [`framework/INDEX.md`](framework/INDEX.md) — 83 modules | 707 symbols
+### [`framework/INDEX.md`](framework/INDEX.md) — 83 modules | 708 symbols
 
 - [`framework`](framework/INDEX.md#L43-L67) (lines 43–67 in `framework/INDEX.md`) — *Repository gate framework (hooks + checkers).*
 - [`framework/gates`](framework/INDEX.md#L68-L95) (lines 68–95 in `framework/INDEX.md`) — *Blocking and advisory repository gates.*
@@ -35,14 +35,14 @@
 - [`framework/tests/coverage_gate`](framework/INDEX.md#L1020-L1030) (lines 1020–1030 in `framework/INDEX.md`) — *Tests for the coverage gate and its probe plugin.*
 - [`framework/tests/distortion`](framework/INDEX.md#L1031-L1057) (lines 1031–1057 in `framework/INDEX.md`) — *Test package for the framework distortion gate.*
 - [`framework/tests/freshness`](framework/INDEX.md#L1058-L1110) (lines 1058–1110 in `framework/INDEX.md`) — *Tests for freshness and ref guard gates.*
-- [`framework/tests/gates`](framework/INDEX.md#L1111-L1221) (lines 1111–1221 in `framework/INDEX.md`) — *Package.*
-- [`framework/tests/gates/instructions`](framework/INDEX.md#L1222-L1261) (lines 1222–1261 in `framework/INDEX.md`) — *Tests for instruction reference validation.*
-- [`framework/tests/gates/params`](framework/INDEX.md#L1262-L1320) (lines 1262–1320 in `framework/INDEX.md`) — *Tests for the parameter registry gates.*
-- [`framework/tests/gates/ratchet`](framework/INDEX.md#L1321-L1343) (lines 1321–1343 in `framework/INDEX.md`) — *Ratchet gates: tables that may only shrink.*
-- [`framework/tests/harness`](framework/INDEX.md#L1344-L1360) (lines 1344–1360 in `framework/INDEX.md`) — *Harness registry tests: project identity and the interpreter floor.*
-- [`framework/tests/hook_hygiene`](framework/INDEX.md#L1361-L1369) (lines 1361–1369 in `framework/INDEX.md`) — *Tests for the hook/test-process boundary.*
-- [`framework/tests/indexing`](framework/INDEX.md#L1370-L1418) (lines 1370–1418 in `framework/INDEX.md`) — *Tests for framework.indexing Table-of-Contents subsystem.*
-- [`framework/tests/typecheck`](framework/INDEX.md#L1419-L1469) (lines 1419–1469 in `framework/INDEX.md`) — *Tests for the static-type gate.*
+- [`framework/tests/gates`](framework/INDEX.md#L1111-L1223) (lines 1111–1223 in `framework/INDEX.md`) — *Package.*
+- [`framework/tests/gates/instructions`](framework/INDEX.md#L1224-L1263) (lines 1224–1263 in `framework/INDEX.md`) — *Tests for instruction reference validation.*
+- [`framework/tests/gates/params`](framework/INDEX.md#L1264-L1322) (lines 1264–1322 in `framework/INDEX.md`) — *Tests for the parameter registry gates.*
+- [`framework/tests/gates/ratchet`](framework/INDEX.md#L1323-L1345) (lines 1323–1345 in `framework/INDEX.md`) — *Ratchet gates: tables that may only shrink.*
+- [`framework/tests/harness`](framework/INDEX.md#L1346-L1362) (lines 1346–1362 in `framework/INDEX.md`) — *Harness registry tests: project identity and the interpreter floor.*
+- [`framework/tests/hook_hygiene`](framework/INDEX.md#L1363-L1371) (lines 1363–1371 in `framework/INDEX.md`) — *Tests for the hook/test-process boundary.*
+- [`framework/tests/indexing`](framework/INDEX.md#L1372-L1420) (lines 1372–1420 in `framework/INDEX.md`) — *Tests for framework.indexing Table-of-Contents subsystem.*
+- [`framework/tests/typecheck`](framework/INDEX.md#L1421-L1471) (lines 1421–1471 in `framework/INDEX.md`) — *Tests for the static-type gate.*
 
 ### [`research/INDEX.md`](research/INDEX.md) — 3 modules | 13 symbols
 
